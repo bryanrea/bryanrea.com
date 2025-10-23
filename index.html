@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="keywords"
+      content="user experience, ux, uxd, design, interaction design, portfolio"
+    />
+    <title>Bryan Rea. UX Designer, Manager, and Leader</title>
+    <meta
+      name="description"
+      content="Experienced deisgner with a passion for empowering people to achieve their dreams. Let's build exceptional experiences together."
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Bryan Rea, UX Designer, Manager, and Leader",
+        "url": "https://bryanrea.com/"
+      }
+    </script>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdn.usefathom.com/script.js"
+      data-site="VBYEXRMM"
+      defer
+    ></script>
+    <style>
+      body {
+        margin: 0; /* Remove default body margin */
+        overflow: hidden; /* Prevent scrollbars */
+        font-family: "Work Sans", serif;
+        text-align: center;
+        color: #222;
+      }
+
+      p {
+        font-size: 1.2rem;
+      }
+
+      h1 {
+        font-size: 3rem;
+        font-family: "Source Serif 4", serif;
+        font-style: italic;
+        color: #3b429f;
+      }
+
+      .background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* Place behind content */
+        background-color: #ffffff;
+      }
+      .circle {
+        position: absolute;
+        width: 80vmin; /* Use viewport units for responsiveness */
+        height: 80vmin;
+        border-radius: 50%;
+        filter: blur(20vmin); /* Adjust blur intensity */
+      }
+      .circle-1 {
+        background: radial-gradient(circle at 70% 30%, #b0a6df, #3b429f);
+        top: 20%;
+        left: 30%;
+      }
+      .circle-2 {
+        background: radial-gradient(circle at 0% 100%, #ff29c3, #00c2ff);
+        top: 60%;
+        left: -10%;
+      }
+      .noise {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("img/noise.png");
+        background-repeat: repeat;
+        opacity: 0.4;
+        mix-blend-mode: overlay;
+      }
+      .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .content > div {
+        flex-basis: 80%;
+        max-width: 35rem;
+        min-width: 25rem;
+        padding: 0 1rem;
+      }
+
+      .content p {
+        margin-bottom: 64px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="noise"></div>
+    </div>
+    <div class="content">
+      <div>
+        <h1>On to something new :)</h1>
+        <p>
+          After 12+ years as a UX designer, manager, and leader at Google on
+          some of the world's biggest products like Play, Android, Gmail, and
+          YouTube, something new is on the way. Stay tuned.
+        </p>
+
+        <h1>In the meantime...</h1>
+        <p>
+          Check out my
+          <a href="https://www.linkedin.com/in/bryanrea/">LinkedIn</a>, a
+          <i>very</i>
+          <a href="https://www.bryanrea.com/archive">old archive of work</a>
+          (pre-Google), or better yet,
+          <a href="mailto:bryan@bryanrea.com">let's chat</a>.
+        </p>
+      </div>
+    </div>
+  </body>
+  <script>
+    function randomizeCirclePosition(circle) {
+      const x = Math.random() * 80; // Generate random x position within 80% of viewport width
+      const y = Math.random() * 80; // Generate random y position within 80% of viewport height
+      circle.style.left = x + "%";
+      circle.style.top = y + "%";
+    }
+
+    const circle1 = document.querySelector(".circle-1");
+    const circle2 = document.querySelector(".circle-2");
+
+    randomizeCirclePosition(circle1);
+    randomizeCirclePosition(circle2);
+  </script>
+</html>

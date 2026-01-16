@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /static/
+Disallow: /*.json$
+
+# Block AI scrapers if you want
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+Sitemap: https://bryanrea.com/sitemap.xml

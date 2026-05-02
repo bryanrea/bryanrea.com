@@ -1,9 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /static/
-Disallow: /*.json$
 
-# Block AI scrapers if you want
+# Block AI scrapers
 User-agent: GPTBot
 Disallow: /
 

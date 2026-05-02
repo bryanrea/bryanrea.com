@@ -264,6 +264,30 @@ header.hero {
 }
 
 /* ===========================
+   Page hero (sub-pages)
+   Smaller than the homepage hero so the "Bryan Rea" wordmark stays
+   reserved for the brand. Using a different selector (.page-hero)
+   means the IntersectionObserver in main.js doesn't latch onto it,
+   so the small nav title appears immediately on subpages.
+   =========================== */
+header.page-hero {
+  padding: 7rem 20px 1rem;
+  text-align: center;
+}
+
+header.page-hero h1 {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-variation-settings: "opsz" 144;
+  font-weight: 600;
+  font-size: 5rem;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+/* ===========================
    Content
    =========================== */
 main.content {
@@ -345,6 +369,15 @@ i {
   header.hero h1 {
     font-size: 4rem;
     letter-spacing: -0.035em;
+  }
+
+  header.page-hero {
+    padding: 5rem 20px 1rem;
+  }
+
+  header.page-hero h1 {
+    font-size: 3.25rem;
+    letter-spacing: -0.03em;
   }
 
   h2 {

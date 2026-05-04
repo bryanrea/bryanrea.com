@@ -216,7 +216,7 @@ body {
    off to the small nav title.
    =========================== */
 header.hero {
-  padding: 6rem 20px 3rem;
+  padding: 6rem 20px 1.5rem;
   text-align: center;
 }
 
@@ -293,7 +293,7 @@ header.page-hero h1 {
 main.content {
   max-width: 36rem;
   margin: 0 auto;
-  padding: 4rem 20px 6rem;
+  padding: 2.5rem 20px 6rem;
   text-align: center;
 }
 
@@ -362,13 +362,21 @@ i {
     letter-spacing: 0.1em;
   }
 
+  .site-nav__title {
+    display: none;
+  }
+
   header.hero {
-    padding: 4rem 20px 2rem;
+    padding: 5.5rem 20px 2rem;
   }
 
   header.hero h1 {
-    font-size: 4rem;
+    font-size: 5rem;
     letter-spacing: -0.035em;
+  }
+
+  .hero__name .tagline {
+    font-size: 0.88rem;
   }
 
   header.page-hero {
@@ -376,7 +384,7 @@ i {
   }
 
   header.page-hero h1 {
-    font-size: 3.25rem;
+    font-size: 4rem;
     letter-spacing: -0.03em;
   }
 

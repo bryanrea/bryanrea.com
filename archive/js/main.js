@@ -25,7 +25,15 @@
     p12:        'slide15',
   };
 
-  const scrollArea = document.querySelector('#container .scrollable');
+  const container = document.getElementById('container');
+  const scrollArea = container.querySelector('.scrollable');
+
+  // Prevent user-initiated scrolling on the container. The container needs
+  // overflow: auto for scrollIntoView to work, but the original site only
+  // navigated via click — wheel/trackpad/touch shouldn't free-scroll the grid.
+  const blockScroll = (e) => e.preventDefault();
+  container.addEventListener('wheel', blockScroll, { passive: false });
+  container.addEventListener('touchmove', blockScroll, { passive: false });
 
   function focusSlide(slideId) {
     const target = document.getElementById(slideId);

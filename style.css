@@ -10,10 +10,6 @@
   box-sizing: border-box;
 }
 
-html {
-  font-size: 17px;
-}
-
 body {
   margin: 0;
   font-family: var(--font-sans);
@@ -129,10 +125,6 @@ i {
    Responsive
    =========================== */
 @media (max-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-
   header.hero {
     padding: 5.5rem 20px 2rem;
   }

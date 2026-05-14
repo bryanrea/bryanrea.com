@@ -12,10 +12,6 @@
     box-sizing: border-box;
 }
 
-html {
-    font-size: 17px;
-}
-
 body {
     font-family: var(--font-sans);
     line-height: 1.7;
@@ -429,10 +425,6 @@ footer a:hover {
    Responsive
    =========================== */
 @media (max-width: 768px) {
-    html {
-        font-size: 16px;
-    }
-
     header {
         padding: 3rem 0 2.5rem;
         margin-bottom: 3rem;

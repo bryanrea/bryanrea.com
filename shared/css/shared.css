@@ -26,6 +26,21 @@
 }
 
 /* ===========================
+   Global base
+   Shared root sizing for both sites. Scales down on narrow screens
+   so the rem-based type system reflows everywhere at once.
+   =========================== */
+html {
+    font-size: 17px;
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+/* ===========================
    Global link styles
    =========================== */
 a {

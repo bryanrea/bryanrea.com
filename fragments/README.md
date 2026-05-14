@@ -83,7 +83,7 @@ Your markdown content here...
 
 - **Live site**: [bryanrea.com](https://bryanrea.com)
 - **Weekly progress**: See `docs/weekly-progress.md`
-- **GitHub**: [github.com/bryanrea/fragments](https://github.com/bryanrea/fragments)
+- **GitHub**: [github.com/bryanrea/bryanrea.com](https://github.com/bryanrea/bryanrea.com)
 
 ## Philosophy
 

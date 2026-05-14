@@ -1,0 +1,464 @@
+/* ===========================
+   Fragments — blog-specific styles.
+   Design tokens, link styles, and nav live in /shared/css/shared.css.
+   =========================== */
+
+/* ===========================
+   Reset & base
+   =========================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 17px;
+}
+
+body {
+    font-family: var(--font-sans);
+    line-height: 1.7;
+    color: var(--color-ink-soft);
+    background-color: var(--color-bg);
+    padding: var(--nav-height) 20px 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===========================
+   Container
+   =========================== */
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+/* ===========================
+   Typography
+   =========================== */
+h1, h2, h3 {
+    font-family: var(--font-serif);
+    font-style: normal;
+    font-variation-settings: "opsz" 144;
+    color: var(--color-ink);
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 3.75rem;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+    margin-top: 2.25rem;
+}
+
+h3 {
+    font-weight: 600;
+    font-size: 1.4rem;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    margin-bottom: 0.5rem;
+    margin-top: 1.75rem;
+}
+
+p {
+    margin-bottom: 1.25rem;
+}
+
+/* ===========================
+   Header (site identity)
+   =========================== */
+header {
+    padding: 5.5rem 0 4rem;
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 7.5rem;
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin-bottom: 0.85rem;
+}
+
+header h1 a {
+    color: var(--color-ink);
+    text-decoration: none;
+}
+
+header h1 a:hover {
+    color: var(--color-accent);
+}
+
+.tagline {
+    color: var(--color-muted);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 400;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* ===========================
+   Main
+   =========================== */
+main {
+    min-height: calc(100vh - 300px);
+    padding-bottom: 4rem;
+}
+
+/* ===========================
+   Posts list (homepage)
+   =========================== */
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.post-preview {
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--color-rule);
+}
+
+.post-preview:first-child {
+    padding-top: 0.5rem;
+}
+
+.post-preview:last-child {
+    border-bottom: none;
+}
+
+.post-preview h2 {
+    font-size: 2.6rem;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.post-preview h2 a {
+    color: var(--color-ink);
+    text-decoration: none;
+}
+
+.post-preview h2 a:hover {
+    color: var(--color-accent);
+}
+
+.post-date {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.85rem;
+}
+
+.post-excerpt {
+    color: var(--color-ink-soft);
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+}
+
+.read-more {
+    display: inline-block;
+}
+
+
+.no-posts {
+    text-align: center;
+    padding: 3rem 0;
+    color: var(--color-muted);
+}
+
+/* ===========================
+   Individual post
+   =========================== */
+.post-full {
+    max-width: 680px;
+}
+
+.post-header {
+    margin-bottom: 2.5rem;
+}
+
+.post-header h1 {
+    margin-bottom: 0.6rem;
+}
+
+.post-header .post-date {
+    margin-bottom: 0;
+}
+
+.post-content {
+    margin-bottom: 3rem;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--color-ink-soft);
+}
+
+.post-content h2 {
+    margin-top: 2.75rem;
+}
+
+.post-content h3 {
+    margin-top: 2.25rem;
+}
+
+/* Drop cap on the first paragraph of the post body only.
+   Goal: exactly 3 lines tall.
+
+   Body in .post-content is 1.05rem with line-height 1.75
+   (≈ 1.8375rem per line) → 3 lines = 5.5125rem.
+   Fraunces cap-height ratio is ~0.72 of font-size, so
+   font-size ≈ 7.6rem produces a cap that visually spans
+   3 body lines. line-height 0.72 keeps the float box at the
+   same height so wrapping text occupies exactly 3 lines. */
+.post-content > p:first-of-type::first-letter {
+    font-family: var(--font-serif);
+    font-style: normal;
+    font-variation-settings: "opsz" 144;
+    font-weight: 600;
+    color: var(--color-accent);
+
+    -webkit-initial-letter: 3;
+    initial-letter: 3;
+
+    float: left;
+    font-size: 7.6rem;
+    line-height: 0.72;
+    margin: 0.05rem 0.55rem 0 0;
+}
+
+@supports (initial-letter: 3) or (-webkit-initial-letter: 3) {
+    .post-content > p:first-of-type::first-letter {
+        float: none;
+        font-size: inherit;
+        line-height: inherit;
+        margin: 0 0.5rem 0 0;
+    }
+}
+
+.post-content ul,
+.post-content ol {
+    margin-bottom: 1.25rem;
+    margin-left: 1.5rem;
+}
+
+.post-content li {
+    margin-bottom: 0.5rem;
+}
+
+.post-content blockquote {
+    border-left: 3px solid var(--color-accent);
+    padding-left: 1.25rem;
+    margin: 1.75rem 0;
+    color: var(--color-muted);
+    font-family: var(--font-serif);
+    font-style: normal;
+    font-size: 1.15rem;
+    line-height: 1.5;
+}
+
+.post-content code {
+    background-color: var(--color-surface-soft);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.92em;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.post-content pre {
+    background-color: var(--color-surface-soft);
+    padding: 1rem 1.25rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--color-rule);
+}
+
+.post-content pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+.post-footer {
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-rule);
+}
+
+/* Previous / Next post navigation */
+.post-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 0;
+}
+
+.post-nav__item {
+    min-height: 1px;
+}
+
+.post-nav__item--previous {
+    text-align: left;
+}
+
+.post-nav__item--next {
+    text-align: right;
+}
+
+.post-nav__item a {
+    display: block;
+    color: var(--color-ink);
+    text-decoration: none;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 6px;
+    background-color: transparent;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.post-nav__item a:hover {
+    border-color: var(--color-accent);
+    background-color: var(--color-surface-soft);
+    color: var(--color-ink);
+}
+
+.post-nav__label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.25rem;
+}
+
+.post-nav__title {
+    display: block;
+    font-family: var(--font-serif);
+    font-style: normal;
+    font-variation-settings: "opsz" 144;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: var(--color-accent);
+}
+
+.back-link--top {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin: 2rem 0 1rem;
+}
+
+/* ===========================
+   Footer
+   =========================== */
+footer {
+    border-top: 1px solid var(--color-rule);
+    padding: 2.5rem 0;
+    margin-top: 4rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+}
+
+footer a {
+    color: var(--color-muted);
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: var(--color-accent);
+}
+
+/* ===========================
+   404
+   =========================== */
+.error-page {
+    text-align: center;
+    padding: 4rem 0;
+}
+
+.error-page h1 {
+    font-size: 6rem;
+    color: var(--color-muted-light);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.04em;
+}
+
+.error-page h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.error-page p {
+    color: var(--color-muted);
+    margin-bottom: 2rem;
+}
+
+/* ===========================
+   Responsive
+   =========================== */
+@media (max-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+
+    header {
+        padding: 3rem 0 2.5rem;
+        margin-bottom: 3rem;
+    }
+
+    header h1 {
+        font-size: 4.5rem;
+        letter-spacing: -0.035em;
+    }
+
+    .post-preview h2 {
+        font-size: 1.85rem;
+    }
+
+    .post-header h1,
+    h1 {
+        font-size: 2.5rem;
+        letter-spacing: -0.025em;
+    }
+
+    .post-nav {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .post-nav__item--next {
+        text-align: left;
+    }
+}

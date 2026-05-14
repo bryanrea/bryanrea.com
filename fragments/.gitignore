@@ -1,0 +1,13 @@
+# Logs
+*.log
+
+# Drafts
+/posts/drafts
+
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Cursor
+.cursorrules

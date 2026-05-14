@@ -14,3 +14,12 @@ Thumbs.db
 # Environment files
 .env
 .env.local
+
+# Python
+fragments/venv/
+fragments/__pycache__/
+fragments/*.pyc
+fragments/.python-version
+
+# Claude Code
+.claude/

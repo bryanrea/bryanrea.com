@@ -253,10 +253,15 @@ header a:hover {
 /*grid setup*/
 
 #container{
-  overflow: hidden;
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
   width: 100%;
   height: 100%;
   background-color: #F9F9F9;
+}
+
+#container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Edge */
 }
 
 .scrollable {
@@ -324,6 +329,7 @@ header a:hover {
 }
 .slideshow{
 	width: 4680px;
+	transition: transform 0.5s ease-in-out;
 }
 
 .subslide{

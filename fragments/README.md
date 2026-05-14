@@ -1,10 +1,12 @@
 # Fragments
 
-A lightweight, minimalist, vibe-coded flat-file blogging platform
+A lightweight, minimalist, vibe-coded flat-file blogging platform.
 
 ## What is Fragments?
 
-Fragments is a minimalist blogging platform vibe coded progressively over 12 weeks. With this project, I'm exploring the power (and limites) of AI programming and the democratizing power they might offer – do we really need big platforms like Medium or Substack anymore if you can just build your own thing? Let's find out.
+Fragments is a minimalist blogging platform being built progressively in public. The project explores the power (and limits) of AI coding assistants — do we really need big platforms like Medium or Substack anymore if you can build your own?
+
+This folder is the Flask blog half of the [bryanrea.com](https://github.com/bryanrea/bryanrea.com) monorepo. The static portfolio site lives at the repo root; shared CSS, JS, and images live in `../shared/`.
 
 ## Why Fragments?
 
@@ -12,39 +14,23 @@ Fragments is a minimalist blogging platform vibe coded progressively over 12 wee
 - **Built in public**: Every step documented, all code open source
 - **AI-assisted**: Shows what works (and what doesn't) when building with AI
 - **Flat-file simplicity**: No database, just markdown files and Python
-- **Progressive development**: Starting simple, adding features week by week
+- **Progressive development**: Starting simple, adding features as needed
 
 ## Tech Stack
 
 - **Backend**: Flask (Python 3.9+)
 - **Content**: Markdown with YAML frontmatter
 - **Templating**: Jinja2
-- **Styling**: Pure CSS, no frameworks
-- **Hosting**: Render
-- **Deployment**: Git push (automatic)
-
-## Project Timeline
-
-This is a 12-week build-in-public project:
-
-- **Week 1**: Foundation & basic blog structure ← *You are here*
-- **Week 2**: Markdown conversion automation
-- **Week 3**: Post listing & navigation
-- **Week 4**: Design & styling
-- **Week 5**: RSS feed
-- **Week 6**: Build automation
-- **Week 7**: Search functionality
-- **Week 8**: Content & reflection
-- **Week 9**: Code highlighting
-- **Week 10**: Comments/webmentions
-- **Week 11**: Performance & polish
-- **Week 12**: Documentation & launch
+- **Styling**: Pure CSS, no frameworks (shared with the portfolio site via `../shared/css/shared.css`)
+- **Hosting**: Digital Ocean VPS (Ubuntu) — Nginx + Gunicorn + systemd
+- **Deployment**: `git pull` + `systemctl restart fragments-blog`
 
 ## Getting Started
+
 ```bash
-# Clone the repo
-git clone git@github.com:bryanrea/fragments.git
-cd fragments
+# Clone the monorepo
+git clone git@github.com:bryanrea/bryanrea.com.git
+cd bryanrea.com/fragments
 
 # Install dependencies
 pip3 install -r requirements.txt
@@ -56,33 +42,48 @@ python3 app.py
 ```
 
 ## Project Structure
+
 ```
-fragments/
-├── app.py              # Flask application
-├── requirements.txt    # Python dependencies
-├── posts/             # Markdown blog posts
-├── templates/         # Jinja2 HTML templates
-├── static/           # CSS, JS, images
-└── docs/             # Project documentation
+bryanrea.com/                ← monorepo root
+├── shared/                  ← shared CSS, JS, images (both sites)
+├── index.html, about/, ...  ← static portfolio site
+└── fragments/               ← this folder — the Flask blog
+    ├── app.py               # Flask application
+    ├── requirements.txt     # Python dependencies
+    ├── posts/               # Markdown blog posts
+    ├── templates/           # Jinja2 HTML templates
+    ├── static/              # CSS, JS, images specific to the blog
+    └── docs/                # Project documentation
 ```
 
 ## Writing Posts
 
 Posts are markdown files in the `posts/` directory with YAML frontmatter:
+
 ```markdown
 ---
 title: My First Post
-date: 2024-11-09
+date: 2026-05-14
 excerpt: A short description of the post
 ---
 
 Your markdown content here...
 ```
 
+Filename format: `YYYY-MM-DD-slug-here.md`.
+
+## Documentation
+
+- `docs/architecture.md` — app structure, request flow, routing
+- `docs/deployment.md` — server setup, Nginx, systemd, troubleshooting
+- `docs/roadmap.md` — what's done, what's next
+- `docs/weekly-progress.md` — build log with what AI did well and where it struggled
+- `docs/conventions.md` — code style and post conventions
+
 ## Follow Along
 
-- **Live site**: [bryanrea.com](https://bryanrea.com)
-- **Weekly progress**: See `docs/weekly-progress.md`
+- **Live blog**: [bryanrea.com/fragments](https://bryanrea.com/fragments)
+- **Portfolio**: [bryanrea.com](https://bryanrea.com)
 - **GitHub**: [github.com/bryanrea/bryanrea.com](https://github.com/bryanrea/bryanrea.com)
 
 ## Philosophy
@@ -91,7 +92,7 @@ Big platforms gave us convenience but took our independence. AI gives us the too
 
 ## License
 
-MIT License - use this code however you want.
+MIT License — use this code however you want.
 
 ## Credits
 
@@ -99,4 +100,4 @@ Built by Bryan Rea with assistance from Claude (Anthropic) and Gemini (Google).
 
 ---
 
-*"Progam. Or be programmed."*
+*"Program. Or be programmed."*

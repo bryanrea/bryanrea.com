@@ -1,0 +1,23 @@
+name: Deploy to Digital Ocean
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # allow manual runs from the Actions tab
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            cd /var/www/bryanrea.com
+            git pull origin main
+            systemctl restart fragments-blog
+            systemctl is-active fragments-blog

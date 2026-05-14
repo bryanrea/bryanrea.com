@@ -1,7 +1,9 @@
 # Fragments — Architecture
 
 ## Overview
-A lightweight flat-file blog built with Flask. No database — posts are markdown files with YAML frontmatter. Deployed at bryanrea.com/fragments alongside a separate static portfolio site.
+A lightweight flat-file Flask blog. No database — posts are markdown files with YAML frontmatter. Lives in the `fragments/` folder of the [bryanrea.com](https://github.com/bryanrea/bryanrea.com) monorepo alongside the static portfolio site and a shared design system in `../shared/`.
+
+Deployed at `bryanrea.com/fragments`.
 
 ## Tech Stack
 - **Framework:** Flask 3.1.0 with Blueprint routing
@@ -9,47 +11,60 @@ A lightweight flat-file blog built with Flask. No database — posts are markdow
 - **Templating:** Jinja2
 - **Content:** Markdown with YAML frontmatter (python-frontmatter)
 - **Markdown rendering:** `markdown` library with `fenced_code`, `codehilite`, `tables` extensions
-- **Styling:** Pure CSS — no frameworks
+- **Styling:** Pure CSS — no frameworks. Design tokens, nav, link styles, and the animated background live in `../shared/css/shared.css`; blog-specific styles in `static/css/style.css`.
 - **WSGI:** Gunicorn
 - **Web server:** Nginx (reverse proxy + SSL termination)
-- **Process management:** systemd
+- **Process management:** systemd (`fragments-blog.service`)
 - **SSL:** Let's Encrypt via Certbot
 
 ## File Structure
+
+The Fragments app is one piece of the larger monorepo:
+
 ```
-fragments/
-├── app.py                  # Flask app init, Blueprint registration, all routes
-├── requirements.txt
-├── posts/                  # Flat-file content store
-│   └── YYYY-MM-DD-slug.md  # Date-prefixed markdown files
-├── templates/
-│   ├── base.html           # Base layout (header, footer)
-│   ├── index.html          # Post listing
-│   ├── post.html           # Individual post
-│   └── 404.html
-├── static/
-│   └── css/
-│       └── style.css
-└── docs/                   # Cursor context files (this folder)
+bryanrea.com/                  ← monorepo root, also the Nginx web root
+├── shared/                    ← shared assets (both sites reference these)
+│   ├── css/shared.css         # Design tokens, nav, link styles, background
+│   ├── js/main.js             # Background blob randomizer, nav scroll behavior
+│   └── img/noise.png          # Noise texture for the gradient overlay
+├── index.html, about/, ...    ← static portfolio site
+└── fragments/                 ← this Flask app
+    ├── app.py                 # Flask init, Blueprint registration, all routes
+    ├── requirements.txt
+    ├── posts/                 # Flat-file content store
+    │   └── YYYY-MM-DD-slug.md
+    ├── templates/
+    │   ├── base.html          # Base layout (loads /shared/css/shared.css + /shared/js/main.js)
+    │   ├── index.html         # Post listing
+    │   ├── post.html          # Individual post
+    │   └── 404.html
+    ├── static/
+    │   └── css/style.css      # Blog-specific styles only
+    └── docs/                  # Context files (this folder)
 ```
 
 ## Request Flow
 ```
-Browser → Firewall → Nginx (SSL) → Gunicorn → Flask → Blueprint → Route handler → Template
+Browser → Nginx (SSL) → either:
+                        ├── /fragments/* → Gunicorn → Flask → Blueprint → Template
+                        ├── /sitemap.xml → Gunicorn → Flask
+                        └── /shared/*, /, /about, etc. → Nginx static files
 ```
 
 Nginx routes:
-- `/fragments/*` → proxied to Flask/Gunicorn
-- `/` → serves static portfolio site files directly
+- `/fragments/*` → proxied to Flask/Gunicorn on `127.0.0.1:8000`
+- `/sitemap.xml` → proxied to Flask (generated dynamically)
+- everything else → static files served directly from `/var/www/bryanrea.com/` (portfolio HTML, `shared/` assets, etc.)
 
 ## Routing
 All blog routes live under the `fragments_bp` Blueprint with `url_prefix='/fragments'`:
 - `GET /fragments/` — homepage, lists all posts
-- `GET /fragments/post/<slug>` — individual post
+- `GET /fragments/post/<slug>` — individual post (with prev/next neighbors)
 
-Two routes live on the bare Flask app (outside Blueprint):
-- `GET /sitemap.xml` — dynamically generated XML sitemap
-- `GET /` — redirects to `/fragments/`
+Three routes live on the bare Flask app (outside the Blueprint):
+- `GET /sitemap.xml` — dynamically generated XML sitemap (includes portfolio URLs + blog URLs)
+- `GET /` — redirects to `/fragments/` (only fires in local dev; in production Nginx serves the portfolio at `/`)
+- `GET /shared/<path:filename>` — serves shared assets in local dev only. In production, Nginx serves `/shared/*` directly and this route is never hit.
 
 ## Post Loading
 `get_posts()` in `app.py` scans `posts/` on every request:
@@ -58,7 +73,9 @@ Two routes live on the bare Flask app (outside Blueprint):
 3. Extracts slug from filename (strips `YYYY-MM-DD-` prefix)
 4. Returns list sorted by date descending
 
-`get_post(slug)` does the same for a single file, then additionally converts markdown body → HTML.
+`get_post(slug)` does the same for a single file, then converts the markdown body → HTML.
+
+`get_post_neighbors(slug)` returns the previous (older) and next (newer) posts for prev/next navigation.
 
 **Note:** No caching — filesystem read on every request. Fine at current scale.
 
@@ -66,7 +83,7 @@ Two routes live on the bare Flask app (outside Blueprint):
 ```yaml
 ---
 title: Post Title
-date: 2024-11-09
+date: 2026-04-27
 excerpt: Short description shown on listing page
 tags: [tag1, tag2]   # In the file; not yet copied into post dicts or templates
 ---
@@ -74,16 +91,27 @@ tags: [tag1, tag2]   # In the file; not yet copied into post dicts or templates
 
 Tags may appear in frontmatter, but `get_posts()` / `get_post()` do not add them to the objects passed to templates yet — so they are not rendered until that wiring exists.
 
-## SEO
+## Shared Assets
 
-- **`/sitemap.xml`** — generated by this Flask app (includes blog URLs and selected main-site URLs).
-- **`robots.txt`** — not served by this repo; it lives at the site root with the static portfolio (or Nginx), alongside content outside the Fragments app.
+The Flask templates load shared CSS/JS via hardcoded absolute paths:
+```html
+<link rel="stylesheet" href="/shared/css/shared.css">
+<script src="/shared/js/main.js" defer></script>
+```
+
+- **In production**, Nginx serves these directly from `/var/www/bryanrea.com/shared/` — fast, no Flask involvement.
+- **In local dev**, the `shared_static` route in `app.py` serves them via `send_from_directory` so styles still load when running `python3 app.py`.
+
+## SEO
+- `/sitemap.xml` — generated by this Flask app (includes both blog URLs and portfolio URLs).
+- `robots.txt` — lives at the monorepo root (`../robots.txt`), served by Nginx as a static file.
 
 ## Template Inheritance
 ```
 base.html
 ├── index.html   (extends base)
-└── post.html    (extends base)
+├── post.html    (extends base)
+└── 404.html     (extends base)
 ```
 
 ## ProxyFix Middleware
@@ -92,5 +120,5 @@ base.html
 ## Code Style
 - Semantic HTML5
 - PEP 8 Python
-- Comment security-related decisions
+- Comment security-related or non-obvious decisions
 - Prioritize clarity and explainability over cleverness

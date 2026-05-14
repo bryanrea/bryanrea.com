@@ -134,25 +134,63 @@ journalctl -u fragments-blog -n 50  # Last 50 log lines
 
 ## Standard Deploy Workflow
 
+**Pushing to `main` auto-deploys the site.** A GitHub Actions workflow SSHes into the server, pulls the latest code, restarts the Flask service, and verifies it's running — usually within ~30 seconds of the push completing.
+
 ```bash
-# 1. SSH into the server
+# Local
+git add .
+git commit -m "..."
+git push origin main
+# That's it. Watch the Actions tab on GitHub to see the deploy run.
+```
+
+The workflow lives at `.github/workflows/deploy.yml` and is also runnable manually from the **Actions** tab via the "Run workflow" button. Useful for re-deploying after a server-side change.
+
+### What the workflow does
+
+```yaml
+script: |
+  set -e
+  cd /var/www/bryanrea.com
+  git pull origin main
+  systemctl restart fragments-blog
+  systemctl is-active fragments-blog
+```
+
+`set -e` halts on any failure. `is-active` makes the Action fail loudly if Gunicorn crashes during restart instead of silently going green.
+
+### Required GitHub repo secrets
+
+| Name | Value |
+|------|-------|
+| `SSH_HOST` | `bryanrea.com` |
+| `SSH_USER` | `root` |
+| `SSH_KEY` | full contents of the deploy private key (`-----BEGIN OPENSSH PRIVATE KEY-----` to `-----END OPENSSH PRIVATE KEY-----`) |
+
+The matching public key lives in `/root/.ssh/authorized_keys` on the server.
+
+### When `requirements.txt` changes
+
+The workflow does **not** re-run `pip install` automatically. If you add a Python dependency, SSH in once after deploying to install it:
+
+```bash
 ssh root@bryanrea.com
-
-# 2. Pull latest code
-cd /var/www/bryanrea.com
-git pull origin main
-
-# 3. If Python dependencies changed (requirements.txt was updated)
-cd fragments
+cd /var/www/bryanrea.com/fragments
 source venv/bin/activate
 pip install -r requirements.txt
 deactivate
-cd ..
-
-# 4. Restart the Flask app
 systemctl restart fragments-blog
+```
 
-# 5. Confirm it's running
+(Worth adding to the workflow eventually if dependency changes become common — for now, manual is fine since they're rare.)
+
+### Manual deploy (if Actions is down or you're debugging)
+
+```bash
+ssh root@bryanrea.com
+cd /var/www/bryanrea.com
+git pull origin main
+systemctl restart fragments-blog
 systemctl status fragments-blog
 ```
 

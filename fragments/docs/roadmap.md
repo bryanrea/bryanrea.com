@@ -22,22 +22,23 @@ Build-in-public project documenting what AI coding assistants can and can't do f
 | 6 | Redesign: warm palette, Fraunces/Inter fonts, nav scroll reveal | ✅ Done |
 | 7 | Previous/Next post navigation, Fathom Analytics | ✅ Done |
 | 8 | Monorepo consolidation, shared design system, visual unification | ✅ Done |
-| 9 | Search functionality | ⬜ Not started |
-| 10 | Rich content (code highlighting, images) | ⬜ Not started |
-| 11 | Comments or webmentions | ⬜ Not started |
-| 12 | RSS feed, performance & polish | ⬜ Not started |
+| 9 | RSS feed, auto-deploy via GitHub Actions, archive modernization | ✅ Done |
+| 10 | Reading time, tags, image support | ⬜ Not started |
+| 11 | Search, rich content (code highlighting) | ⬜ Not started |
+| 12 | Comments/webmentions, performance & polish | ⬜ Not started |
 
 ---
 
 ## Current Backlog
 
-1. **Tag system** — tags already in frontmatter, need to render + make clickable
-2. **Reading time estimate** — "5 min read" on listing and post pages
-3. **RSS feed** — standard Atom/RSS
-4. **Search** — client-side search with generated index
-5. **Admin interface** — web-based post editor (deferred until core blog is stable)
-6. **Accessibility audit**
-7. **Performance** — caching, compression, image optimization
+1. **Reading time estimate** — "5 min read" on listing and post pages
+2. **Tag system** — tags already in frontmatter, need to render + make clickable
+3. **Image support in posts** — confirm workflow for adding images to markdown posts and how they get sized/styled
+4. **Search** — client-side search with generated index (defer until post count grows)
+5. **Code highlighting** — Pygments via the existing `codehilite` markdown extension; needs a stylesheet
+6. **Admin interface** — web-based post editor (deferred until core blog is stable)
+7. **Accessibility audit**
+8. **Performance** — caching, compression, image optimization
 
 ---
 
@@ -48,3 +49,5 @@ Build-in-public project documenting what AI coding assistants can and can't do f
 - **Monorepo:** Static portfolio (`bryanrea.com`) and Flask blog (`fragments`) consolidated into a single GitHub repo (`bryanrea.com`). Shared CSS, JS, and assets now live in `shared/` and are referenced by both sites — one edit ripples everywhere.
 - **Pure CSS:** No frameworks. Easier to understand, easier to explain in blog posts.
 - **Shared design system:** Design tokens, nav styles, background animation, and link styles extracted into `shared/css/shared.css` and `shared/js/main.js`. Both sites now look and feel like one cohesive thing.
+- **Auto-deploy:** GitHub Actions workflow at `.github/workflows/deploy.yml` SSHes into the DO server on every push to `main`, runs `git pull` and `systemctl restart fragments-blog`. Manual SSH is now the fallback, not the default.
+- **RSS over Atom:** Feed served at `/fragments/feed.xml` is RSS 2.0 (not Atom) since "RSS" is the universally recognized name. Includes both `<description>` (excerpt) and `<content:encoded>` (full HTML) so readers can show either summary or full text. Auto-discovery `<link>` in `base.html` so feed readers find it from any page.

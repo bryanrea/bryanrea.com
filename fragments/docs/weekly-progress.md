@@ -1,6 +1,73 @@
 # Weekly Progress Log
 
 
+## Week 8: Monorepo, Shared Design System & Visual Unification
+
+**Date:** May 14, 2026  
+**Hours Spent:** ~3 hours
+
+### ✅ Completed
+
+**Monorepo Consolidation:**
+- Merged the static portfolio (`bryanrea.com`) and Fragments blog into a single GitHub repo (`bryanrea.com`)
+- Portfolio files live at the repo root; Flask blog lives in `fragments/`; shared assets in `shared/`
+- Removed the nested `.git` from the old fragments repo to integrate it cleanly
+- Single `git pull` on the server now updates both sites
+
+**Shared Design System:**
+- Extracted duplicated CSS into `shared/css/shared.css`: design tokens (colors, fonts, spacing), global link styles, and the full site nav
+- Moved the background animation JS and blob phase randomizer into `shared/js/main.js`, replacing an inline `<script>` in the Flask template
+- Moved `noise.png` into `shared/img/` so Flask's local dev route can serve it without a separate Nginx location block
+- Both sites now reference the shared files — one change propagates everywhere
+
+**Visual Unification:**
+- Added the animated gradient background (two blobs + noise texture) to Fragments — it was previously only on the portfolio
+- Unified border/divider color: switched from opaque cream (`#EDE5D5`) to semi-transparent cream (`rgba(237, 229, 213, 0.5)`) so dividers look soft on the gradient instead of harsh
+- Unified link styling across both sites: ink-colored text, soft red underline (`--color-accent-soft`), full red on hover — matches the portfolio exactly
+- Removed redundant `font-weight`, `font-size`, and `color` overrides from `.read-more` so it inherits cleanly from the global link style
+
+**Server Deployment:**
+- Discovered the monorepo's Nginx root (`/var/www/bryanrea.com`) was already correct — no Nginx path changes needed for the portfolio
+- Wrote a proper systemd service file (`fragments-blog.service`) — the old one was missing the `[Unit]`, `[Service]`, and `[Install]` sections entirely, which is why it had never been properly managed
+- Discovered an old `fragments.service` was still running the previous Flask app from `/var/www/fragments`, blocking the new service from binding to port 8000. Stopped and disabled it.
+- Enabled `fragments-blog.service` to auto-start on reboot (it hadn't been enabled before)
+
+### 🤖 What AI Did Well
+
+- Identified the monorepo structure that kept deployment complexity low (no Nginx changes for the portfolio)
+- Tracked the CSS specificity cascade precisely — knowing that `a:not([class])` in reset.css has higher specificity than `a` in shared.css, and that `text-decoration` shorthand resets `text-decoration-color`, were non-obvious bugs that would have taken a long time to find manually
+- Diagnosed the 502 error methodically: checked the socket, found the port conflict, found the stale service
+- Wrote a comprehensive deployment doc that explains *why* each piece exists, not just what commands to run
+
+### 🔧 Where AI Struggled / What I Had to Fix
+
+- Initially tried Unix socket for Gunicorn instead of a port — added complexity without benefit given the existing Nginx config used a port. Caught quickly but required a round-trip.
+- The systemd service file I pasted into the server got corrupted (only the two path lines survived). Had to rewrite the whole file from scratch via `cat >`. Would have been faster to just open the file properly.
+
+### 💡 Key Learnings
+
+**On the monorepo:**
+- Two repos that share design tokens is a maintenance trap. Every visual tweak becomes two edits. Monorepo with a `shared/` folder solves this with almost no extra complexity.
+- Relative paths in CSS `url()` are relative to the CSS file, not the HTML that loads it — critical for `noise.png` to resolve correctly from `shared/css/`.
+
+**On CSS:**
+- The `text-decoration` shorthand silently resets `text-decoration-color` to `currentColor`. If you set `text-decoration-color` on `a` and then a child rule re-declares `text-decoration: underline`, your color is gone.
+- Semi-transparent colors (`rgba`) for borders are more versatile than opaque ones — they work on any background color, not just the one you designed for.
+
+**On the server:**
+- Always check `ss -tlnp | grep <port>` when a service won't start — another process may already own the port.
+- `systemctl list-units | grep <name>` reveals old/duplicate services that are easy to forget about.
+- A systemd service file with missing section headers (`[Unit]`, `[Service]`, `[Install]`) will fail silently on reload but show "bad unit file setting" on restart.
+
+### 🌐 Result
+
+- Both sites (`bryanrea.com` and `bryanrea.com/fragments`) served from one repo, one server directory
+- Consistent visual identity: same palette, fonts, nav, background, link behavior
+- Deployment is simpler: `git pull` + `systemctl restart fragments-blog`
+- `fragments-blog.service` now properly enabled and auto-starts on reboot
+
+---
+
 ## Week 2: Migrating from Render to DigitalOcean
 
 **Date:** January 12, 2026  

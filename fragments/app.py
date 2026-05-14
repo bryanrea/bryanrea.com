@@ -2,7 +2,9 @@ from flask import Flask, render_template, abort, Blueprint, redirect, url_for, R
 import markdown
 import frontmatter
 import os
-from datetime import datetime
+from datetime import datetime, timezone
+from email.utils import format_datetime
+from html import escape
 from dateutil import parser as date_parser
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -156,6 +158,70 @@ def post(slug):
     neighbors = get_post_neighbors(slug)
     return render_template('post.html', post=post_data, neighbors=neighbors)
 
+@fragments_bp.route('/feed.xml')
+def feed():
+    """RSS 2.0 feed of all posts.
+
+    Includes both a short description (excerpt) and the full HTML body
+    via content:encoded, so readers can show whatever they prefer.
+    """
+    base_url = 'https://bryanrea.com'
+    feed_url = f'{base_url}/fragments/feed.xml'
+    site_url = f'{base_url}/fragments'
+
+    posts = get_posts()
+
+    def to_rfc822(d):
+        """Convert a date or datetime to an RFC 822 string (RSS requirement)."""
+        if d is None:
+            return ''
+        if isinstance(d, datetime):
+            dt = d if d.tzinfo else d.replace(tzinfo=timezone.utc)
+        else:
+            # date object -> midnight UTC
+            dt = datetime.combine(d, datetime.min.time(), tzinfo=timezone.utc)
+        return format_datetime(dt)
+
+    items = []
+    for post in posts:
+        post_url = f'{base_url}/fragments/post/{post["slug"]}'
+        html_content = markdown.markdown(
+            post['content'],
+            extensions=['fenced_code', 'codehilite', 'tables']
+        )
+        items.append(
+            f'    <item>\n'
+            f'      <title>{escape(post["title"])}</title>\n'
+            f'      <link>{post_url}</link>\n'
+            f'      <guid isPermaLink="true">{post_url}</guid>\n'
+            f'      <pubDate>{to_rfc822(post["date"])}</pubDate>\n'
+            f'      <description>{escape(post.get("excerpt", ""))}</description>\n'
+            f'      <content:encoded><![CDATA[{html_content}]]></content:encoded>\n'
+            f'    </item>'
+        )
+
+    # lastBuildDate = newest post date, or now if no posts
+    last_build = to_rfc822(posts[0]['date']) if posts else format_datetime(datetime.now(timezone.utc))
+
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0"\n'
+        '     xmlns:atom="http://www.w3.org/2005/Atom"\n'
+        '     xmlns:content="http://purl.org/rss/1.0/modules/content/">\n'
+        '  <channel>\n'
+        '    <title>Fragments</title>\n'
+        f'    <link>{site_url}</link>\n'
+        f'    <atom:link href="{feed_url}" rel="self" type="application/rss+xml" />\n'
+        '    <description>Building with AI, in public. A blog by Bryan Rea.</description>\n'
+        '    <language>en-us</language>\n'
+        f'    <lastBuildDate>{last_build}</lastBuildDate>\n'
+        + '\n'.join(items) + '\n'
+        '  </channel>\n'
+        '</rss>\n'
+    )
+
+    return Response(xml, mimetype='application/rss+xml')
+
 @app.route('/sitemap.xml')
 def site_sitemap():
     """Generate XML sitemap for entire bryanrea.com site"""
@@ -173,6 +239,7 @@ def site_sitemap():
         {'loc': f'{base_url}/archive', 'priority': '0.6', 'changefreq': 'yearly'},
         {'loc': f'{base_url}/resume.pdf', 'priority': '0.8', 'changefreq': 'monthly'},
         {'loc': f'{base_url}/fragments', 'priority': '0.9', 'changefreq': 'weekly'},
+        {'loc': f'{base_url}/fragments/feed.xml', 'priority': '0.5', 'changefreq': 'weekly'},
     ]
     
     for page in static_pages:

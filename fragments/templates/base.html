@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="/shared/css/shared.css">
     <link rel="stylesheet" href="{{ url_for('fragments.static', filename='css/style.css') }}">
 
+    <!-- RSS feed auto-discovery -->
+    <link rel="alternate" type="application/rss+xml" title="Fragments RSS Feed" href="{{ url_for('fragments.feed') }}">
+
     <!-- Fathom Analytics -->
     <script
       src="https://cdn.usefathom.com/script.js"
@@ -61,7 +64,7 @@
 
     <footer>
         <div class="container">
-            <p>Built with AI • <a href="https://github.com/bryanrea/bryanrea.com" target="_blank">View Source</a></p>
+            <p>Built with AI • <a href="https://github.com/bryanrea/bryanrea.com" target="_blank">View Source</a> • <a href="{{ url_for('fragments.feed') }}">RSS</a></p>
         </div>
     </footer>
 

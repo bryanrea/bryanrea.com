@@ -94,12 +94,15 @@ def get_post(slug):
                         post.content,
                         extensions=['fenced_code', 'codehilite', 'tables']
                     )
-                    
+
+                    word_count = len(post.content.split())
+
                     return {
                         'title': post.get('title', 'Untitled'),
                         'date': post.get('date'),
                         'content': html_content,
-                        'slug': slug
+                        'slug': slug,
+                        'reading_time': max(1, math.ceil(word_count / 200)),
                     }
     
     return None

@@ -209,6 +209,7 @@ main {
 
 .post-header .post-meta {
     margin-bottom: 0;
+    justify-content: center;
 }
 
 .post-content {

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, abort, Blueprint, redirect, url_for, Response, send_from_directory
+import math
 import markdown
 import frontmatter
 import os
@@ -48,13 +49,15 @@ def get_posts():
                     slug = slug[11:]  # Remove YYYY-MM-DD- prefix
                 
                 # Create post object
+                word_count = len(post.content.split())
                 post_data = {
                     'title': post.get('title', 'Untitled'),
                     'date': post.get('date'),
                     'excerpt': post.get('excerpt', ''),
                     'content': post.content,
                     'slug': slug,
-                    'filename': filename
+                    'filename': filename,
+                    'reading_time': max(1, math.ceil(word_count / 200)),
                 }
                 
                 posts.append(post_data)

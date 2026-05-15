@@ -8,9 +8,12 @@
         {% for post in posts %}
         <article class="post-preview">
             <h2><a href="{{ url_for('fragments.post', slug=post.slug) }}">{{ post.title }}</a></h2>
-            <time class="post-date" datetime="{{ post.date }}">
-                {{ post.date.strftime('%B %d, %Y') if post.date else 'No date' }}
-            </time>
+            <div class="post-meta">
+                <time class="post-date" datetime="{{ post.date }}">
+                    {{ post.date.strftime('%B %d, %Y') if post.date else 'No date' }}
+                </time>
+                <span class="post-reading-time">{{ post.reading_time }} min read</span>
+            </div>
             
             {% if post.excerpt %}
                 <p class="post-excerpt">{{ post.excerpt }}</p>

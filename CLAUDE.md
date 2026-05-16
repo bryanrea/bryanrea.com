@@ -53,6 +53,12 @@ tags: [tag1, tag2]
 
 Filename format: `YYYY-MM-DD-slug-here.md`. Required fields: `title`, `date`, `excerpt`. Tags are optional; each tag gets a `/fragments/tag/<tag>` page (404s if no posts match).
 
+## Cache busting
+
+**Fragments blog** — `app.py` has a context processor that injects `cache_bust` (the current git short hash) into every template. `base.html` appends `?v={{ cache_bust }}` to all CSS and JS URLs. This updates automatically on every deploy — no manual work needed.
+
+**Static portfolio** (`index.html`, `about/index.html`, `experience/index.html`) — version strings are hardcoded in the HTML (e.g. `shared.css?v=acec136`). When pushing CSS or JS changes that affect the portfolio, update the hash in these three files to match the new commit hash (`git rev-parse --short HEAD`).
+
 ## Conventions
 
 - All blog routes go in `fragments_bp`; keep route handlers thin — logic belongs in helpers

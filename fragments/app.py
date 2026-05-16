@@ -3,6 +3,7 @@ import math
 import markdown
 import frontmatter
 import os
+import subprocess
 from datetime import datetime, timezone
 from email.utils import format_datetime
 from html import escape
@@ -10,6 +11,17 @@ from dateutil import parser as date_parser
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
+
+@app.context_processor
+def inject_cache_bust():
+    try:
+        rev = subprocess.check_output(
+            ['git', 'rev-parse', '--short', 'HEAD'],
+            stderr=subprocess.DEVNULL
+        ).decode().strip()
+    except Exception:
+        rev = '1'
+    return {'cache_bust': rev}
 
 # Configure for reverse proxy
 app.wsgi_app = ProxyFix(

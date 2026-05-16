@@ -2,6 +2,7 @@
 title: "Faster! But Towards What?"
 date: 2026-04-27
 excerpt: "To increase velocity, you need to know where you're going"
+tags: [thinking, velocity, product, vision]
 ---
 
 All I hear these days is we need to _go faster_. I get it. AI is certainly making it possible to do more. I have multiple agents running in the background _right now_ doing more than I could have ever possibly done before. And with everyone roughly unlocking these new AI super powers in unison, there's a ton of pressure to keep up, to speed up, to deliver more, to say yes or get left behind. 

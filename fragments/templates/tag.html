@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "_macros.html" import post_preview %}
+
+{% block title %}Posts tagged "{{ tag }}" - Fragments{% endblock %}
+{% block meta_description %}All Fragments posts tagged "{{ tag }}".{% endblock %}
+
+{# Tag pages omit the site identity header — the post list is the focus. #}
+{% block site_header %}{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('fragments.index') }}" class="back-link back-link-top">← All posts</a>
+
+<div class="tag-header">
+    <h1 class="tag-pill">{{ tag }}</h1>
+    <p class="tag-count">{{ posts|length }} post{{ '' if posts|length == 1 else 's' }}</p>
+</div>
+
+<div class="posts-list">
+    {% for post in posts %}
+    {{ post_preview(post) }}
+    {% endfor %}
+</div>
+{% endblock %}

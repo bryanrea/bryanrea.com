@@ -29,13 +29,13 @@ header.hero {
   text-align: center;
 }
 
-.hero__name {
+.hero-name {
   display: inline-block;
   position: relative;
   text-align: left;
 }
 
-.hero__name h1 {
+.hero-name h1 {
   font-family: var(--font-serif);
   font-style: normal;
   font-variation-settings: "opsz" 144;
@@ -47,7 +47,7 @@ header.hero {
   margin: 0;
 }
 
-.hero__name .tagline {
+.hero-name .tagline {
   position: absolute;
   top: 100%;
   margin-top: -.4em;
@@ -134,7 +134,7 @@ i {
     letter-spacing: -0.035em;
   }
 
-  .hero__name .tagline {
+  .hero-name .tagline {
     font-size: 0.88rem;
   }
 

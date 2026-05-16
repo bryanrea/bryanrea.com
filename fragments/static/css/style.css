@@ -185,6 +185,47 @@ main {
     display: inline-block;
 }
 
+/* ===========================
+   Tags
+   =========================== */
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+}
+
+.tag {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-muted);
+    text-decoration: none;
+    /* Uppercase glyphs ride high in the line box; extra top padding re-centers them. */
+    padding: 0.26rem 0.5rem 0.14rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 8px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.tag:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent-soft);
+}
+
+/* Tags sit below the read-more link on listing previews */
+.post-preview .tag-list {
+    margin-top: 1rem;
+}
+
+/* Tags centered under the meta row in the post header */
+.post-header .tag-list {
+    justify-content: center;
+    margin-top: 1rem;
+}
 
 .no-posts {
     text-align: center;
@@ -317,19 +358,19 @@ main {
     margin-bottom: 0;
 }
 
-.post-nav__item {
+.post-nav-item {
     min-height: 1px;
 }
 
-.post-nav__item--previous {
+.post-nav-prev {
     text-align: left;
 }
 
-.post-nav__item--next {
+.post-nav-next {
     text-align: right;
 }
 
-.post-nav__item a {
+.post-nav-item a {
     display: block;
     color: var(--color-ink);
     text-decoration: none;
@@ -340,13 +381,13 @@ main {
     transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-.post-nav__item a:hover {
+.post-nav-item a:hover {
     border-color: var(--color-accent);
     background-color: var(--color-surface-soft);
     color: var(--color-ink);
 }
 
-.post-nav__label {
+.post-nav-label {
     display: block;
     font-family: var(--font-sans);
     font-size: 0.72rem;
@@ -357,7 +398,7 @@ main {
     margin-bottom: 0.25rem;
 }
 
-.post-nav__title {
+.post-nav-title {
     display: block;
     font-family: var(--font-serif);
     font-style: normal;
@@ -380,12 +421,47 @@ main {
     color: var(--color-accent);
 }
 
-.back-link--top {
+.back-link-top {
     font-family: var(--font-sans);
     font-size: 0.85rem;
     font-weight: 500;
     letter-spacing: 0.02em;
     margin: 2rem 0 1rem;
+}
+
+/* ===========================
+   Tag page
+   =========================== */
+.tag-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.tag-pill {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 2.6rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: normal;
+    line-height: 1;
+    color: var(--color-accent);
+    /* Uppercase glyphs ride high in the line box; extra top padding re-centers them. */
+    padding: 0.35em 0.8em 0.29em;
+    border: 2px solid var(--color-accent-soft);
+    border-radius: 24px;
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tag-count {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-muted);
+    margin-bottom: 0;
 }
 
 /* ===========================
@@ -448,7 +524,8 @@ footer a:hover {
         letter-spacing: -0.035em;
     }
 
-    .post-preview h2 {
+    .post-preview h2,
+    .tag-pill {
         font-size: 1.85rem;
     }
 
@@ -463,7 +540,7 @@ footer a:hover {
         gap: 0.75rem;
     }
 
-    .post-nav__item--next {
+    .post-nav-next {
         text-align: left;
     }
 }

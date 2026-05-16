@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_macros.html" import tag_list %}
 
 {% block title %}{{ post.title }} - Fragments{% endblock %}
 
@@ -8,7 +9,7 @@
 {% block site_header %}{% endblock %}
 
 {% block content %}
-<a href="{{ url_for('fragments.index') }}" class="back-link back-link--top">← All posts</a>
+<a href="{{ url_for('fragments.index') }}" class="back-link back-link-top">← All posts</a>
 
 <article class="post-full">
     <header class="post-header">
@@ -19,6 +20,7 @@
             </time>
             <span class="post-reading-time">{{ post.reading_time }} min read</span>
         </div>
+        {{ tag_list(post.tags) }}
     </header>
 
     <div class="post-content">
@@ -28,19 +30,19 @@
     {% if neighbors and (neighbors.previous or neighbors.next) %}
     <footer class="post-footer">
         <nav class="post-nav" aria-label="Post navigation">
-            <div class="post-nav__item post-nav__item--previous">
+            <div class="post-nav-item post-nav-prev">
                 {% if neighbors.previous %}
                     <a href="{{ url_for('fragments.post', slug=neighbors.previous.slug) }}">
-                        <span class="post-nav__label">← Previous</span>
-                        <span class="post-nav__title">{{ neighbors.previous.title }}</span>
+                        <span class="post-nav-label">← Previous</span>
+                        <span class="post-nav-title">{{ neighbors.previous.title }}</span>
                     </a>
                 {% endif %}
             </div>
-            <div class="post-nav__item post-nav__item--next">
+            <div class="post-nav-item post-nav-next">
                 {% if neighbors.next %}
                     <a href="{{ url_for('fragments.post', slug=neighbors.next.slug) }}">
-                        <span class="post-nav__label">Next →</span>
-                        <span class="post-nav__title">{{ neighbors.next.title }}</span>
+                        <span class="post-nav-label">Next →</span>
+                        <span class="post-nav-title">{{ neighbors.next.title }}</span>
                     </a>
                 {% endif %}
             </div>

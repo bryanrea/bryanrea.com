@@ -63,11 +63,11 @@ a:hover {
    Layout: HOME / ABOUT on the left, EXPERIENCE / FRAGMENTS on the
    right, "Bryan Rea" centered. The center title is hidden by
    default — once the hero scrolls past, JS toggles
-   .site-nav--title-visible and the small "Bryan Rea" mark flies in.
+   .nav-title-visible and the small "Bryan Rea" mark flies in.
    On pages without a hero (post pages, subpages), the title shows
    immediately via JS adding the class on load.
    =========================== */
-.site-nav {
+.nav {
     position: fixed;
     top: 0;
     left: 0;
@@ -82,11 +82,11 @@ a:hover {
     padding: 0 32px;
 }
 
-.site-nav--scrolled {
+.nav-scrolled {
     border-bottom-color: var(--color-rule);
 }
 
-.site-nav__inner {
+.nav-inner {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
@@ -94,23 +94,23 @@ a:hover {
     height: 100%;
 }
 
-.site-nav__group {
+.nav-group {
     display: flex;
     align-items: center;
     gap: 2rem;
 }
 
-.site-nav__group--left {
+.nav-start {
     grid-column: 1;
     justify-self: start;
 }
 
-.site-nav__group--right {
+.nav-end {
     grid-column: 3;
     justify-self: end;
 }
 
-.site-nav__group a {
+.nav-group a {
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-size: 0.78rem;
@@ -121,12 +121,12 @@ a:hover {
     transition: color 0.15s ease;
 }
 
-.site-nav__group a:hover {
+.nav-group a:hover {
     color: var(--color-accent);
 }
 
 /* Brand title that flies in on scroll. */
-.site-nav__title {
+.nav-title {
     grid-column: 2;
     justify-self: center;
     font-family: var(--font-serif);
@@ -146,13 +146,13 @@ a:hover {
     pointer-events: none;
 }
 
-.site-nav--title-visible .site-nav__title {
+.nav-title-visible .nav-title {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
 }
 
-.site-nav__title:hover {
+.nav-title:hover {
     color: var(--color-accent);
 }
 
@@ -160,20 +160,20 @@ a:hover {
    Responsive nav
    =========================== */
 @media (max-width: 768px) {
-    .site-nav {
+    .nav {
         padding: 0 16px;
     }
 
-    .site-nav__group {
+    .nav-group {
         gap: 1rem;
     }
 
-    .site-nav__group a {
+    .nav-group a {
         font-size: 0.72rem;
         letter-spacing: 0.1em;
     }
 
-    .site-nav__title {
+    .nav-title {
         display: none;
     }
 }

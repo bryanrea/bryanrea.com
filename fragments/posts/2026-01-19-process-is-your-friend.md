@@ -2,6 +2,7 @@
 title: "Process is Your Friend"
 date: 2026-01-19
 excerpt: "People love to complain about process while simultaneously not delivering great results"
+tags: [process, leadership]
 ---
 
 Whenever someone complains about process, I like to remind them of the definition (I swear I'm fun at parties). Process is just "a series of actions or steps taken in order to achieve a particular end". That's it. Nothing more. Nothing less. Repeatable steps to achieve a desired outcome. So when they complain, I ask if it's the desired outcome part they have a problem with or the repeatable steps?

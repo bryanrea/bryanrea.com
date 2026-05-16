@@ -1,6 +1,37 @@
 # Weekly Progress Log
 
 
+## Week 10: Reading Time & Tag System
+
+**Date:** May 15, 2026
+
+### ✅ Completed
+
+**Reading time:**
+- Word-count estimate (words ÷ 200, minimum 1 min) computed in `get_posts()` and `get_post()`, shown as "X min read" beside the date on both the listing and post pages.
+
+**Tag system:**
+- Added tags to all four posts' frontmatter and wired `tags` into the post dicts in both helper functions.
+- New `/fragments/tag/<tag>` route — dynamically lists every post carrying a tag, 404s if none match. Adding a tag to frontmatter creates its page automatically; no per-tag setup.
+- Tags render as clickable pills on the listing and post pages; each links to its tag page. The tag page header shows the tag as a larger version of the same pill.
+- Extracted `_macros.html` with `tag_list` and `post_preview` macros so the post-card markup isn't duplicated between the listing and the new tag page.
+
+### 🤖 What AI Did Well
+- Caught that `get_posts()` and `get_post()` are separate code paths — both the reading-time and tag wiring had to land in each, easy to miss one.
+- Suggested the macro extraction so the tag page reused the post-preview markup instead of copying it.
+
+### 🔧 Where AI Struggled / What I Had to Fix
+- First pass added reading time only to `get_posts()`, so post pages rendered "MIN READ" with no number until `get_post()` was fixed too.
+- Tag visual design took several rounds — pill vs. outline, fill color, size, corner radius, optical centering of the uppercase text. The look is a human call; AI iterated but I drove it.
+
+### 💡 Key Learnings
+- Uppercase text rides high in its line box (no descenders). Asymmetric padding — more on top than bottom — optically re-centers it without changing the element's height.
+
+### 🌐 Result
+Posts show reading time and clickable tags; tag pages are fully dynamic. Two of the three Week 10 items done — image support remains.
+
+---
+
 ## Week 9: RSS Feed, Auto-Deploy & Archive Modernization
 
 **Date:** May 2026

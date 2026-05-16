@@ -2,6 +2,7 @@
 title: Why I'm Building Fragments
 date: 2025-11-09
 excerpt: I'm vibe coding a simple blog from scratch to see what's possible, explore a world without platforms or intermediaries, and most importantly, create a place where I can think and write.
+tags: [vibe-coding, building, writing]
 ---
 
 ## I Like Writing

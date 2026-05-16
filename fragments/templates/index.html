@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_macros.html" import post_preview %}
 
 {% block title %}Fragments - Home{% endblock %}
 
@@ -6,23 +7,7 @@
 <div class="posts-list">
     {% if posts %}
         {% for post in posts %}
-        <article class="post-preview">
-            <h2><a href="{{ url_for('fragments.post', slug=post.slug) }}">{{ post.title }}</a></h2>
-            <div class="post-meta">
-                <time class="post-date" datetime="{{ post.date }}">
-                    {{ post.date.strftime('%B %d, %Y') if post.date else 'No date' }}
-                </time>
-                <span class="post-reading-time">{{ post.reading_time }} min read</span>
-            </div>
-            
-            {% if post.excerpt %}
-                <p class="post-excerpt">{{ post.excerpt }}</p>
-            {% else %}
-                <p class="post-excerpt">{{ post.content[:150] }}...</p>
-            {% endif %}
-            
-            <a href="{{ url_for('fragments.post', slug=post.slug) }}" class="read-more">Read more →</a>
-        </article>
+        {{ post_preview(post) }}
         {% endfor %}
     {% else %}
         <div class="no-posts">

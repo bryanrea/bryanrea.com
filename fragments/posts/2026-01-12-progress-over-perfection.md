@@ -2,6 +2,7 @@
 title: "Progress Over Perfection"
 date: 2026-01-12
 excerpt: "How I learned to stop worrying about perfect and started shipping again"
+tags: [design, vision, imperfection]
 ---
 
 I spent a good chunk of last year feeling stuck. Without getting into all the details, I was working on major evolution of our product vision. It was bold, it was exciting, it was pushing us into new territory... and it was taking forever. I want everything I do to be great. And, like many designers, one of my superpowers is to sense when something isn't. I worked myself into this little ball of stress and frustration because all I could see was the delta between where the vision was and where I wanted it to be. I was letting my push for perfection take the joy out of the progress we were making.

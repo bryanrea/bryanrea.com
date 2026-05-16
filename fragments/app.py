@@ -58,6 +58,7 @@ def get_posts():
                     'slug': slug,
                     'filename': filename,
                     'reading_time': max(1, math.ceil(word_count / 200)),
+                    'tags': post.get('tags', []) or [],
                 }
                 
                 posts.append(post_data)
@@ -103,6 +104,7 @@ def get_post(slug):
                         'content': html_content,
                         'slug': slug,
                         'reading_time': max(1, math.ceil(word_count / 200)),
+                        'tags': post.get('tags', []) or [],
                     }
     
     return None
@@ -163,6 +165,16 @@ def post(slug):
 
     neighbors = get_post_neighbors(slug)
     return render_template('post.html', post=post_data, neighbors=neighbors)
+
+@fragments_bp.route('/tag/<tag>')
+def tag(tag):
+    """List all posts that carry a given tag."""
+    posts = [p for p in get_posts() if tag in p['tags']]
+
+    if not posts:
+        abort(404)
+
+    return render_template('tag.html', tag=tag, posts=posts)
 
 @fragments_bp.route('/feed.xml')
 def feed():

@@ -35,8 +35,10 @@ bryanrea.com/                  ← monorepo root, also the Nginx web root
     │   └── YYYY-MM-DD-slug.md
     ├── templates/
     │   ├── base.html          # Base layout (loads /shared/css/shared.css + /shared/js/main.js)
+    │   ├── _macros.html       # Reusable fragments: post preview card, tag list
     │   ├── index.html         # Post listing
     │   ├── post.html          # Individual post
+    │   ├── tag.html           # Posts filtered by a single tag
     │   └── 404.html
     ├── static/
     │   └── css/style.css      # Blog-specific styles only
@@ -60,6 +62,7 @@ Nginx routes:
 All blog routes live under the `fragments_bp` Blueprint with `url_prefix='/fragments'`:
 - `GET /fragments/` — homepage, lists all posts
 - `GET /fragments/post/<slug>` — individual post (with prev/next neighbors)
+- `GET /fragments/tag/<tag>` — all posts carrying a given tag (404 if none match)
 - `GET /fragments/feed.xml` — RSS 2.0 feed of all posts
 
 Three routes live on the bare Flask app (outside the Blueprint):
@@ -86,11 +89,11 @@ Three routes live on the bare Flask app (outside the Blueprint):
 title: Post Title
 date: 2026-04-27
 excerpt: Short description shown on listing page
-tags: [tag1, tag2]   # In the file; not yet copied into post dicts or templates
+tags: [tag1, tag2]
 ---
 ```
 
-Tags may appear in frontmatter, but `get_posts()` / `get_post()` do not add them to the objects passed to templates yet — so they are not rendered until that wiring exists.
+`get_posts()` and `get_post()` both copy `tags` into the post dict (defaulting to an empty list). Tags render as clickable pills on the listing and post pages; each links to its `/fragments/tag/<tag>` page.
 
 ## Shared Assets
 

@@ -16,7 +16,7 @@
 // - Reveals the centered "Bryan Rea" title once the hero h1 scrolls out of
 //   view. On pages without a hero (post pages, subpages), shows it immediately.
 (function () {
-  const nav = document.querySelector(".site-nav");
+  const nav = document.querySelector(".nav");
   if (!nav) return;
 
   // Observe the big hero h1 if present. Using header.hero h1 means the
@@ -24,7 +24,7 @@
   const hero = document.querySelector("header.hero h1");
 
   function updateScrolled() {
-    nav.classList.toggle("site-nav--scrolled", window.scrollY > 8);
+    nav.classList.toggle("nav-scrolled", window.scrollY > 8);
   }
   window.addEventListener("scroll", updateScrolled, { passive: true });
   updateScrolled();
@@ -37,7 +37,7 @@
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          nav.classList.toggle("site-nav--title-visible", !entry.isIntersecting);
+          nav.classList.toggle("nav-title-visible", !entry.isIntersecting);
         });
       },
       { rootMargin: "-" + navHeight + " 0px 0px 0px", threshold: 0 }
@@ -45,6 +45,6 @@
     observer.observe(hero);
   } else {
     // No hero on this page — show nav title and border immediately.
-    nav.classList.add("site-nav--title-visible", "site-nav--scrolled");
+    nav.classList.add("nav-title-visible", "nav-scrolled");
   }
 })();

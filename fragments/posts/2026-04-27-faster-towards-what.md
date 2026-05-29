@@ -11,9 +11,9 @@ But I'm from the camp of less is more. Where the hard part isn't what you _can_ 
 
 I stumbled upon this post [Design is Dead. It’s All Evolution Now](https://ilyabirman.net/meanwhile/all/design-vs-evolution/) and it really stuck with me. "There was a time when products were designed with intent. Sections were organized into a hierarchy, features were given logical places. You could feel a system behind the product". That feels antiquated. That's not how teams operate these days. It's hundreds of small changes, keep the winners, roll back the losers. The result isn't an intentional product. It's an accumulation. 
 
-Maybe that's better? Evolution got us pretty far. 
+Maybe that's better? Evolution did get us pretty far. 
 
-Then again, that was over billions of years. The half-life of the tech companies is only about [5 years](https://www.bls.gov/bdm/us_age_naics_51_table7.txt).
+Then again, that was over billions of years. The half-life of the average tech company is only about [5 years](https://www.bls.gov/bdm/us_age_naics_51_table7.txt)...
 
 I think about this a lot. A few things I keep coming back to:
 

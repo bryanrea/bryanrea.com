@@ -5,7 +5,6 @@ excerpt: I'm vibe coding a simple blog from scratch to see what's possible, expl
 tags: [vibe-coding, building, writing]
 ---
 
-## I Like Writing
 I've always enjoyed writing. It helps me think. I haven't had a good forum for it since university. I'll be using this space to document my vibe coding experience and capture my thoughts on design, technology, psychology, and anything else that strikes my fancy. 
 
 ## Less is More

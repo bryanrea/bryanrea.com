@@ -32,6 +32,29 @@ tags: [flask, learning, ai]
 ---
 ```
 
+## Images in Posts
+- Store image files in `fragments/static/images/`. The blueprint serves them at
+  `/fragments/static/images/<filename>`.
+- Reference them in markdown with a standard image and **always include alt text**:
+
+  ```markdown
+  ![A descriptive alt text](/fragments/static/images/my-photo.jpg)
+  ```
+
+  These render responsive and centered (max-width 100%, rounded, light border).
+- For a **captioned** image, write a raw `<figure>` block in the markdown (python-markdown
+  passes raw HTML through untouched):
+
+  ```html
+  <figure>
+    <img src="/fragments/static/images/my-photo.jpg" alt="A descriptive alt text">
+    <figcaption>Caption text shown below the image.</figcaption>
+  </figure>
+  ```
+
+  Keep `alt` (for screen readers) distinct from the `figcaption` (visible context) —
+  don't just duplicate one into the other.
+
 ## Flask / Python Patterns
 - All blog routes live in the `fragments_bp` Blueprint
 - Helper functions (`get_posts`, `get_post`) handle filesystem reads

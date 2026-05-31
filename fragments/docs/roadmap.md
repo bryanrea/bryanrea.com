@@ -23,7 +23,7 @@ Build-in-public project documenting what AI coding assistants can and can't do f
 | 7 | Previous/Next post navigation, Fathom Analytics | ✅ Done |
 | 8 | Monorepo consolidation, shared design system, visual unification | ✅ Done |
 | 9 | RSS feed, auto-deploy via GitHub Actions, archive modernization | ✅ Done |
-| 10 | Reading time, tags, image support | 🟡 In progress |
+| 10 | Reading time, tags, image support | ✅ Done |
 | 11 | Search, rich content (code highlighting) | ⬜ Not started |
 | 12 | Comments/webmentions, performance & polish | ⬜ Not started |
 
@@ -31,14 +31,13 @@ Build-in-public project documenting what AI coding assistants can and can't do f
 
 ## Current Backlog
 
-1. **Image support in posts** — confirm workflow for adding images to markdown posts and how they get sized/styled
-2. **Search** — client-side search with generated index (defer until post count grows)
-3. **Code highlighting** — Pygments via the existing `codehilite` markdown extension; needs a stylesheet
-4. **Admin interface** — web-based post editor (deferred until core blog is stable)
-5. **Accessibility audit**
-6. **Performance** — caching, compression, image optimization
+1. **Search** — client-side search with generated index (defer until post count grows)
+2. **Code highlighting** — Pygments via the existing `codehilite` markdown extension; needs a stylesheet
+3. **Admin interface** — web-based post editor (deferred until core blog is stable)
+4. **Accessibility audit**
+5. **Performance** — caching, compression, image optimization
 
-> **Done:** reading time estimate and the tag system (Week 10) — see the weekly progress log.
+> **Done:** reading time estimate, the tag system, and image support (Week 10) — see the weekly progress log and `docs/conventions.md` for the image workflow.
 
 ---
 
@@ -51,4 +50,5 @@ Build-in-public project documenting what AI coding assistants can and can't do f
 - **Shared design system:** Design tokens, nav styles, background animation, and link styles extracted into `shared/css/shared.css` and `shared/js/main.js`. Both sites now look and feel like one cohesive thing.
 - **Auto-deploy:** GitHub Actions workflow at `.github/workflows/deploy.yml` SSHes into the DO server on every push to `main`, runs `git pull` and `systemctl restart fragments-blog`. Manual SSH is now the fallback, not the default.
 - **RSS over Atom:** Feed served at `/fragments/feed.xml` is RSS 2.0 (not Atom) since "RSS" is the universally recognized name. Includes both `<description>` (excerpt) and `<content:encoded>` (full HTML) so readers can show either summary or full text. Auto-discovery `<link>` in `base.html` so feed readers find it from any page.
+- **Images:** Stored in `fragments/static/images/` (blueprint serves them at `/fragments/static/images/<file>`) and referenced from markdown with a normal `![alt](…)`. No app.py change was needed — python-markdown already renders images and the blueprint already serves `static/`. The work was purely CSS (responsive, centered, rounded) plus a documented convention. Captions use a raw `<figure>`/`<figcaption>` block written directly in the markdown (python-markdown passes raw HTML through), keeping the common case a one-line markdown image while still allowing captions without a new extension. See `docs/conventions.md`.
 - **Dynamic tag pages:** Tags live in post frontmatter. The `/fragments/tag/<tag>` route filters posts at request time, so adding a tag to a post automatically creates its tag page — no code change, no per-tag setup. A page 404s if no post carries that tag. No standalone "all tags" index page; tags are discovered from posts. Reading time is computed the same way — derived at request time, never stored.

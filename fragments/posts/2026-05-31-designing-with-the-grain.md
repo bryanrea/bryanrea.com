@@ -1,7 +1,7 @@
 ---
-title: "Designing with the Grain: Thoughts on Designing with AI"
+title: "Designing with the Grain of AI"
 date: 2026-05-31
-excerpt: "Learnings from designing with the grain of AI"
+excerpt: "Start from the story, explore widely, steer it with your taste, and design the whole system, not slivers"
 tags: [design, ai, craft, process]
 ---
 

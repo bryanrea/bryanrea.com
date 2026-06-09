@@ -49,11 +49,9 @@
 
     {% block site_header %}
     <header class="hero">
-        <div class="container">
-            <div class="site-identity">
-                <h1><a href="{{ url_for('fragments.index') }}">Fragments</a></h1>
-                <p class="tagline">Building with AI, in public</p>
-            </div>
+        <div class="hero-name">
+            <h1><a href="{{ url_for('fragments.index') }}">Fragments</a></h1>
+            <p class="tagline">Building with AI, in public</p>
         </div>
     </header>
     {% endblock %}

@@ -71,38 +71,55 @@ p {
 }
 
 /* ===========================
-   Header (site identity)
+   Hero (site identity)
+   Mirrors the home page hero in the portfolio's /style.css so the
+   Fragments landing matches: an 8rem name with the tagline tucked
+   under-right. The body already adds --nav-height (3.5rem) of top
+   padding, so 2.5rem here lands the title 6rem from the top — the
+   same offset as home's 6rem hero padding-top.
    =========================== */
-header {
-    padding: 5.5rem 0 4rem;
-    margin-bottom: 4rem;
+header.hero {
+    padding: 2.5rem 0 1.5rem;
+    margin-bottom: 2.5rem;
     text-align: center;
 }
 
-header h1 {
-    font-size: 7.5rem;
+.hero-name {
+    display: inline-block;
+    position: relative;
+    text-align: left;
+}
+
+.hero-name h1 {
+    font-size: 8rem;
     font-weight: 600;
     line-height: 0.9;
     letter-spacing: -0.04em;
-    margin-bottom: 0.85rem;
+    margin-bottom: 0;
 }
 
-header h1 a {
+.hero-name h1 a {
     color: var(--color-ink);
     text-decoration: none;
 }
 
-header h1 a:hover {
+.hero-name h1 a:hover {
     color: var(--color-accent);
 }
 
-.tagline {
+.hero-name .tagline {
+    position: absolute;
+    top: 100%;
+    margin-top: -0.4em;
+    /* Start just right of the "g" descender so the tagline clears it,
+       the way home's tagline clears the "y" in "Bryan". The "g" in
+       "Fragments" ends at ~43% of the title width. */
+    left: 46%;
     color: var(--color-muted);
     font-family: var(--font-sans);
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 400;
-    margin-top: 0;
-    margin-bottom: 0;
+    white-space: nowrap;
 }
 
 /* ===========================
@@ -544,14 +561,18 @@ footer a:hover {
    Responsive
    =========================== */
 @media (max-width: 768px) {
-    header {
-        padding: 3rem 0 2.5rem;
-        margin-bottom: 3rem;
+    header.hero {
+        padding: 2rem 0 2rem;
+        margin-bottom: 2rem;
     }
 
-    header h1 {
-        font-size: 4.5rem;
+    .hero-name h1 {
+        font-size: 5rem;
         letter-spacing: -0.035em;
+    }
+
+    .hero-name .tagline {
+        font-size: 0.88rem;
     }
 
     .post-preview h2,

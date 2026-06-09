@@ -259,10 +259,12 @@ main {
 
 .post-header {
     margin-bottom: 2.5rem;
+    text-align: center;
 }
 
 .post-header h1 {
     margin-bottom: 0.6rem;
+    text-wrap: balance;
 }
 
 .post-header .post-meta {

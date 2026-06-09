@@ -19,5 +19,8 @@ jobs:
             set -e
             cd /var/www/bryanrea.com
             git pull origin main
+            # Sync Python deps into the service's virtualenv. Fast no-op when
+            # requirements.txt is unchanged, so it's safe to run every deploy.
+            fragments/venv/bin/pip install --upgrade -r fragments/requirements.txt
             systemctl restart fragments-blog
             systemctl is-active fragments-blog

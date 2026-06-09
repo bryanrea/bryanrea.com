@@ -12,16 +12,23 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
 
-@app.context_processor
-def inject_cache_bust():
+# Resolve the current git short hash once at startup. It can't change while the
+# process is running, so there's no reason to shell out on every request — the
+# old behavior spawned a `git` subprocess per page load.
+def _resolve_cache_bust():
     try:
-        rev = subprocess.check_output(
+        return subprocess.check_output(
             ['git', 'rev-parse', '--short', 'HEAD'],
             stderr=subprocess.DEVNULL
         ).decode().strip()
     except Exception:
-        rev = '1'
-    return {'cache_bust': rev}
+        return '1'
+
+CACHE_BUST = _resolve_cache_bust()
+
+@app.context_processor
+def inject_cache_bust():
+    return {'cache_bust': CACHE_BUST}
 
 # Configure for reverse proxy
 app.wsgi_app = ProxyFix(
@@ -49,31 +56,37 @@ def get_posts():
     for filename in os.listdir(posts_dir):
         if filename.endswith('.md'):
             filepath = os.path.join(posts_dir, filename)
-            
-            # Read the markdown file with frontmatter
-            with open(filepath, 'r', encoding='utf-8') as f:
-                post = frontmatter.load(f)
-                
-                # Extract slug from filename (remove .md and date prefix if present)
-                # Example: 2024-11-09-why-im-building-this.md -> why-im-building-this
-                slug = filename.replace('.md', '')
-                if len(slug) > 10 and slug[10] == '-':  # Has date prefix
-                    slug = slug[11:]  # Remove YYYY-MM-DD- prefix
-                
-                # Create post object
-                word_count = len(post.content.split())
-                post_data = {
-                    'title': post.get('title', 'Untitled'),
-                    'date': post.get('date'),
-                    'excerpt': post.get('excerpt', ''),
-                    'content': post.content,
-                    'slug': slug,
-                    'filename': filename,
-                    'reading_time': max(1, math.ceil(word_count / 200)),
-                    'tags': post.get('tags', []) or [],
-                }
-                
-                posts.append(post_data)
+
+            # Read the markdown file with frontmatter. Guard each file so one
+            # malformed post is skipped rather than 500-ing the whole listing
+            # (and, by extension, the feed and sitemap that also call this).
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    post = frontmatter.load(f)
+            except Exception:
+                app.logger.warning('Skipping unreadable post: %s', filename, exc_info=True)
+                continue
+
+            # Extract slug from filename (remove .md and date prefix if present)
+            # Example: 2024-11-09-why-im-building-this.md -> why-im-building-this
+            slug = filename.replace('.md', '')
+            if len(slug) > 10 and slug[10] == '-':  # Has date prefix
+                slug = slug[11:]  # Remove YYYY-MM-DD- prefix
+
+            # Create post object
+            word_count = len(post.content.split())
+            post_data = {
+                'title': post.get('title', 'Untitled'),
+                'date': post.get('date'),
+                'excerpt': post.get('excerpt', ''),
+                'content': post.content,
+                'slug': slug,
+                'filename': filename,
+                'reading_time': max(1, math.ceil(word_count / 200)),
+                'tags': post.get('tags', []) or [],
+            }
+
+            posts.append(post_data)
     
     # Sort posts by date (newest first)
     posts.sort(key=lambda x: x['date'] if x['date'] else datetime.min, reverse=True)
@@ -97,27 +110,32 @@ def get_post(slug):
             
             if file_slug == slug:
                 filepath = os.path.join(posts_dir, filename)
-                
-                # Read and parse the post
-                with open(filepath, 'r', encoding='utf-8') as f:
-                    post = frontmatter.load(f)
-                    
-                    # Convert markdown to HTML
-                    html_content = markdown.markdown(
-                        post.content,
-                        extensions=['fenced_code', 'codehilite', 'tables']
-                    )
 
-                    word_count = len(post.content.split())
+                # Read and parse the post. A malformed file falls through to
+                # a 404 rather than crashing the post route.
+                try:
+                    with open(filepath, 'r', encoding='utf-8') as f:
+                        post = frontmatter.load(f)
+                except Exception:
+                    app.logger.warning('Failed to load post: %s', filename, exc_info=True)
+                    return None
 
-                    return {
-                        'title': post.get('title', 'Untitled'),
-                        'date': post.get('date'),
-                        'content': html_content,
-                        'slug': slug,
-                        'reading_time': max(1, math.ceil(word_count / 200)),
-                        'tags': post.get('tags', []) or [],
-                    }
+                # Convert markdown to HTML
+                html_content = markdown.markdown(
+                    post.content,
+                    extensions=['fenced_code', 'codehilite', 'tables']
+                )
+
+                word_count = len(post.content.split())
+
+                return {
+                    'title': post.get('title', 'Untitled'),
+                    'date': post.get('date'),
+                    'content': html_content,
+                    'slug': slug,
+                    'reading_time': max(1, math.ceil(word_count / 200)),
+                    'tags': post.get('tags', []) or [],
+                }
     
     return None
 

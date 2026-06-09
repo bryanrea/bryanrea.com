@@ -153,11 +153,12 @@ script: |
   set -e
   cd /var/www/bryanrea.com
   git pull origin main
+  fragments/venv/bin/pip install --upgrade -r fragments/requirements.txt
   systemctl restart fragments-blog
   systemctl is-active fragments-blog
 ```
 
-`set -e` halts on any failure. `is-active` makes the Action fail loudly if Gunicorn crashes during restart instead of silently going green.
+`set -e` halts on any failure. The `pip install` line syncs Python deps into the service's virtualenv on every deploy — it's a fast no-op when `requirements.txt` is unchanged, and it means dependency bumps ship automatically with a normal push. `is-active` makes the Action fail loudly if Gunicorn crashes during restart instead of silently going green.
 
 ### Required GitHub repo secrets
 
@@ -171,7 +172,9 @@ The matching public key lives in `/root/.ssh/authorized_keys` on the server.
 
 ### When `requirements.txt` changes
 
-The workflow does **not** re-run `pip install` automatically. If you add a Python dependency, SSH in once after deploying to install it:
+The workflow installs dependencies into the venv on every deploy (`fragments/venv/bin/pip install --upgrade -r fragments/requirements.txt`), so adding or bumping a Python dependency ships automatically with a normal push to `main` — no manual SSH step needed.
+
+If you ever need to install deps by hand (e.g. Actions is down):
 
 ```bash
 ssh root@bryanrea.com
@@ -181,8 +184,6 @@ pip install -r requirements.txt
 deactivate
 systemctl restart fragments-blog
 ```
-
-(Worth adding to the workflow eventually if dependency changes become common — for now, manual is fine since they're rare.)
 
 ### Manual deploy (if Actions is down or you're debugging)
 

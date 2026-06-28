@@ -336,6 +336,94 @@ main {
     padding: 0;
 }
 
+/* Syntax highlighting — Pygments tokens emitted by the codehilite extension
+   (see app.py). A warm light theme tuned to the cream/crimson palette so code
+   blocks read like part of the site, not a transplant. Earth tones with a
+   crimson-family red for keywords; one cool note (purple) for numbers and
+   constants. Scoped to .codehilite so the classes never leak. */
+.post-content .codehilite .c,
+.post-content .codehilite .ch,
+.post-content .codehilite .cm,
+.post-content .codehilite .cp,
+.post-content .codehilite .cpf,
+.post-content .codehilite .c1,
+.post-content .codehilite .cs {            /* comments */
+    color: #a1907c;
+    font-style: italic;
+}
+
+.post-content .codehilite .k,
+.post-content .codehilite .kc,
+.post-content .codehilite .kd,
+.post-content .codehilite .kn,
+.post-content .codehilite .kp,
+.post-content .codehilite .kr,
+.post-content .codehilite .kt,
+.post-content .codehilite .o,
+.post-content .codehilite .ow,
+.post-content .codehilite .nt,
+.post-content .codehilite .err {           /* keywords, operators, tags */
+    color: #9d0006;
+}
+
+.post-content .codehilite .s,
+.post-content .codehilite .sa,
+.post-content .codehilite .sb,
+.post-content .codehilite .sc,
+.post-content .codehilite .dl,
+.post-content .codehilite .sd,
+.post-content .codehilite .s2,
+.post-content .codehilite .se,
+.post-content .codehilite .sh,
+.post-content .codehilite .si,
+.post-content .codehilite .sx,
+.post-content .codehilite .sr,
+.post-content .codehilite .s1,
+.post-content .codehilite .ss {            /* strings */
+    color: #79740e;
+}
+
+.post-content .codehilite .m,
+.post-content .codehilite .mb,
+.post-content .codehilite .mf,
+.post-content .codehilite .mh,
+.post-content .codehilite .mi,
+.post-content .codehilite .mo,
+.post-content .codehilite .il,
+.post-content .codehilite .no,
+.post-content .codehilite .nv,
+.post-content .codehilite .vc,
+.post-content .codehilite .vg,
+.post-content .codehilite .vi {            /* numbers, constants, variables */
+    color: #8f3f71;
+}
+
+.post-content .codehilite .nf,
+.post-content .codehilite .fm,
+.post-content .codehilite .na {            /* function names, attributes */
+    color: #b57614;
+}
+
+.post-content .codehilite .nc,
+.post-content .codehilite .nn,
+.post-content .codehilite .ne {            /* class / namespace / exception */
+    color: #b57614;
+    font-weight: 600;
+}
+
+.post-content .codehilite .nb,
+.post-content .codehilite .bp,
+.post-content .codehilite .nd {            /* builtins, decorators */
+    color: #af3a03;
+}
+
+.post-content .codehilite .gd { color: #9d0006; }   /* diff deleted */
+.post-content .codehilite .gi { color: #79740e; }   /* diff inserted */
+.post-content .codehilite .ge { font-style: italic; }
+.post-content .codehilite .gs { font-weight: 600; }
+.post-content .codehilite .gh,
+.post-content .codehilite .gu { color: #b57614; font-weight: 600; }
+
 /* Images. Plain markdown ![alt](src) renders as an <img> inside a <p>;
    for a caption, wrap it in a raw <figure> (see docs/conventions.md). */
 .post-content img {

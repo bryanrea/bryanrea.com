@@ -60,6 +60,18 @@ html {
     }
 }
 
+/* Shared body base for both sites. Each site's own stylesheet adds only its
+   delta on top: the portfolio zeroes UA margins, the blog pads for the fixed
+   nav. */
+body {
+    font-family: var(--font-sans);
+    line-height: 1.7;
+    color: var(--color-ink-soft);
+    background-color: var(--color-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 /* ===========================
    Global link styles
    =========================== */

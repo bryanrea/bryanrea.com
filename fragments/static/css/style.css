@@ -12,14 +12,10 @@
     box-sizing: border-box;
 }
 
+/* Body base (font, color, background, leading, smoothing) lives in shared.css.
+   Only the blog's delta stays here: pad for the fixed nav. */
 body {
-    font-family: var(--font-sans);
-    line-height: 1.7;
-    color: var(--color-ink-soft);
-    background-color: var(--color-bg);
     padding: var(--nav-height) 20px 0;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 /* ===========================

@@ -6,14 +6,10 @@
 
 /* box-sizing is handled by reset.css (loaded before this file). */
 
+/* Body base (font, color, background, leading, smoothing) lives in shared.css.
+   reset.css only clears margin-block-end, so we still zero the UA side margins. */
 body {
   margin: 0;
-  font-family: var(--font-sans);
-  line-height: 1.7;
-  color: var(--color-ink-soft);
-  background-color: var(--color-bg);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 

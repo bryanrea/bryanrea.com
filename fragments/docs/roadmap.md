@@ -24,7 +24,7 @@ Build-in-public project documenting what AI coding assistants can and can't do f
 | 8 | Monorepo consolidation, shared design system, visual unification | ✅ Done |
 | 9 | RSS feed, auto-deploy via GitHub Actions, archive modernization | ✅ Done |
 | 10 | Reading time, tags, image support | ✅ Done |
-| 11 | Search, rich content (code highlighting) | ⬜ Not started |
+| 11 | Search, rich content (code highlighting) | 🔶 In progress — code highlighting done, search deferred |
 | 12 | Comments/webmentions, performance & polish | ⬜ Not started |
 
 ---
@@ -32,12 +32,11 @@ Build-in-public project documenting what AI coding assistants can and can't do f
 ## Current Backlog
 
 1. **Search** — client-side search with generated index (defer until post count grows)
-2. **Code highlighting** — Pygments via the existing `codehilite` markdown extension; needs a stylesheet
-3. **Admin interface** — web-based post editor (deferred until core blog is stable)
-4. **Accessibility audit**
-5. **Performance** — caching, compression, image optimization
+2. **Admin interface** — web-based post editor (deferred until core blog is stable)
+3. **Accessibility audit**
+4. **Performance** — caching, compression, image optimization
 
-> **Done:** reading time estimate, the tag system, and image support (Week 10) — see the weekly progress log and `docs/conventions.md` for the image workflow.
+> **Done:** reading time estimate, the tag system, and image support (Week 10); code highlighting (Week 11) — a warm Pygments theme for the already-enabled `codehilite` extension lives in `fragments/static/css/style.css`. See the weekly progress log and `docs/conventions.md` for the image workflow.
 
 ---
 

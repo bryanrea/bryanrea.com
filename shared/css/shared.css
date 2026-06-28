@@ -21,8 +21,8 @@
     --color-surface-soft: #F6F0E1; /* slightly darker cream for hover */
 
     --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
-    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
     /* Type scale — canonical font sizes. Reference these instead of
        hardcoding rem values. Base is html { font-size: 17px } (16px ≤768px),

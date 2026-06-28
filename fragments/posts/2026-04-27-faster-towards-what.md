@@ -1,7 +1,7 @@
 ---
 title: "Faster! But Towards What?"
 date: 2026-04-27
-excerpt: "To increase velocity, you need to know where you're going"
+excerpt: "To truly increase velocity, you need to know where you're going"
 tags: [thinking, velocity, product, vision]
 ---
 

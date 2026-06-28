@@ -1,11 +1,11 @@
 ---
 title: "Designing with the Grain of AI"
 date: 2026-05-31
-excerpt: "Start from the story, explore widely, steer it with your taste, and design the whole system, not slivers"
+excerpt: "What happens when you design with the grain of AI instead of fighting it? An AI-native workflow shifts our role from designing screens to starting from the story, exploring the solution spaces, and operationalizing taste."
 tags: [design, ai, craft, process]
 ---
 
-I recently had the opportunity to work on a fun little side project. I used it as a chance to explore what a fully AI-native workflow could look like. Spoiler alert: it felt like I was living in the future. By starting with AI (vs. trying to bolt it onto existing workflows), I was able to make the most of the material and explore concepts in a much more fluid, and quite frankly, fun, way.
+I recently had the opportunity to work on a fun little side project. I used it as a chance to explore what a fully AI-native workflow could look like. Spoiler alert: it felt like I was living in the future. By *starting* with AI (vs. trying to bolt it onto existing workflows), I was able to make the most of the material and explore concepts in a much more fluid, and quite frankly, fun, way.
 
 It might be a stretch, but it reminded me of the [truth to materials](https://en.wikipedia.org/wiki/Truth_to_materials) philosophy and of some of my favorite architects like [Peter Zumthor](https://en.wikipedia.org/wiki/Peter_Zumthor), [Stanley Saitowitz](https://en.wikipedia.org/wiki/Stanley_Saitowitz), or [Alberto Ponis](https://pioniraproject.com/casa-hartley-alberto-ponis/). They lean into the material, work _with_ the stone or the concrete or the brick instead of trying to manipulating them into something they are not.
 

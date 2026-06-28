@@ -25,7 +25,7 @@ header.hero {
 
 /* Offset the tagline to clear the "y" descender in "Bryan". */
 .hero-name .tagline {
-  left: 35%;
+  left: 36%;
 }
 
 /* ===========================

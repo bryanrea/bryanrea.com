@@ -71,17 +71,16 @@ Three routes live on the bare Flask app (outside the Blueprint):
 - `GET /shared/<path:filename>` — serves shared assets in local dev only. In production, Nginx serves `/shared/*` directly and this route is never hit.
 
 ## Post Loading
-`get_posts()` in `app.py` scans `posts/` on every request:
+`get_posts()` in `app.py` returns all posts, newest first. The first call (and any call after `posts/` changes) builds the list via `_build_posts()`:
 1. Lists all `.md` files
 2. Parses YAML frontmatter via `python-frontmatter`
 3. Extracts slug from filename (strips `YYYY-MM-DD-` prefix)
-4. Returns list sorted by date descending
+4. Renders the markdown body → HTML once (stored alongside the raw markdown)
+5. Returns list sorted by date descending
 
-`get_post(slug)` does the same for a single file, then converts the markdown body → HTML.
+`get_post(slug)` is just a lookup over that cached list. `get_post_neighbors(slug)` returns the previous (older) and next (newer) posts for prev/next navigation.
 
-`get_post_neighbors(slug)` returns the previous (older) and next (newer) posts for prev/next navigation.
-
-**Note:** No caching — filesystem read on every request. Fine at current scale.
+**Caching:** the built list is held in an in-process cache (`_posts_cache`) keyed on a fingerprint of `posts/` — each file's name and mtime (`_posts_signature()`). The common request does no filesystem parsing or markdown rendering; the cache rebuilds only when a post is added, edited, or removed (and on deploy, which restarts the process). Each post object carries both `content` (raw markdown, used by the listing's excerpt fallback) and `html` (rendered once, reused by the post page and the RSS feed). Each Gunicorn worker keeps its own copy; a redundant rebuild under concurrency is harmless, so there's no lock.
 
 ## Frontmatter Schema
 ```yaml

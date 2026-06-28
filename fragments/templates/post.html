@@ -24,7 +24,7 @@
     </header>
 
     <div class="post-content">
-        {{ post.content|safe }}
+        {{ post.html|safe }}
     </div>
 
     {% if neighbors and (neighbors.previous or neighbors.next) %}

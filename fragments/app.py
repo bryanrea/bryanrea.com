@@ -39,104 +39,115 @@ app.wsgi_app = ProxyFix(
     x_prefix=1
 )
 
-# Helper function to get all posts
-def get_posts():
+# Posts live as flat markdown files here. The slug logic, the cache, and the
+# sitemap all key off this one location.
+POSTS_DIR = 'posts'
+
+# Markdown rendering is identical for post pages and the RSS feed, so the
+# extension list lives in one place rather than being duplicated at each call.
+MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'tables']
+
+# In-process cache of fully parsed and rendered posts. Posts are flat files
+# that only change on deploy (which restarts the process) or, in local dev,
+# when you edit one — so instead of re-scanning the directory and re-rendering
+# markdown on every request, we build the list once and reuse it until the
+# directory's fingerprint changes. Each Gunicorn worker keeps its own copy; a
+# redundant rebuild under concurrency is harmless, so no lock is needed.
+_posts_cache = {'signature': None, 'posts': []}
+
+
+def _posts_signature():
+    """A cheap fingerprint of posts/ — each markdown file's name and mtime.
+
+    Adding, editing, or removing a post changes this tuple, which is the signal
+    to rebuild the cache. Stat-ing files is far cheaper than parsing them.
     """
-    Load all markdown files from posts/ directory,
-    parse their frontmatter, and return a sorted list.
+    if not os.path.exists(POSTS_DIR):
+        return ()
+
+    entries = []
+    for filename in os.listdir(POSTS_DIR):
+        if not filename.endswith('.md'):
+            continue
+        try:
+            mtime = os.path.getmtime(os.path.join(POSTS_DIR, filename))
+        except OSError:
+            continue
+        entries.append((filename, mtime))
+    return tuple(sorted(entries))
+
+
+def _slug_from_filename(filename):
+    """Strip the .md extension and any YYYY-MM-DD- date prefix.
+
+    Example: 2024-11-09-why-im-building-this.md -> why-im-building-this
+    """
+    slug = filename[:-3] if filename.endswith('.md') else filename
+    if len(slug) > 10 and slug[10] == '-':  # has a date prefix
+        slug = slug[11:]
+    return slug
+
+
+def _build_posts():
+    """Parse and render every post once. Called only when the cache is stale.
+
+    Each post carries both `content` (raw markdown, used by the listing's
+    excerpt fallback) and `html` (rendered once here, reused by the post page
+    and the feed).
     """
     posts = []
-    posts_dir = 'posts'
-    
-    # Check if posts directory exists
-    if not os.path.exists(posts_dir):
-        return posts
-    
-    # Loop through all markdown files
-    for filename in os.listdir(posts_dir):
-        if filename.endswith('.md'):
-            filepath = os.path.join(posts_dir, filename)
 
-            # Read the markdown file with frontmatter. Guard each file so one
-            # malformed post is skipped rather than 500-ing the whole listing
-            # (and, by extension, the feed and sitemap that also call this).
-            try:
-                with open(filepath, 'r', encoding='utf-8') as f:
-                    post = frontmatter.load(f)
-            except Exception:
-                app.logger.warning('Skipping unreadable post: %s', filename, exc_info=True)
-                continue
+    for filename in os.listdir(POSTS_DIR):
+        if not filename.endswith('.md'):
+            continue
 
-            # Extract slug from filename (remove .md and date prefix if present)
-            # Example: 2024-11-09-why-im-building-this.md -> why-im-building-this
-            slug = filename.replace('.md', '')
-            if len(slug) > 10 and slug[10] == '-':  # Has date prefix
-                slug = slug[11:]  # Remove YYYY-MM-DD- prefix
+        filepath = os.path.join(POSTS_DIR, filename)
 
-            # Create post object
-            word_count = len(post.content.split())
-            post_data = {
-                'title': post.get('title', 'Untitled'),
-                'date': post.get('date'),
-                'excerpt': post.get('excerpt', ''),
-                'content': post.content,
-                'slug': slug,
-                'filename': filename,
-                'reading_time': max(1, math.ceil(word_count / 200)),
-                'tags': post.get('tags', []) or [],
-            }
+        # Guard each file so one malformed post is skipped rather than 500-ing
+        # the whole listing (and, by extension, the feed and sitemap).
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                post = frontmatter.load(f)
+        except Exception:
+            app.logger.warning('Skipping unreadable post: %s', filename, exc_info=True)
+            continue
 
-            posts.append(post_data)
-    
+        word_count = len(post.content.split())
+        posts.append({
+            'title': post.get('title', 'Untitled'),
+            'date': post.get('date'),
+            'excerpt': post.get('excerpt', ''),
+            'content': post.content,
+            'html': markdown.markdown(post.content, extensions=MARKDOWN_EXTENSIONS),
+            'slug': _slug_from_filename(filename),
+            'filename': filename,
+            'reading_time': max(1, math.ceil(word_count / 200)),
+            'tags': post.get('tags', []) or [],
+        })
+
     # Sort posts by date (newest first)
     posts.sort(key=lambda x: x['date'] if x['date'] else datetime.min, reverse=True)
-    
     return posts
 
-# Helper function to get a single post
+
+def get_posts():
+    """Return all posts, newest first.
+
+    Rebuilds the cache only when posts/ changes; otherwise returns the cached
+    list, so the common request does no filesystem parsing or markdown work.
+    """
+    signature = _posts_signature()
+    if signature != _posts_cache['signature']:
+        _posts_cache['posts'] = _build_posts()
+        _posts_cache['signature'] = signature
+    return _posts_cache['posts']
+
+
 def get_post(slug):
-    """
-    Load a specific post by its slug.
-    """
-    posts_dir = 'posts'
-    
-    # Try to find the markdown file matching this slug
-    for filename in os.listdir(posts_dir):
-        if filename.endswith('.md'):
-            # Check if slug matches (with or without date prefix)
-            file_slug = filename.replace('.md', '')
-            if len(file_slug) > 10 and file_slug[10] == '-':
-                file_slug = file_slug[11:]
-            
-            if file_slug == slug:
-                filepath = os.path.join(posts_dir, filename)
-
-                # Read and parse the post. A malformed file falls through to
-                # a 404 rather than crashing the post route.
-                try:
-                    with open(filepath, 'r', encoding='utf-8') as f:
-                        post = frontmatter.load(f)
-                except Exception:
-                    app.logger.warning('Failed to load post: %s', filename, exc_info=True)
-                    return None
-
-                # Convert markdown to HTML
-                html_content = markdown.markdown(
-                    post.content,
-                    extensions=['fenced_code', 'codehilite', 'tables']
-                )
-
-                word_count = len(post.content.split())
-
-                return {
-                    'title': post.get('title', 'Untitled'),
-                    'date': post.get('date'),
-                    'content': html_content,
-                    'slug': slug,
-                    'reading_time': max(1, math.ceil(word_count / 200)),
-                    'tags': post.get('tags', []) or [],
-                }
-    
+    """Return a single post by slug, or None. Served from the same cache as get_posts()."""
+    for post in get_posts():
+        if post['slug'] == slug:
+            return post
     return None
 
 def get_post_neighbors(slug):
@@ -233,10 +244,7 @@ def feed():
     items = []
     for post in posts:
         post_url = f'{base_url}/fragments/post/{post["slug"]}'
-        html_content = markdown.markdown(
-            post['content'],
-            extensions=['fenced_code', 'codehilite', 'tables']
-        )
+        html_content = post['html']  # rendered once when the cache was built
         items.append(
             f'    <item>\n'
             f'      <title>{escape(post["title"])}</title>\n'
@@ -301,10 +309,9 @@ def site_sitemap():
     posts = get_posts()
     for post in posts:
         # Get last modification time from file
-        posts_dir = 'posts'
         filename = post.get('filename', '')
         if filename:
-            filepath = os.path.join(posts_dir, filename)
+            filepath = os.path.join(POSTS_DIR, filename)
             lastmod = get_file_modification_time(filepath)
         else:
             lastmod = post.get('date')

@@ -34,7 +34,7 @@ sudo systemctl restart fragments-blog
 
 All blog routes are registered on the `fragments_bp` Blueprint (`url_prefix='/fragments'`). Three routes live on the bare app: `/sitemap.xml`, `/` (redirects to the blog in local dev only), and `/shared/<path>` (local dev only — Nginx handles this in production).
 
-Posts are flat markdown files in `fragments/posts/`. There is no database and no caching — `get_posts()` and `get_post()` scan the filesystem on every request. The slug is derived from the filename by stripping the `YYYY-MM-DD-` prefix.
+Posts are flat markdown files in `fragments/posts/`. There is no database. `get_posts()` builds a parsed+rendered list once and caches it in-process (`_posts_cache`), rebuilding only when `posts/` changes — invalidation keys off a fingerprint of each file's name and mtime (`_posts_signature()`). `get_post(slug)` is a lookup over that cached list. The slug is derived from the filename by stripping the `YYYY-MM-DD-` prefix.
 
 Templates use inheritance from `base.html`. Shared macros (post preview card, tag list) live in `_macros.html`.
 

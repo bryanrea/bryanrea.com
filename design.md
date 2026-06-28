@@ -16,7 +16,7 @@ routing see `fragments/docs/architecture.md`; for code style see
 
 | File | Scope | Owns |
 |------|-------|------|
-| `shared/css/shared.css` | **Both sites** | Design tokens + type scale, `html` root sizing, global link styles, fixed nav, **hero name block**, animated background |
+| `shared/css/shared.css` | **Both sites** | Design tokens + type scale, `html` root sizing, shared `body` base (font, color, background, leading, smoothing), global link styles, fixed nav, **hero name block**, animated background |
 | `reset.css` | Portfolio only | Modern box-sizing / margin reset (Andy-Bell-style). The portfolio's `style.css` relies on it for `box-sizing` and does **not** redeclare it |
 | `style.css` (root) | Portfolio only | Page-hero, content prose, experience/résumé layout, + the hero's outer spacing & tagline offset |
 | `fragments/static/css/style.css` | Blog only | Blog reset/base, post list, post body, tags, footer, 404, + the hero's outer spacing & tagline offset |

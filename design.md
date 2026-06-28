@@ -264,7 +264,7 @@ full crimson.
 
 | Variant | Selector | Use | Look |
 |---------|----------|-----|------|
-| **Tag** | `.tag` | Inline tag chips on previews & post headers | `0.62rem` uppercase muted pill, `--color-rule` border, `8px` radius |
+| **Tag** | `.tag` | Inline tag chips on previews & post headers | `--text-2xs` (0.65rem) uppercase muted pill, `--color-rule` border, `8px` radius |
 | **Tag heading** | `.tag-pill` | The H1 of a tag page | Large `2.5rem` crimson pill, translucent cream fill + `blur(3px)`, `24px` radius |
 
 Tag hover: text → crimson, border → `--color-accent-soft`. Rendered in lists via
@@ -283,7 +283,7 @@ system; everything else separates with hairlines, not boxes.
 ### 7.5 Meta row
 
 `.post-meta` — a flex row of `.post-date` + `.post-reading-time`, both Inter
-`0.75rem`, uppercase, `0.1em` tracking, muted. The reading time is preceded by a
+`--text-xs` (0.78rem), uppercase, `0.1em` tracking, muted. The reading time is preceded by a
 `·` separator. Left-aligned on listing cards; centered in the post header.
 
 ### 7.6 Prose / content elements (blog `.post-content`)
@@ -350,7 +350,7 @@ blog index. (Comments in the CSS explain how the `2.5rem` top padding + body's
 ### Post listing (`.post-preview`)
 - Stacked, separated by `--color-rule` bottom borders.
 - Title `h2` `2.5rem`, ink, crimson on hover.
-- `.post-meta` — date + reading time, Inter `0.75rem`, uppercase,
+- `.post-meta` — date + reading time, Inter `--text-xs` (0.78rem), uppercase,
   `letter-spacing 0.1em`, muted; reading time separated by a `·`.
 - `.post-excerpt` `1.05rem`; `.read-more` "Read more →"; tags below.
 
@@ -418,10 +418,8 @@ background. Leave it alone unless explicitly redesigning it.
 - **Cache busting differs by site.** The blog auto-appends `?v={{ cache_bust }}`
   (git short hash, via a context processor). The static portfolio hardcodes the
   hash in `index.html`, `about/index.html`, `experience/index.html` (currently
-  `?v=acec136`) — **update all three by hand** when shipping shared CSS/JS
+  `?v=5473d61`) — **update all three by hand** when shipping shared CSS/JS
   changes that affect the portfolio. See `CLAUDE.md` § Cache busting.
 - **Fonts are loaded per-page** in each `<head>` (Fraunces + Inter); the
   experience page additionally loads Fraunces italic.
 - **Analytics:** Fathom (`data-site="VBYEXRMM"`) is included on every page.
-</content>
-</invoke>

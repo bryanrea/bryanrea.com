@@ -4,7 +4,7 @@
 {% if tags %}
 <ul class="tag-list">
     {% for tag in tags %}
-    <li><a href="{{ url_for('fragments.tag', tag=tag) }}" class="tag">{{ tag }}</a></li>
+    <li><a href="{{ url_for('fragments.tag', tag=tag) }}" class="tag pill">{{ tag }}</a></li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -12,12 +12,12 @@
 
 {% macro post_preview(post) %}
 <article class="post-preview">
-    <h2><a href="{{ url_for('fragments.post', slug=post.slug) }}">{{ post.title }}</a></h2>
+    <h2 class="display display--lg"><a href="{{ url_for('fragments.post', slug=post.slug) }}">{{ post.title }}</a></h2>
     <div class="post-meta">
-        <time class="post-date" datetime="{{ post.date }}">
+        <time class="post-date label" datetime="{{ post.date }}">
             {{ post.date.strftime('%B %d, %Y') if post.date else 'No date' }}
         </time>
-        <span class="post-reading-time">{{ post.reading_time }} min read</span>
+        <span class="post-reading-time label">{{ post.reading_time }} min read</span>
     </div>
 
     {% if post.excerpt %}

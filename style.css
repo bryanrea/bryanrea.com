@@ -36,17 +36,8 @@ header.page-hero {
   text-align: center;
 }
 
-header.page-hero h1 {
-  font-family: var(--font-serif);
-  font-style: normal;
-  font-variation-settings: "opsz" 144;
-  font-weight: 600;
-  font-size: var(--text-5xl);
-  line-height: 0.95;
-  letter-spacing: -0.035em;
-  color: var(--color-ink);
-  margin: 0;
-}
+/* The sub-page hero title is `<h1 class="display display--hero">`; only the
+   header spacing lives here (see header.page-hero above). */
 
 /* ===========================
    Content
@@ -58,17 +49,10 @@ main.content {
   text-align: center;
 }
 
-h2 {
-  font-family: var(--font-serif);
-  font-style: normal;
-  font-variation-settings: "opsz" 144;
-  font-weight: 600;
-  font-size: var(--text-2xl);
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  color: var(--color-accent);
-  margin: 0 0 1rem;
-  text-wrap: balance;
+/* Section headings are `<h2 class="display display--lg display--accent">`;
+   this keeps only the spacing before the section body. */
+.section h2 {
+  margin-bottom: 1rem;
 }
 
 p {
@@ -113,7 +97,11 @@ main.experience {
   padding-top: 0.5rem;
 }
 
+/* Deliberately off-system: the right-rail section labels are a small italic
+   serif treatment, not a display heading — so they stay bespoke and do NOT use
+   the `.display` utility. (Self-contained now that the global h2 rule is gone.) */
 main.experience h2 {
+  font-family: var(--font-serif);
   font-size: var(--text-base);
   font-style: italic;
   font-variation-settings: "opsz" 9;
@@ -133,15 +121,8 @@ main.experience h2 {
   border-top: 1px solid var(--color-rule);
 }
 
+/* Entry titles are `<h3 class="display display--md">`; only spacing remains. */
 .resume-entry h3 {
-  font-family: var(--font-serif);
-  font-style: normal;
-  font-variation-settings: "opsz" 144;
-  font-weight: 600;
-  font-size: var(--text-xl);
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  color: var(--color-ink);
   margin: 0 0 0.4rem;
 }
 
@@ -208,24 +189,7 @@ main.experience p:last-child {
   text-align: center;
 }
 
-.resume-footer a {
-  display: inline-block;
-  font-family: var(--font-sans);
-  font-size: var(--text-2xs);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--color-accent);
-  text-decoration: none;
-  padding: 0.26rem 0.6rem 0.14rem;
-  border: 1px solid var(--color-accent-soft);
-  border-radius: 8px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-}
-
-.resume-footer a:hover {
-  border-color: var(--color-accent);
-}
+/* The download button is `<a class="pill pill--accent">`; no extra rules. */
 
 /* ===========================
    Responsive
@@ -239,15 +203,7 @@ main.experience p:last-child {
     padding: 5rem 20px 1rem;
   }
 
-  header.page-hero h1 {
-    font-size: 4rem;
-    letter-spacing: -0.03em;
-  }
-
-  h2 {
-    font-size: var(--text-xl);
-    letter-spacing: -0.02em;
-  }
+  /* Chrome heading sizes shrink via the shared `.display--*` mobile scale. */
 
   .resume-section {
     grid-template-columns: 1fr;
@@ -259,10 +215,6 @@ main.experience p:last-child {
     text-align: left;
     padding-top: 0;
     font-size: var(--text-sm);
-  }
-
-  .resume-entry h3 {
-    font-size: 1.5rem;
   }
 
   .resume-results {

@@ -13,12 +13,12 @@
 
 <article class="post-full">
     <header class="post-header">
-        <h1>{{ post.title }}</h1>
+        <h1 class="display display--xl">{{ post.title }}</h1>
         <div class="post-meta">
-            <time class="post-date" datetime="{{ post.date }}">
+            <time class="post-date label" datetime="{{ post.date }}">
                 {{ post.date.strftime('%B %d, %Y') if post.date else 'No date' }}
             </time>
-            <span class="post-reading-time">{{ post.reading_time }} min read</span>
+            <span class="post-reading-time label">{{ post.reading_time }} min read</span>
         </div>
         {{ tag_list(post.tags) }}
     </header>
@@ -33,16 +33,16 @@
             <div class="post-nav-item post-nav-prev">
                 {% if neighbors.previous %}
                     <a href="{{ url_for('fragments.post', slug=neighbors.previous.slug) }}">
-                        <span class="post-nav-label">← Previous</span>
-                        <span class="post-nav-title">{{ neighbors.previous.title }}</span>
+                        <span class="post-nav-label label label--accent">← Previous</span>
+                        <span class="post-nav-title display display--sm">{{ neighbors.previous.title }}</span>
                     </a>
                 {% endif %}
             </div>
             <div class="post-nav-item post-nav-next">
                 {% if neighbors.next %}
                     <a href="{{ url_for('fragments.post', slug=neighbors.next.slug) }}">
-                        <span class="post-nav-label">Next →</span>
-                        <span class="post-nav-title">{{ neighbors.next.title }}</span>
+                        <span class="post-nav-label label label--accent">Next →</span>
+                        <span class="post-nav-title display display--sm">{{ neighbors.next.title }}</span>
                     </a>
                 {% endif %}
             </div>

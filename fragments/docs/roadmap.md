@@ -34,9 +34,12 @@ Build-in-public project documenting what AI coding assistants can and can't do f
 1. **Search** — client-side search with generated index (defer until post count grows)
 2. **Admin interface** — web-based post editor (deferred until core blog is stable)
 3. **Accessibility audit**
-4. **Performance** — caching, compression, image optimization
+4. **Performance** — ~~caching~~ (done), compression, image optimization
+   - Caching: posts are parsed and rendered once into an in-process cache invalidated by file mtime (`_posts_cache` / `_posts_signature()` in `app.py`). See `docs/architecture.md`.
+   - Compression: gzip belongs in the Nginx config in production (it fronts both sites), not the Flask app — no Python dependency needed.
+   - Image optimization: cheap wins are `loading="lazy"`/`decoding="async"` on post images and pre-sizing source files; not yet done.
 
-> **Done:** reading time estimate, the tag system, and image support (Week 10); code highlighting (Week 11) — a warm Pygments theme for the already-enabled `codehilite` extension lives in `fragments/static/css/style.css`. See the weekly progress log and `docs/conventions.md` for the image workflow.
+> **Done:** reading time estimate, the tag system, and image support (Week 10); code highlighting (Week 11) — a warm Pygments theme for the already-enabled `codehilite` extension lives in `fragments/static/css/style.css`; post caching (Week 12) — `get_posts()` builds once and caches until `posts/` changes. See the weekly progress log and `docs/conventions.md` for the image workflow.
 
 ---
 

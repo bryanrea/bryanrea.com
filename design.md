@@ -56,12 +56,13 @@ saturated color and is used sparingly — it should always read as emphasis.
 | Token | Stack | Use |
 |-------|-------|-----|
 | `--font-serif` | `"Fraunces", Georgia, "Times New Roman", serif` | All display type & headings |
-| `--font-sans` | `"Inter", -apple-system, BlinkMacSystemFont, …` | Body, nav, meta, labels, taglines |
+| `--font-sans` | `"DM Sans", -apple-system, BlinkMacSystemFont, …` | Body, nav, meta, labels, taglines |
 
 Loaded from Google Fonts in every page `<head>`:
 - **Fraunces** — variable, `opsz 9..144`, `wght 400..700`. The experience page
   also loads the *italic* axis (`ital`) for its right-rail section labels.
-- **Inter** — `wght 400;500;600`.
+- **DM Sans** — variable, `opsz 9..40`, `wght 400..600`, with the *italic* axis
+  (`ital`) for emphasized body text.
 
 ### Type scale
 
@@ -150,7 +151,7 @@ sites with identical markup.
   until scrolled.
 - **Layout:** a 3-column grid `1fr auto 1fr` — `HOME / ABOUT` left,
   `EXPERIENCE / FRAGMENTS` right, centered brand title between.
-- **Nav links:** Inter, `0.78rem`, weight 500, uppercase, `letter-spacing
+- **Nav links:** DM Sans, `0.78rem`, weight 500, uppercase, `letter-spacing
   0.14em`. Ink by default, crimson on hover.
 - **Brand title** (`.nav-title`, "Bryan Rea"): Fraunces `1.4rem` (`--text-lg`), hidden by
   default (`opacity: 0`, nudged up 8px). It flies in once the hero scrolls
@@ -204,7 +205,7 @@ tagline's `left` offset.
   `line-height 0.9`, `letter-spacing -0.04em`, ink. On the blog the name is
   wrapped in an `<a>` (links home); the portfolio's isn't, so the shared
   `.hero-name h1 a` rule is simply inert there.
-- `.hero-name .tagline` — Inter `--text-md` (1.1rem), muted, absolutely
+- `.hero-name .tagline` — DM Sans `--text-md` (1.1rem), muted, absolutely
   positioned just under-right of the name, clearing the descender (the `y` in
   "Bryan", the `g` in "Fragments" — hence the blog tagline's `left: 46%`
   override vs the portfolio's `left: 35%`, the one per-site difference).
@@ -241,7 +242,7 @@ components; this section covers the rest.) The surface sections (§8–§9) desc
 | Variant | Selector | Look | Hover |
 |---------|----------|------|-------|
 | **Prose link** (default) | global `a` | Inherits color; underline in `--color-accent-soft`, `0.2em` offset | Text + underline → `--color-accent` |
-| **Nav link** | `.nav-group a` | Inter `0.78rem`, uppercase, `0.14em` tracking, ink, no underline | → `--color-accent` |
+| **Nav link** | `.nav-group a` | DM Sans `0.78rem`, uppercase, `0.14em` tracking, ink, no underline | → `--color-accent` |
 | **Brand title** | `.nav-title` | Fraunces `1.4rem` (`--text-lg`), ink, hidden until scroll | → `--color-accent` |
 | **Read-more / back-link** | `.read-more`, `.back-link` | Inline; read-more carries a trailing `→`, back-link a leading `←`; back-link is muted | accent |
 | **Footer link** | `footer a` | Muted, no underline | → `--color-accent` |
@@ -252,7 +253,7 @@ hover; only prose links keep the underline.
 
 ### 7.2 Pill / button
 
-The single button-like control. Pattern: small uppercase Inter, crimson text, a
+The single button-like control. Pattern: small uppercase DM Sans, crimson text, a
 `--color-accent-soft` (or `--color-rule`) border, `8px` radius, with extra **top
 padding** to optically center the uppercase glyphs. Hover darkens the border to
 full crimson.
@@ -282,7 +283,7 @@ system; everything else separates with hairlines, not boxes.
 
 ### 7.5 Meta row
 
-`.post-meta` — a flex row of `.post-date` + `.post-reading-time`, both Inter
+`.post-meta` — a flex row of `.post-date` + `.post-reading-time`, both DM Sans
 `--text-xs` (0.78rem), uppercase, `0.1em` tracking, muted. The reading time is preceded by a
 `·` separator. Left-aligned on listing cards; centered in the post header.
 
@@ -303,7 +304,7 @@ Markdown renders into these — they're styled once and reused across all posts:
 
 ## 8. Portfolio surfaces (root `style.css`)
 
-**Body:** Inter, `line-height 1.7`, `--color-ink-soft` on `--color-bg`,
+**Body:** DM Sans, `line-height 1.7`, `--color-ink-soft` on `--color-bg`,
 antialiased.
 
 ### Home / About content (`main.content`)
@@ -318,13 +319,13 @@ antialiased.
   separated by `--color-rule` top borders. The left column is the section label.
 - `main.experience h2` (section label) — Fraunces **italic**, `1.05rem`,
   `opsz 9`, muted, right-aligned in its rail.
-- `.resume-entry h3` — Fraunces `2rem`, ink. `.resume-meta` — Inter `0.78rem`,
+- `.resume-entry h3` — Fraunces `2rem`, ink. `.resume-meta` — DM Sans `0.78rem`,
   muted, for dates/locations.
 - `.resume-results` — two-column list of metrics, crimson, each prefixed with a
   faded `→`.
 - `.resume-papers` — stacked citations, ink-soft.
 - `.resume-footer a` ("Download resume") — the **pill button** pattern: tiny
-  uppercase Inter, crimson text, `--color-accent-soft` border, `8px` radius,
+  uppercase DM Sans, crimson text, `--color-accent-soft` border, `8px` radius,
   border darkens to full crimson on hover.
 - **≤768px:** the grid collapses to one column; section labels go left-aligned;
   entry `h3` drops to `1.5rem`.
@@ -333,7 +334,7 @@ antialiased.
 
 ## 9. Fragments blog surfaces (`fragments/static/css/style.css`)
 
-**Body:** Inter, `line-height 1.7`, top padding `--nav-height` (clears the fixed
+**Body:** DM Sans, `line-height 1.7`, top padding `--nav-height` (clears the fixed
 nav). Content lives in `.container` (`max-width: 680px`, centered).
 
 ### Headings
@@ -350,7 +351,7 @@ blog index. (Comments in the CSS explain how the `2.5rem` top padding + body's
 ### Post listing (`.post-preview`)
 - Stacked, separated by `--color-rule` bottom borders.
 - Title `h2` `2.5rem`, ink, crimson on hover.
-- `.post-meta` — date + reading time, Inter `--text-xs` (0.78rem), uppercase,
+- `.post-meta` — date + reading time, DM Sans `--text-xs` (0.78rem), uppercase,
   `letter-spacing 0.1em`, muted; reading time separated by a `·`.
 - `.post-excerpt` `1.05rem`; `.read-more` "Read more →"; tags below.
 
@@ -372,14 +373,14 @@ blog index. (Comments in the CSS explain how the `2.5rem` top padding + body's
   border to crimson with a soft-surface fill.
 
 ### Tags
-- `.tag` — small uppercase Inter pill, muted, `--color-rule` border, `8px`
+- `.tag` — small uppercase DM Sans pill, muted, `--color-rule` border, `8px`
   radius; crimson + soft border on hover. (Extra top padding re-centers the
   uppercase glyphs in the box — a recurring trick for all uppercase pills.)
 - Tag page header — `.tag-pill`, a large (`2.5rem`) translucent blurred pill in
   crimson, with a `.tag-count` beneath.
 
 ### Footer & 404
-- **Footer** (blog only) — top `--color-rule` border, centered, muted Inter
+- **Footer** (blog only) — top `--color-rule` border, centered, muted DM Sans
   `0.85rem`: *"Built with AI • View Source • RSS"*. The portfolio has no footer.
 - **404** — giant `6rem` muted-light "404", an ink `h2`, a muted line, and a
   `← Go home` back-link.
@@ -420,6 +421,6 @@ background. Leave it alone unless explicitly redesigning it.
   hash in `index.html`, `about/index.html`, `experience/index.html` (currently
   `?v=5473d61`) — **update all three by hand** when shipping shared CSS/JS
   changes that affect the portfolio. See `CLAUDE.md` § Cache busting.
-- **Fonts are loaded per-page** in each `<head>` (Fraunces + Inter); the
+- **Fonts are loaded per-page** in each `<head>` (Fraunces + DM Sans); the
   experience page additionally loads Fraunces italic.
 - **Analytics:** Fathom (`data-site="VBYEXRMM"`) is included on every page.

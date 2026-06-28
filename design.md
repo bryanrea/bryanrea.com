@@ -139,6 +139,33 @@ their own hover (typically ink → accent).
 - **Background blobs**: 64s / 82s `ease-in-out infinite` drifts.
 - Respect `prefers-reduced-motion: reduce` — it pauses the blob animations.
 
+### Component utilities
+
+Both sites compose their repeated patterns from three utility families in
+`shared.css`, applied via class in markup. One source per recipe; size and color
+via modifiers; per-context structural bits (margins, grid placement, bespoke
+chrome) stay on the site classes.
+
+- **`.display`** — the serif heading recipe (Fraunces, `opsz 144`, weight 600,
+  ink, balanced wrap). Size via a modifier: `--hero` (`--text-hero`), `--xl`
+  (`--text-4xl`), `--lg` (`--text-2xl`), `--md` (`--text-xl`), `--sm`
+  (`--text-lg`); `--accent` recolors to crimson. Mobile sizes are token-driven
+  in one `@media` block. Used by the hero name, sub-page heroes, post titles,
+  listing titles, the nav brand, and the 404.
+- **`.label`** — uppercase meta (DM Sans, `--text-xs`, weight 500, `0.1em`
+  tracking, muted); `--accent` recolors. Used by post dates, reading time, tag
+  counts, the post-nav labels.
+- **`.pill`** — small bordered uppercase chip (`--text-2xs`, `0.07em`, `8px`
+  radius, hover to accent); `--accent` is the always-crimson variant. Used by
+  blog tags and the résumé download button. The tag-page heading composes
+  `.pill` with a bespoke `.tag-pill` shim for its larger, rounder display scale.
+
+**Deliberately off-system** (do *not* take `.display`): the experience
+right-rail section labels (`main.experience h2` — small italic serif, `opsz 9`),
+the drop cap (`::first-letter`, math tied to `.post-content` line-height), and
+Markdown-rendered prose headings (`.post-content h1/h2/h3` — can't take classes,
+so they carry the recipe scoped to `.post-content`).
+
 ---
 
 ## 4. The fixed navigation

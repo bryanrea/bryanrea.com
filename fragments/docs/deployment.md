@@ -90,6 +90,39 @@ systemctl restart nginx         # Full restart (causes brief downtime)
 tail -f /var/log/nginx/error.log  # Watch for errors
 ```
 
+### Gzip compression
+
+`gzip on` lives in the stock `/etc/nginx/nginx.conf` but only compresses
+`text/html` by default. The extra directives live in
+`/etc/nginx/conf.d/gzip.conf` (added July 2026), which Nginx includes
+automatically:
+
+```nginx
+# Gzip for text assets beyond the text/html default.
+# gzip itself is enabled in nginx.conf; text/html is always included.
+gzip_vary on;
+gzip_proxied any;
+gzip_comp_level 5;
+gzip_min_length 256;
+gzip_types
+    text/plain
+    text/css
+    text/xml
+    application/javascript
+    application/json
+    application/xml
+    application/rss+xml
+    image/svg+xml;
+```
+
+This covers both the static portfolio assets and the proxied Flask
+responses (the RSS feed dropped from ~21.5 KB to ~8.8 KB, shared CSS from
+~12.8 KB to ~4.3 KB). Verify from anywhere with:
+
+```bash
+curl -sI -H 'Accept-Encoding: gzip' https://bryanrea.com/shared/css/shared.css | grep -i content-encoding
+```
+
 ---
 
 ## systemd Service

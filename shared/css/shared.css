@@ -89,6 +89,36 @@ a:hover {
     text-decoration-color: var(--color-accent);
 }
 
+/* Keyboard focus — one consistent ring everywhere. :focus-visible keeps it
+   off mouse clicks; the offset clears descenders and pill borders. */
+:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+/* Skip link — first tabbable element on every page. Visually hidden until
+   focused, then drops in over the fixed nav. */
+.skip-link {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 200;
+    padding: 0.5rem 0.9rem;
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid var(--color-accent);
+    border-radius: 8px;
+    transform: translateY(calc(-100% - 16px));
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
 /* ===========================
    Component utilities
    The shared vocabulary both sites compose from in markup. One source for
@@ -244,16 +274,23 @@ a:hover {
     justify-self: center;
     text-decoration: none;
     opacity: 0;
+    /* visibility (not just opacity) so the hidden link is also out of the
+       tab order — otherwise keyboard focus lands on an invisible element.
+       Its discrete transition flips at the end of the fade-out and the
+       start of the fade-in. */
+    visibility: hidden;
     transform: translateY(-8px);
     transition:
         opacity 250ms cubic-bezier(0.2, 0.8, 0.2, 1),
         transform 250ms cubic-bezier(0.2, 0.8, 0.2, 1),
+        visibility 250ms cubic-bezier(0.2, 0.8, 0.2, 1),
         color 0.15s ease;
     pointer-events: none;
 }
 
 .nav-title-visible .nav-title {
     opacity: 1;
+    visibility: visible;
     transform: translateY(0);
     pointer-events: auto;
 }

@@ -9,7 +9,7 @@
 {% block site_header %}{% endblock %}
 
 {% block content %}
-<a href="{{ url_for('fragments.index') }}" class="back-link back-link-top">← All posts</a>
+<a href="{{ url_for('fragments.index') }}" class="back-link back-link-top"><span aria-hidden="true">←</span> All posts</a>
 
 <article class="post-full">
     <header class="post-header">
@@ -33,7 +33,7 @@
             <div class="post-nav-item post-nav-prev">
                 {% if neighbors.previous %}
                     <a href="{{ url_for('fragments.post', slug=neighbors.previous.slug) }}">
-                        <span class="post-nav-label label label--accent">← Previous</span>
+                        <span class="post-nav-label label label--accent"><span aria-hidden="true">←</span> Previous</span>
                         <span class="post-nav-title display display--sm">{{ neighbors.previous.title }}</span>
                     </a>
                 {% endif %}
@@ -41,7 +41,7 @@
             <div class="post-nav-item post-nav-next">
                 {% if neighbors.next %}
                     <a href="{{ url_for('fragments.post', slug=neighbors.next.slug) }}">
-                        <span class="post-nav-label label label--accent">Next →</span>
+                        <span class="post-nav-label label label--accent">Next <span aria-hidden="true">→</span></span>
                         <span class="post-nav-title display display--sm">{{ neighbors.next.title }}</span>
                     </a>
                 {% endif %}

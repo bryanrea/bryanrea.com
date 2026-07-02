@@ -26,7 +26,7 @@
         <p class="post-excerpt">{{ post.content[:150] }}...</p>
     {% endif %}
 
-    <a href="{{ url_for('fragments.post', slug=post.slug) }}" class="read-more">Read more →</a>
+    <a href="{{ url_for('fragments.post', slug=post.slug) }}" class="read-more" aria-label="Read more: {{ post.title }}">Read more <span aria-hidden="true">→</span></a>
     {{ tag_list(post.tags) }}
 </article>
 {% endmacro %}

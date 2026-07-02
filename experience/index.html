@@ -24,13 +24,15 @@
     ></script>
   </head>
   <body>
-    <div class="background">
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <div class="background" aria-hidden="true">
       <div class="circle circle-1"></div>
       <div class="circle circle-2"></div>
       <div class="noise"></div>
     </div>
 
-    <nav class="nav">
+    <nav class="nav" aria-label="Site">
       <div class="nav-inner">
         <div class="nav-group nav-start">
           <a href="/">Home</a>
@@ -50,7 +52,7 @@
       <h1 class="display display--hero">Experience</h1>
     </header>
 
-    <main class="experience">
+    <main class="experience" id="main">
 
       <!-- Philosophy -->
       <section class="resume-section">

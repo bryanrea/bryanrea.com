@@ -8,7 +8,7 @@
 {% block site_header %}{% endblock %}
 
 {% block content %}
-<a href="{{ url_for('fragments.index') }}" class="back-link back-link-top">← All posts</a>
+<a href="{{ url_for('fragments.index') }}" class="back-link back-link-top"><span aria-hidden="true">←</span> All posts</a>
 
 <div class="tag-header">
     <h1 class="tag-pill pill">{{ tag }}</h1>

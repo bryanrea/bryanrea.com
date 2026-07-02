@@ -163,6 +163,9 @@ main.experience p:last-child {
 
 .resume-results li::before {
   content: "→ ";
+  /* Alt-text syntax mutes the arrow for screen readers; browsers without
+     support ignore this line and keep the plain declaration above. */
+  content: "→ " / "";
   opacity: 0.6;
 }
 

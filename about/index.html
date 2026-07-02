@@ -9,8 +9,8 @@
       content="About Bryan Rea. A full about page is in the works."
     />
     <link rel="stylesheet" href="../reset.css" />
-    <link rel="stylesheet" href="../shared/css/shared.css?v=c9cb20a" />
-    <link rel="stylesheet" href="../style.css?v=c9cb20a" />
+    <link rel="stylesheet" href="../shared/css/shared.css?v=4820c16" />
+    <link rel="stylesheet" href="../style.css?v=4820c16" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -24,13 +24,15 @@
     ></script>
   </head>
   <body>
-    <div class="background">
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <div class="background" aria-hidden="true">
       <div class="circle circle-1"></div>
       <div class="circle circle-2"></div>
       <div class="noise"></div>
     </div>
 
-    <nav class="nav">
+    <nav class="nav" aria-label="Site">
       <div class="nav-inner">
         <div class="nav-group nav-start">
           <a href="/">Home</a>
@@ -50,7 +52,7 @@
       <h1 class="display display--hero">About</h1>
     </header>
 
-    <main class="content">
+    <main class="content" id="main">
       <section class="section">
         <h2 class="display display--lg display--accent">It's about time</h2>
         <p>
@@ -62,6 +64,6 @@
       </section>
     </main>
 
-    <script src="../shared/js/main.js?v=c9cb20a" defer></script>
+    <script src="../shared/js/main.js?v=4820c16" defer></script>
   </body>
 </html>

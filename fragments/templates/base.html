@@ -25,13 +25,15 @@
     ></script>
 </head>
 <body>
-    <div class="background">
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <div class="background" aria-hidden="true">
         <div class="circle circle-1"></div>
         <div class="circle circle-2"></div>
         <div class="noise"></div>
     </div>
 
-    <nav class="nav">
+    <nav class="nav" aria-label="Site">
         <div class="nav-inner">
             <div class="nav-group nav-start">
                 <a href="https://bryanrea.com">Home</a>
@@ -56,13 +58,13 @@
     </header>
     {% endblock %}
 
-    <main class="container">
+    <main class="container" id="main">
         {% block content %}{% endblock %}
     </main>
 
     <footer>
         <div class="container">
-            <p>Built with AI • <a href="https://github.com/bryanrea/bryanrea.com" target="_blank">View Source</a> • <a href="{{ url_for('fragments.feed') }}">RSS</a></p>
+            <p>Built with AI • <a href="https://github.com/bryanrea/bryanrea.com" target="_blank" rel="noopener">View Source</a> • <a href="{{ url_for('fragments.feed') }}">RSS</a></p>
         </div>
     </footer>
 

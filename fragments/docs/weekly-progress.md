@@ -1,6 +1,44 @@
 # Weekly Progress Log
 
 
+## Week 12 (part 1): Accessibility Audit
+
+**Date:** July 2, 2026
+
+### ✅ Completed
+
+**Keyboard & focus (both sites):**
+- Skip-to-content link on every page — first tabbable element, hidden until focused, then drops in over the fixed nav.
+- Global `:focus-visible` ring in the accent crimson — keyboard-only, so mouse clicks stay clean.
+- Fixed a real focus trap: the centered "Bryan Rea" nav title was hidden with `opacity: 0` but stayed in the tab order, so keyboard users focused an invisible link on every hero page. Now toggles `visibility` alongside opacity, timed with the existing fade.
+
+**Screen readers:**
+- `aria-label="Site"` on the nav, `aria-hidden` on the decorative background blobs.
+- Decorative arrows (back-links, prev/next, read-more) hidden from screen readers; the CSS-generated `·` separator and `→` résumé bullets use the `content` alt-text syntax (`content: "→ " / ""`) with a fallback for older browsers.
+- The five identical "Read more →" listing links now announce as "Read more: {post title}".
+
+**Contrast:**
+- Computed WCAG ratios for every color pair in the palette. Three Pygments syntax colors failed AA on the code-block background and were darkened within their hue families (comments 2.7→4.6:1, functions 3.3→5.2:1, strings 4.3→5.2:1).
+- The site palette itself was left untouched — the failures there (small crimson text at 3.93:1, the 404 numeral at 2.17:1) are design decisions, now a backlog item.
+
+### 🤖 What AI Did Well
+- Found the invisible-focus-trap bug by reasoning about the CSS, then *proved* it in a live browser: focused the hidden element programmatically before the fix, confirmed it was unreachable after.
+- Did the contrast math properly — wrote a quick script implementing the WCAG luminance formula instead of eyeballing, and verified its own hand calculations before claiming anything failed.
+- Checked its own assumptions: it guessed the blob animation lacked a reduced-motion guard, looked, found the guard already existed, and said so instead of "fixing" a non-problem.
+
+### 🔧 Where AI Struggled / What I Had to Fix
+- Scope boundary on design: when I said "we'll refine the color palette" (meaning *later*), it applied palette changes immediately. Reverted cleanly, but the line between mechanical accessibility fixes and design taste is one the human has to draw explicitly.
+
+### 💡 Key Learnings
+- `opacity: 0` hides an element visually but keeps it focusable. `visibility: hidden` removes it from the tab order *and* transitions discretely — it flips at the end of a fade-out and the start of a fade-in, so you can animate with opacity and gate interactivity with visibility in the same transition.
+- CSS generated content is read by screen readers. The alt-text syntax (`content: "·" / ""`) mutes it; declare the plain version first so older browsers that don't parse the syntax keep the visual.
+- Contrast is arithmetic, not opinion — an AI can audit it objectively. But *which* color to change is still design.
+
+### 🌐 Result
+Both sites are keyboard-navigable with visible focus, screen-reader clean, and AA-compliant except for the deliberately-deferred palette items. Zero visual change for sighted mouse users. Live via PR #19.
+
+---
+
 ## Week 10: Reading Time & Tag System
 
 **Date:** May 15, 2026

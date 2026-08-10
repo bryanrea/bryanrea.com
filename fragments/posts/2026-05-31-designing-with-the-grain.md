@@ -1,16 +1,16 @@
 ---
 title: "Designing with the Grain of AI"
 date: 2026-05-31
-excerpt: "What happens when you design with the grain of AI instead of fighting it? An AI-native workflow shifts our role from designing screens to starting from the story, exploring the solution spaces, and operationalizing taste."
+excerpt: "What happens when you design with the grain of AI instead of fighting it? An AI-first workflow shifts design's role from designing screens to telling the story, exploring the solution space, and operationalizing taste."
 tags: [design, ai, craft, process]
 ---
 
-I recently had the opportunity to work on a fun little side project. I used it as a chance to explore what a fully AI-native workflow could look like. Spoiler alert: it felt like I was living in the future. By *starting* with AI (vs. trying to bolt it onto existing workflows), I was able to make the most of the material and explore concepts in a much more fluid, and quite frankly, fun, way.
+I recently had the opportunity to work on a fun little side project. I used it as a chance to explore what a fully AI-first workflow could look like. Spoiler alert: it felt like I was living in the future. By *starting* with AI (vs. trying to bolt it onto existing workflows), I was able to make the most of the material and explore concepts in a much more fluid, and quite frankly, fun, way.
 
 It might be a stretch, but it reminded me of the [truth to materials](https://en.wikipedia.org/wiki/Truth_to_materials) philosophy and of some of my favorite architects like [Peter Zumthor](https://en.wikipedia.org/wiki/Peter_Zumthor), [Stanley Saitowitz](https://en.wikipedia.org/wiki/Stanley_Saitowitz), or [Alberto Ponis](https://pioniraproject.com/casa-hartley-alberto-ponis/). They lean into the material, work _with_ the stone or the concrete or the brick instead of trying to manipulating them into something they are not.
 
 ## Start from the story
-Even before the current AI-craze, I was a firm believer that stories are a powerful way to bring your ideas to life and see if they feel right. Write the story of someone using the product. What's the context? What are they thinking? What are they feeling? What are they doing? If you write all that down and it feels forced or contrived, if you're asking yourself would anyone ever do this, then that's probably not the right experience (Looking at you [Shit User Stories](https://x.com/ShitUserStory)). Our brains, much like AI, are prediction machines. We're incredibly adept at detecting when A doesn't naturally lead to B. Stories without real causality or an internal logic don't hold. If you write it down and it feels natural, real, and captivating, you're on to something.
+Even before the current AI-craze, I was a firm believer that stories are a powerful way to bring your ideas to life and see if they feel right. Write the story of someone using the product. What's the context? What are they thinking? What are they feeling? What are they doing? If you write all that down and it feels forced, if you're asking yourself would anyone ever do this, then that's probably not the right experience (Looking at you [Shit User Stories](https://x.com/ShitUserStory)). Our brains, much like AI, are prediction machines. We're incredibly adept at detecting when A doesn't naturally lead to B. Stories without real causality or an internal logic don't hold. If you write it down and it feels natural, real, and captivating, you're on to something.
 
 The nice thing in this new world is AI is _great_ with words. I fed it my narrative, broke it down into the major beats, each beat became a screen and with just a page or two of writing and a few prompts later I had a working prototype that brought the narrative to life. The story became the guide for AI to follow.
 

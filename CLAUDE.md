@@ -14,10 +14,14 @@ This is a monorepo for bryanrea.com with two distinct sites:
 
 ```bash
 cd fragments
-pip3 install -r requirements.txt
-python3 app.py
+python3.13 -m venv venv          # first time only; Python 3.10+ required
+venv/bin/pip install -r requirements.txt
+venv/bin/python app.py
 # Visit http://localhost:5000
 ```
+
+Dependencies require Python 3.10+, so don't run against macOS system Python (3.9).
+Production is Ubuntu 24.04 on Python 3.12.
 
 There are no tests and no lint step configured.
 

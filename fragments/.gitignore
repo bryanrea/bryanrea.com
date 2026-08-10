@@ -1,6 +1,9 @@
 # Logs
 *.log
 
+# Local virtualenv
+venv/
+
 # Drafts
 /posts/drafts
 

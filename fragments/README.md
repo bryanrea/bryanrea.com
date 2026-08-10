@@ -32,11 +32,12 @@ This folder is the Flask blog half of the [bryanrea.com](https://github.com/brya
 git clone git@github.com:bryanrea/bryanrea.com.git
 cd bryanrea.com/fragments
 
-# Install dependencies
-pip3 install -r requirements.txt
+# Create a virtualenv (Python 3.10+ required) and install dependencies
+python3.13 -m venv venv
+venv/bin/pip install -r requirements.txt
 
 # Run locally
-python3 app.py
+venv/bin/python app.py
 
 # Visit http://localhost:5000
 ```

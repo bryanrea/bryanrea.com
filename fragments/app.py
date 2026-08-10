@@ -1,4 +1,4 @@
-from flask import Flask, render_template, abort, Blueprint, redirect, url_for, Response, send_from_directory
+from flask import Flask, render_template, abort, Blueprint, redirect, url_for, Response, send_from_directory, request
 import math
 import markdown
 import frontmatter
@@ -47,13 +47,18 @@ POSTS_DIR = 'posts'
 # extension list lives in one place rather than being duplicated at each call.
 MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'tables']
 
+# How long readers and intermediaries may treat the feed as fresh. Short enough
+# that a new post surfaces promptly, long enough to spare us a full re-send on
+# every poll (conditional requests handle the rest).
+FEED_MAX_AGE = 900  # 15 minutes
+
 # In-process cache of fully parsed and rendered posts. Posts are flat files
 # that only change on deploy (which restarts the process) or, in local dev,
 # when you edit one — so instead of re-scanning the directory and re-rendering
 # markdown on every request, we build the list once and reuse it until the
 # directory's fingerprint changes. Each Gunicorn worker keeps its own copy; a
 # redundant rebuild under concurrency is harmless, so no lock is needed.
-_posts_cache = {'signature': None, 'posts': []}
+_posts_cache = {'signature': None, 'posts': [], 'last_modified': None}
 
 
 def _posts_signature():
@@ -75,6 +80,22 @@ def _posts_signature():
             continue
         entries.append((filename, mtime))
     return tuple(sorted(entries))
+
+
+def _last_modified_from(signature):
+    """Newest mtime in posts/, as an aware UTC datetime (None when there are no posts).
+
+    Derived from the signature we already computed, so this costs no extra
+    stat calls. This is when the content actually changed on this server —
+    unlike a post's frontmatter date, which has no time component and so
+    floors to midnight. Truncated to whole seconds to match HTTP date
+    resolution, which keeps conditional requests from always missing by a
+    fraction.
+    """
+    if not signature:
+        return None
+    newest = max(mtime for _, mtime in signature)
+    return datetime.fromtimestamp(newest, tz=timezone.utc).replace(microsecond=0)
 
 
 def _slug_from_filename(filename):
@@ -139,8 +160,19 @@ def get_posts():
     signature = _posts_signature()
     if signature != _posts_cache['signature']:
         _posts_cache['posts'] = _build_posts()
+        _posts_cache['last_modified'] = _last_modified_from(signature)
         _posts_cache['signature'] = signature
     return _posts_cache['posts']
+
+
+def get_posts_last_modified():
+    """When posts/ last changed, as an aware UTC datetime (or None if empty).
+
+    Goes through get_posts() so the cache is refreshed first — otherwise this
+    could report a stale timestamp for a post that hasn't been picked up yet.
+    """
+    get_posts()
+    return _posts_cache['last_modified']
 
 
 def get_post(slug):
@@ -223,6 +255,11 @@ def feed():
 
     Includes both a short description (excerpt) and the full HTML body
     via content:encoded, so readers can show whatever they prefer.
+
+    Freshness is reported three ways — lastBuildDate, Last-Modified, and an
+    ETag — all derived from when posts/ actually changed. Conditional requests
+    get a 304, so a polling reader only pays for the body when there's
+    something new.
     """
     base_url = 'https://bryanrea.com'
     feed_url = f'{base_url}/fragments/feed.xml'
@@ -256,8 +293,13 @@ def feed():
             f'    </item>'
         )
 
-    # lastBuildDate = newest post date, or now if no posts
-    last_build = to_rfc822(posts[0]['date']) if posts else format_datetime(datetime.now(timezone.utc))
+    # lastBuildDate is when the feed's content last changed, not the newest
+    # post's frontmatter date. Those differ by however long it took to write
+    # and deploy a post, and a reader that polls in that window would
+    # otherwise see a lastBuildDate no newer than the one it already had —
+    # and skip the new item entirely.
+    last_modified = get_posts_last_modified()
+    last_build = format_datetime(last_modified or datetime.now(timezone.utc))
 
     xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -276,7 +318,14 @@ def feed():
         '</rss>\n'
     )
 
-    return Response(xml, mimetype='application/rss+xml')
+    response = Response(xml, mimetype='application/rss+xml')
+    if last_modified:
+        response.last_modified = last_modified
+    response.add_etag()  # hashes the body, so it changes iff the output does
+    response.cache_control.public = True
+    response.cache_control.max_age = FEED_MAX_AGE
+    # Turns a matching If-None-Match / If-Modified-Since into a 304.
+    return response.make_conditional(request)
 
 @app.route('/sitemap.xml')
 def site_sitemap():

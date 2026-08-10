@@ -32,8 +32,9 @@ This folder is the Flask blog half of the [bryanrea.com](https://github.com/brya
 git clone git@github.com:bryanrea/bryanrea.com.git
 cd bryanrea.com/fragments
 
-# Create a virtualenv (Python 3.10+ required) and install dependencies
-python3.13 -m venv venv
+# Create a virtualenv and install dependencies.
+# Python 3.12 to match production; 3.10+ is the hard floor.
+python3.12 -m venv venv
 venv/bin/pip install -r requirements.txt
 
 # Run locally

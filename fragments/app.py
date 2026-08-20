@@ -7,10 +7,17 @@ import subprocess
 from datetime import datetime, timezone
 from email.utils import format_datetime
 from html import escape
+from urllib.parse import quote
 from dateutil import parser as date_parser
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
+
+# The canonical origin for this site. Every absolute URL we emit — canonical
+# links, social tags, the feed, the sitemap — is built from this rather than
+# from the incoming request, so the output doesn't depend on the proxy
+# forwarding host and scheme correctly.
+SITE_URL = 'https://bryanrea.com'
 
 # Resolve the current git short hash once at startup. It can't change while the
 # process is running, so there's no reason to shell out on every request — the
@@ -29,6 +36,24 @@ CACHE_BUST = _resolve_cache_bust()
 @app.context_processor
 def inject_cache_bust():
     return {'cache_bust': CACHE_BUST}
+
+
+@app.context_processor
+def inject_site_urls():
+    """Absolute-URL builder for canonical links and social meta tags.
+
+    Templates need the full https://bryanrea.com/... form; url_for alone gives
+    a site-relative path. Going through SITE_URL keeps this identical to how
+    the feed and sitemap already build their URLs.
+    """
+    def absolute_url(endpoint, **values):
+        # url_for spells the blog index "/fragments/", while the feed and the
+        # sitemap have always used "/fragments". Trailing slashes are stripped
+        # so a page advertises exactly one canonical URL everywhere it appears.
+        path = url_for(endpoint, **values).rstrip('/')
+        return SITE_URL + (path or '/')
+
+    return {'absolute_url': absolute_url}
 
 # Configure for reverse proxy
 app.wsgi_app = ProxyFix(
@@ -261,9 +286,8 @@ def feed():
     get a 304, so a polling reader only pays for the body when there's
     something new.
     """
-    base_url = 'https://bryanrea.com'
-    feed_url = f'{base_url}/fragments/feed.xml'
-    site_url = f'{base_url}/fragments'
+    feed_url = f'{SITE_URL}/fragments/feed.xml'
+    blog_url = f'{SITE_URL}/fragments'
 
     posts = get_posts()
 
@@ -280,7 +304,7 @@ def feed():
 
     items = []
     for post in posts:
-        post_url = f'{base_url}/fragments/post/{post["slug"]}'
+        post_url = f'{SITE_URL}/fragments/post/{post["slug"]}'
         html_content = post['html']  # rendered once when the cache was built
         items.append(
             f'    <item>\n'
@@ -308,7 +332,7 @@ def feed():
         '     xmlns:content="http://purl.org/rss/1.0/modules/content/">\n'
         '  <channel>\n'
         '    <title>Fragments</title>\n'
-        f'    <link>{site_url}</link>\n'
+        f'    <link>{blog_url}</link>\n'
         f'    <atom:link href="{feed_url}" rel="self" type="application/rss+xml" />\n'
         '    <description>Building with AI, in public. A blog by Bryan Rea.</description>\n'
         '    <language>en-us</language>\n'
@@ -330,21 +354,19 @@ def feed():
 @app.route('/sitemap.xml')
 def site_sitemap():
     """Generate XML sitemap for entire bryanrea.com site"""
-    base_url = 'https://bryanrea.com'
-    
     # Start building XML
     xml_parts = ['<?xml version="1.0" encoding="UTF-8"?>']
     xml_parts.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
     
     # Static pages on main site
     static_pages = [
-        {'loc': f'{base_url}/', 'priority': '1.0', 'changefreq': 'monthly'},
-        {'loc': f'{base_url}/about', 'priority': '0.8', 'changefreq': 'monthly'},
-        {'loc': f'{base_url}/experience', 'priority': '0.8', 'changefreq': 'monthly'},
-        {'loc': f'{base_url}/archive', 'priority': '0.6', 'changefreq': 'yearly'},
-        {'loc': f'{base_url}/resume.pdf', 'priority': '0.8', 'changefreq': 'monthly'},
-        {'loc': f'{base_url}/fragments', 'priority': '0.9', 'changefreq': 'weekly'},
-        {'loc': f'{base_url}/fragments/feed.xml', 'priority': '0.5', 'changefreq': 'weekly'},
+        {'loc': f'{SITE_URL}/', 'priority': '1.0', 'changefreq': 'monthly'},
+        {'loc': f'{SITE_URL}/about', 'priority': '0.8', 'changefreq': 'monthly'},
+        {'loc': f'{SITE_URL}/experience', 'priority': '0.8', 'changefreq': 'monthly'},
+        {'loc': f'{SITE_URL}/archive', 'priority': '0.6', 'changefreq': 'yearly'},
+        {'loc': f'{SITE_URL}/resume.pdf', 'priority': '0.8', 'changefreq': 'monthly'},
+        {'loc': f'{SITE_URL}/fragments', 'priority': '0.9', 'changefreq': 'weekly'},
+        {'loc': f'{SITE_URL}/fragments/feed.xml', 'priority': '0.5', 'changefreq': 'weekly'},
     ]
     
     for page in static_pages:
@@ -380,13 +402,24 @@ def site_sitemap():
             lastmod_str = None
         
         xml_parts.append('  <url>')
-        xml_parts.append(f'    <loc>{base_url}/fragments/post/{post["slug"]}</loc>')
+        xml_parts.append(f'    <loc>{SITE_URL}/fragments/post/{post["slug"]}</loc>')
         if lastmod_str:
             xml_parts.append(f'    <lastmod>{lastmod_str}</lastmod>')
         xml_parts.append('    <changefreq>monthly</changefreq>')
         xml_parts.append('    <priority>0.7</priority>')
         xml_parts.append('  </url>')
-    
+
+    # Tag pages are generated from frontmatter at request time, so the only way
+    # to enumerate them is from the posts themselves. Derived from the list we
+    # already have, so this costs no extra filesystem work. Without this they're
+    # indexable but undiscoverable — nothing machine-readable links to them.
+    for tag in sorted({tag for post in posts for tag in post['tags']}):
+        xml_parts.append('  <url>')
+        xml_parts.append(f'    <loc>{SITE_URL}/fragments/tag/{quote(tag, safe="")}</loc>')
+        xml_parts.append('    <changefreq>monthly</changefreq>')
+        xml_parts.append('    <priority>0.4</priority>')
+        xml_parts.append('  </url>')
+
     xml_parts.append('</urlset>')
     
     xml_content = '\n'.join(xml_parts)

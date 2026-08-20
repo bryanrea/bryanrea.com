@@ -43,6 +43,8 @@ Posts are flat markdown files in `fragments/posts/`. There is no database. `get_
 
 Templates use inheritance from `base.html`. Shared macros (post preview card, tag list) live in `_macros.html`.
 
+`base.html` emits the canonical URL and the Open Graph / Twitter tags for every page, replaying the `title` and `meta_description` blocks through `{{ self.title()|striptags }}` — `striptags` is required, since a block's literal text isn't autoescaped. A new page template overrides `canonical_url` and, when it isn't a plain page, `og_type`. Absolute URLs come from `absolute_url()` (built on the `SITE_URL` constant). See `fragments/docs/architecture.md`.
+
 Shared assets are loaded via hardcoded absolute paths (`/shared/css/shared.css`, `/shared/js/main.js`). In production Nginx serves them; in local dev `app.py` proxies them.
 
 ## Post frontmatter schema

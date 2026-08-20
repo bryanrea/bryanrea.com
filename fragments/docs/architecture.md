@@ -7,7 +7,7 @@ Deployed at `bryanrea.com/fragments`.
 
 ## Tech Stack
 - **Framework:** Flask 3.1.0 with Blueprint routing
-- **Language:** Python 3.9.6
+- **Language:** Python 3.12 (matches production on Ubuntu 24.04)
 - **Templating:** Jinja2
 - **Content:** Markdown with YAML frontmatter (python-frontmatter)
 - **Markdown rendering:** `markdown` library with `fenced_code`, `codehilite`, `tables` extensions
@@ -44,6 +44,28 @@ bryanrea.com/                  ← monorepo root, also the Nginx web root
     │   └── css/style.css      # Blog-specific styles only
     └── docs/                  # Context files (this folder)
 ```
+
+## Page Metadata
+
+Every page emits a canonical URL, Open Graph tags, and a Twitter card from `base.html`. Rather than restating each string, the social tags replay the blocks a page already defines:
+
+```jinja
+<meta property="og:title" content="{{ self.title()|striptags }}">
+```
+
+`striptags` is load-bearing. A block's literal template text is not autoescaped — only its expressions are — so replaying `Posts tagged "ai" - Fragments` straight into an attribute closes it early. `striptags` returns a plain string, which autoescaping then quotes correctly.
+
+Blocks a child template can override:
+
+| Block | Default | Overridden by |
+|-------|---------|---------------|
+| `canonical_url` | the blog index | `post.html`, `tag.html` |
+| `og_type` | `website` | `post.html` → `article` |
+| `extra_meta` | empty | `post.html` (article tags + JSON-LD), `404.html` (`noindex`) |
+
+Absolute URLs come from `absolute_url(endpoint, **values)`, injected by a context processor in `app.py`. It builds on the `SITE_URL` constant rather than `url_for(_external=True)`, so output doesn't depend on the proxy forwarding host and scheme correctly, and it strips trailing slashes so the index advertises `/fragments` — the spelling the feed and sitemap already use — not both forms.
+
+Post pages carry `BlogPosting` JSON-LD written as a Jinja dict through `|tojson`. Hand-written JSON would break on an apostrophe in a title, and a broken block fails silently since only crawlers read it.
 
 ## Request Flow
 ```

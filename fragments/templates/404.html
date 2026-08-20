@@ -2,6 +2,10 @@
 
 {% block title %}Page Not Found - Fragments{% endblock %}
 
+{# Every unmatched URL renders this page. Without noindex they'd all be
+   indexable, each one canonical-ing back to the homepage. #}
+{% block extra_meta %}<meta name="robots" content="noindex">{% endblock %}
+
 {% block content %}
 <div class="error-page">
     <h1 class="display display--xl">404</h1>

@@ -4,6 +4,8 @@
 {% block title %}Posts tagged "{{ tag }}" - Fragments{% endblock %}
 {% block meta_description %}All Fragments posts tagged "{{ tag }}".{% endblock %}
 
+{% block canonical_url %}{{ absolute_url('fragments.tag', tag=tag) }}{% endblock %}
+
 {# Tag pages omit the site identity header — the post list is the focus. #}
 {% block site_header %}{% endblock %}
 

@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% block meta_description %}Fragments - A lightweight, AI-built blog{% endblock %}">
+    <meta name="description" content="{% block meta_description %}Building with AI, in public. A blog by Bryan Rea.{% endblock %}">
     <title>{% block title %}Fragments{% endblock %}</title>
+
+    <link rel="canonical" href="{% block canonical_url %}{{ absolute_url('fragments.index') }}{% endblock %}">
+
+    <!-- Social sharing — how a link to this page renders when it's posted to
+         LinkedIn, Slack, X, Bluesky, and the like. Title and description are
+         pulled from the blocks above via self.*, so each page still sets them
+         in exactly one place. No og:image yet; until a share card exists,
+         twitter:card stays "summary" (the text-only form).
+
+         striptags is what makes replaying a block safe here: a block's literal
+         text isn't escaped on the way out, so the quotes in a title like
+         Posts tagged "ai" would close the content attribute early. striptags
+         hands back a plain string, which autoescaping then quotes properly. -->
+    <meta property="og:site_name" content="Fragments">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{{ self.title()|striptags }}">
+    <meta property="og:description" content="{{ self.meta_description()|striptags }}">
+    <meta property="og:url" content="{{ self.canonical_url() }}">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ self.title()|striptags }}">
+    <meta name="twitter:description" content="{{ self.meta_description()|striptags }}">
+
+    {% block extra_meta %}{% endblock %}
 
     <!-- Web fonts: Fraunces (variable serif, headlines) + DM Sans (sans, body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

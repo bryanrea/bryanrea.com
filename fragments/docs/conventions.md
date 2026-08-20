@@ -10,6 +10,10 @@
 - Semantic HTML5 elements (`<article>`, `<nav>`, `<header>`, `<main>`, etc.)
 - Accessible markup — use proper heading hierarchy, alt text on images
 - Template inheritance: always extend `base.html`
+- A new page template overrides `canonical_url`, plus `og_type` when the page isn't a plain
+  page (`article` for posts). Title and description come from the existing `title` and
+  `meta_description` blocks — `base.html` replays them into the social tags, so don't
+  restate them.
 
 ## CSS
 - No frameworks — pure CSS only

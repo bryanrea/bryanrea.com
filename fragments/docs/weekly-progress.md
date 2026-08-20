@@ -1,6 +1,51 @@
 # Weekly Progress Log
 
 
+## Week 12 (part 2): Maintenance, Feed Freshness & the Social Layer
+
+**Date:** August 19, 2026
+
+### ✅ Completed
+
+**Maintenance (July–August):**
+- Bumped Python dependencies, declared Pygments explicitly instead of leaning on it arriving transitively, and moved local dev onto a proper venv (PR #22).
+- Pinned local dev to Python 3.12 to match production on Ubuntu 24.04 — the deps need 3.10+, so macOS system Python (3.9) silently wasn't an option (PR #23).
+- Fixed feed freshness: `lastBuildDate`, `Last-Modified`, and an `ETag` now all derive from when `posts/` actually changed, so a polling reader gets a 304 instead of the whole body (PR #24).
+- Published "Good Principles, Good Outcomes."
+
+**Social & SEO metadata:**
+- Found the actual gap by looking rather than guessing: the blog had *no* Open Graph tags, no Twitter card, no canonical URL, and no structured data. Every shared link rendered as a bare grey URL. The Week 5 SEO pass built the sitemap and robots.txt; the social layer on top of it was never built.
+- `base.html` now emits canonical, Open Graph, and Twitter card tags, pulling title and description from the blocks that already existed via `{{ self.title() }}` — one string per page, not two.
+- Post pages add `article:*` tags and `BlogPosting` JSON-LD (headline, description, publish date, author, keywords).
+- Tag pages joined the sitemap — 14 of them, indexable before but linked from nothing machine-readable. 404s are now `noindex`.
+- Hoisted the base URL that `feed()` and `site_sitemap()` each declared separately into one `SITE_URL` constant.
+
+**Deliberately not done:**
+- The share card image (`og:image`) — needs an actual 1200×630 file. Links preview as text-only cards until then, which still beats a bare URL.
+- Palette contrast refinement — moved out of the backlog and into a future look-and-feel pass.
+- Search, still. Six posts doesn't justify an index.
+
+### 🤖 What AI Did Well
+- Checked the thing it was about to flag. It started to report the portfolio's cache-bust hash as stale, then traced `shared/` history, found the hash matched the last commit that touched it, and dropped the claim instead of "fixing" a non-problem.
+- Verified escaping by attacking it rather than eyeballing it: wrote a throwaway post titled `Ampersands & "Quotes" — a <test>` with a `<script>` tag in the excerpt, parsed the rendered HTML back out with a real HTML parser to confirm the attribute survived intact, then deleted the probe.
+- Caught its own bug in verification. The first pass rendered `content="Posts tagged "ai" - Fragments"` — a broken attribute — because a replayed block's literal text isn't autoescaped. It spotted that in the curl output and fixed it rather than reporting success.
+- Noticed the index was advertising `/fragments/` as canonical while the sitemap said `/fragments` — precisely the duplicate-URL signal canonical tags exist to prevent.
+
+### 🔧 Where AI Struggled / What I Had to Fix
+- Same scope boundary as last time, and it needed saying again: I'd deferred the palette work in July, and the plan came back leading with contrast fixes. Design changes don't get folded into functional work — they get their own pass. To its credit, once I said so it moved the item into a "deferred to a look-and-feel pass" section with the measurements preserved, rather than just deleting it.
+- It proposed a share image without checking whether I knew what one was. Worth remembering that "obvious" infrastructure vocabulary isn't obvious.
+
+### 💡 Key Learnings
+- Jinja's `{{ self.block() }}` lets a base template replay a block a child defined — which is how one title feeds `<title>`, `og:title`, and `twitter:title` without repeating the string. The catch is that a block's *literal* text is not autoescaped, only its expressions, so replaying it into an HTML attribute needs `striptags` to round-trip it back through the escaper.
+- Structured data fails silently. Nothing renders, nothing errors, no console warning — it's only read by crawlers. That makes it worth asserting in verification (parse the JSON) rather than trusting that it looks right.
+- The most valuable item on a roadmap can be the one that isn't on it. Everything in the written backlog was correctly deferred; the highest-leverage work was a gap nobody had written down.
+
+### 🌐 Result
+A shared Fragments link now carries a real title, description, and site name instead of nothing. Search engines can attribute posts to an author with a publish date, and 14 tag pages became discoverable. Zero visual change — the whole diff is in `<head>`.
+
+---
+
+
 ## Week 12 (part 1): Accessibility Audit
 
 **Date:** July 2, 2026

@@ -33,6 +33,7 @@ Side note: I just learned that a word with two contradicting definitions is a [c
 Looking across many different definitions of principle, there are few common elements we can use to get to a solid working definition.
 
 Principles must:
+
 - capture fundamental or derived truths
 - represent knowledge and relationships 
 - be reusable and flexible, can be applied in many situations

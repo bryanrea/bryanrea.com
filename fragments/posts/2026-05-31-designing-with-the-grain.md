@@ -1,7 +1,7 @@
 ---
 title: "Designing with the Grain of AI"
 date: 2026-05-31
-excerpt: "What happens when you design with the grain of AI instead of fighting it? An AI-first workflow shifts design's role from designing screens to telling the story, exploring the solution space, and operationalizing taste."
+excerpt: "What happens when you design with the grain of AI instead of fighting it?"
 tags: [design, ai, craft, process]
 ---
 

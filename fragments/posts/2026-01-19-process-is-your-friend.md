@@ -1,7 +1,7 @@
 ---
 title: "Process is Your Friend"
 date: 2026-01-19
-excerpt: "People love to complain about process while simultaneously not delivering great results"
+excerpt: "People love to complain about process while simultaneously not delivering results"
 tags: [process, leadership]
 ---
 

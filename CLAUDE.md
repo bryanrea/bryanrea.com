@@ -28,7 +28,7 @@ There are no tests and no lint step configured.
 
 ## Deployment
 
-Pushes to `main` auto-deploy via GitHub Actions (SSH → `git pull` → `systemctl restart fragments-blog`). Manual deploy sequence on the VPS:
+Pushes to `main` auto-deploy via GitHub Actions (SSH → `git pull` → `pip install -r requirements.txt` → `systemctl restart fragments-blog`). Manual deploy sequence on the VPS:
 
 ```bash
 git pull origin main
@@ -39,7 +39,7 @@ sudo systemctl restart fragments-blog
 
 All blog routes are registered on the `fragments_bp` Blueprint (`url_prefix='/fragments'`). Three routes live on the bare app: `/sitemap.xml`, `/` (redirects to the blog in local dev only), and `/shared/<path>` (local dev only — Nginx handles this in production).
 
-Posts are flat markdown files in `fragments/posts/`. There is no database. `get_posts()` builds a parsed+rendered list once and caches it in-process (`_posts_cache`), rebuilding only when `posts/` changes — invalidation keys off a fingerprint of each file's name and mtime (`_posts_signature()`). `get_post(slug)` is a lookup over that cached list. The slug is derived from the filename by stripping the `YYYY-MM-DD-` prefix.
+Posts are flat markdown files in `fragments/posts/`. There is no database. Drafts live in `fragments/posts/drafts/` (gitignored); only top-level files in `posts/` are read, so publishing means moving a file up a level. `get_posts()` builds a parsed+rendered list once and caches it in-process (`_posts_cache`), rebuilding only when `posts/` changes — invalidation keys off a fingerprint of each file's name and mtime (`_posts_signature()`). `get_post(slug)` is a lookup over that cached list. The slug is derived from the filename by stripping the `YYYY-MM-DD-` prefix.
 
 Templates use inheritance from `base.html`. Shared macros (post preview card, tag list) live in `_macros.html`.
 

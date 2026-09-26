@@ -25,7 +25,7 @@
 - Filename format: `YYYY-MM-DD-slug-here.md`
 - Slug: lowercase, hyphen-separated, no special characters
 - Required frontmatter fields: `title`, `date`, `excerpt`
-- Optional: `tags` (list), `published` (bool, for draft filtering later)
+- Optional: `tags` (list)
 
 ```yaml
 ---
@@ -35,6 +35,9 @@ excerpt: One or two sentences describing the post.
 tags: [flask, learning, ai]
 ---
 ```
+
+### Drafts
+Drafts live in `posts/drafts/`. The app only reads markdown files at the top level of `posts/`, so anything in `drafts/` never appears on the site; publishing a post means moving it up into `posts/`. The folder is gitignored, so drafts exist only on the machine you wrote them on — back them up separately.
 
 ## Images in Posts
 - Store image files in `fragments/static/images/`. The blueprint serves them at
@@ -68,12 +71,14 @@ tags: [flask, learning, ai]
 ## Git & Deployment
 - Commit messages: plain English, describe what changed and why if not obvious
 - Always test locally before pushing
-- Deploy sequence: `git pull` → `sudo systemctl restart fragments-blog`
+- Pushing to `main` auto-deploys (see `docs/deployment.md`); the manual fallback is `git pull` → `sudo systemctl restart fragments-blog`
 - Never commit `venv/`, `__pycache__/`, `.env`, or secrets
 
-## Working with Cursor
-- Use `@docs/architecture.md` when working on app structure or routes
-- Use `@docs/deployment.md` when working on server, Nginx, or systemd
-- Use `@docs/roadmap.md` when planning or prioritizing features
-- Use `@docs/conventions.md` for code style questions
+## Working with AI Assistants
+- `CLAUDE.md` at the repo root is loaded automatically by Claude Code and summarizes the essentials
+- Point the assistant at `docs/architecture.md` when working on app structure or routes
+- Point it at `docs/deployment.md` when working on server, Nginx, or systemd
+- Point it at `docs/roadmap.md` when planning or prioritizing features
+- Point it at `docs/conventions.md` for code style questions
+- Point it at `../design.md` for anything visual
 - Prefer asking "why does this work this way" over just "how do I do this"

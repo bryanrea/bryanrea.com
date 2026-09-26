@@ -23,8 +23,9 @@ Close with a takeaway. What should the reader walk away thinking, doing, or reco
 
 <!--
 Notes for myself, delete before publishing:
-- Filename: posts/YYYY-MM-DD-slug-here.md (lowercase, hyphens, no special chars)
-- Frontmatter: title, date, excerpt are required; tags and published are optional
+- Filename: YYYY-MM-DD-slug-here.md (lowercase, hyphens, no special chars)
+- Draft in posts/drafts/; publish by moving the file up into posts/
+- Frontmatter: title, date, excerpt are required; tags are optional
 - Section headers use ##Heading (no space) to match existing posts
 - Keep paragraphs short. Link generously. Read it out loud once before shipping.
 -->

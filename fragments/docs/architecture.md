@@ -6,7 +6,7 @@ A lightweight flat-file Flask blog. No database — posts are markdown files wit
 Deployed at `bryanrea.com/fragments`.
 
 ## Tech Stack
-- **Framework:** Flask 3.1.0 with Blueprint routing
+- **Framework:** Flask 3.1 with Blueprint routing
 - **Language:** Python 3.12 (matches production on Ubuntu 24.04)
 - **Templating:** Jinja2
 - **Content:** Markdown with YAML frontmatter (python-frontmatter)
@@ -31,7 +31,7 @@ bryanrea.com/                  ← monorepo root, also the Nginx web root
 └── fragments/                 ← this Flask app
     ├── app.py                 # Flask init, Blueprint registration, all routes
     ├── requirements.txt
-    ├── posts/                 # Flat-file content store
+    ├── posts/                 # Flat-file content store (published posts)
     │   └── YYYY-MM-DD-slug.md
     ├── templates/
     │   ├── base.html          # Base layout (loads /shared/css/shared.css + /shared/js/main.js)
@@ -94,7 +94,7 @@ Three routes live on the bare Flask app (outside the Blueprint):
 
 ## Post Loading
 `get_posts()` in `app.py` returns all posts, newest first. The first call (and any call after `posts/` changes) builds the list via `_build_posts()`:
-1. Lists all `.md` files
+1. Lists the `.md` files at the top level of `posts/` (subfolders such as `posts/drafts/` are never read)
 2. Parses YAML frontmatter via `python-frontmatter`
 3. Extracts slug from filename (strips `YYYY-MM-DD-` prefix)
 4. Renders the markdown body → HTML once (stored alongside the raw markdown)
@@ -124,7 +124,7 @@ The Flask templates load shared CSS/JS via hardcoded absolute paths with a cache
 <script src="/shared/js/main.js?v={{ cache_bust }}" defer></script>
 ```
 
-`cache_bust` is injected by a context processor in `app.py` that reads the current git short hash at request time. The hash changes on every deploy, so browsers always fetch fresh CSS/JS after a `git pull + systemctl restart`.
+`cache_bust` is injected by a context processor in `app.py` that serves the current git short hash, resolved once when the process starts. Every deploy pulls a new commit and restarts the service, so browsers always fetch fresh CSS/JS after a `git pull + systemctl restart`.
 
 - **In production**, Nginx serves the shared files directly from `/var/www/bryanrea.com/shared/` — fast, no Flask involvement.
 - **In local dev**, the `shared_static` route in `app.py` serves them via `send_from_directory` so styles still load when running `python3 app.py`.
@@ -141,6 +141,7 @@ The static portfolio pages (`index.html`, `about/`, `experience/`) use hardcoded
 base.html
 ├── index.html   (extends base)
 ├── post.html    (extends base)
+├── tag.html     (extends base)
 └── 404.html     (extends base)
 ```
 

@@ -62,7 +62,7 @@ Filename format: `YYYY-MM-DD-slug-here.md`. Required fields: `title`, `date`, `e
 
 ## Cache busting
 
-**Fragments blog** — `app.py` has a context processor that injects `cache_bust` (the current git short hash) into every template. `base.html` appends `?v={{ cache_bust }}` to all CSS and JS URLs. This updates automatically on every deploy — no manual work needed.
+**Fragments blog** — `app.py` has a context processor that injects `cache_bust` (the current git short hash) into every template. `base.html` appends `?v={{ cache_bust }}` to all CSS and JS URLs. This updates automatically on every deploy — no manual work needed. Post images get `?v=<content hash>` added at render time, and any `?v=` request to the blog's `static/` is served with a one-year `immutable` cache header.
 
 **Static portfolio** (`index.html`, `about/index.html`, `experience/index.html`) — version strings are hardcoded in the HTML (e.g. `shared.css?v=acec136`). When pushing CSS or JS changes that affect the portfolio, update the hash in these three files to match the new commit hash (`git rev-parse --short HEAD`).
 

@@ -2,12 +2,15 @@ from flask import Flask, render_template, abort, Blueprint, redirect, url_for, R
 import math
 import markdown
 import frontmatter
+import hashlib
+import imagesize
 import os
+import re
 import subprocess
 from datetime import datetime, timezone
 from email.utils import format_datetime
 from html import escape
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 from dateutil import parser as date_parser
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -72,6 +75,26 @@ POSTS_DIR = 'posts'
 # extension list lives in one place rather than being duplicated at each call.
 MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'tables']
 
+# Loading hints added to every <img> in a rendered post. `loading="lazy"` defers
+# images below the fold until the reader scrolls near them; `decoding="async"`
+# lets the browser decode off the main thread so text isn't held up.
+IMAGE_LOADING_HINTS = {'loading': 'lazy', 'decoding': 'async'}
+_IMG_TAG = re.compile(r'<img\b[^>]*>', re.IGNORECASE)
+_SRC_ATTR = re.compile(r'\ssrc\s*=\s*(["\'])(.*?)\1', re.IGNORECASE)
+_HTML_TAG = re.compile(r'<[a-zA-Z][^>]*>')
+_RELATIVE_URL_ATTR = re.compile(r'(\s(?:src|href)\s*=\s*)(["\'])/(?!/)', re.IGNORECASE)
+
+# Where post images live, as a URL and on disk. Posts are rendered when the
+# cache builds, outside any request, so url_for isn't available; this mirrors
+# the blueprint's url_prefix and static_folder.
+STATIC_URL_PREFIX = '/fragments/static/'
+STATIC_DIR = os.path.join(app.root_path, 'static')
+
+# Static files requested with a ?v= version never change at that URL, so
+# browsers may keep them for a year without checking back. Stylesheets get
+# their version from cache_bust, post images from a hash of the file.
+VERSIONED_STATIC_MAX_AGE = 365 * 24 * 60 * 60  # one year
+
 # How long readers and intermediaries may treat the feed as fresh. Short enough
 # that a new post surfaces promptly, long enough to spare us a full re-send on
 # every poll (conditional requests handle the rest).
@@ -134,12 +157,105 @@ def _slug_from_filename(filename):
     return slug
 
 
+def _has_attribute(tag, name):
+    return re.search(rf'\s{name}\s*=', tag, re.IGNORECASE) is not None
+
+
+def _local_image_path(src):
+    """Path on disk for an image served from our static folder, or None.
+
+    Anything else — an external URL, or a path that escapes the static
+    folder — is left for the browser to handle as written.
+    """
+    if not src.startswith(STATIC_URL_PREFIX):
+        return None
+    relative = unquote(src[len(STATIC_URL_PREFIX):].split('?')[0])
+    path = os.path.normpath(os.path.join(STATIC_DIR, relative))
+    if not path.startswith(STATIC_DIR + os.sep):
+        return None
+    if not os.path.isfile(path):
+        app.logger.warning('Post image not found: %s', src)
+        return None
+    return path
+
+
+def _file_version(path):
+    """A short hash of the file's contents, used as its ?v= cache-buster."""
+    with open(path, 'rb') as f:
+        return hashlib.sha256(f.read()).hexdigest()[:10]
+
+
+def _enhance_images(html):
+    """Prepare every <img> in a rendered post for fast, stable loading.
+
+    - Adds IMAGE_LOADING_HINTS (lazy loading, async decoding).
+    - For our own images, adds the file's width and height so the browser
+      reserves the right space before the image arrives and the text below
+      doesn't jump when it does.
+    - For our own images, appends ?v=<content hash> to the src, so the image
+      can be cached for a year and replacing the file still reaches readers.
+
+    Works on the rendered HTML rather than inside python-markdown so it also
+    reaches images in raw <figure> blocks, which markdown passes through
+    untouched. Attributes a post sets itself (say, loading="eager" on a hero
+    image) are left alone.
+    """
+    def enhance(match):
+        tag = match.group(0)
+        attributes = dict(IMAGE_LOADING_HINTS)
+
+        src_match = _SRC_ATTR.search(tag)
+        path = _local_image_path(src_match.group(2)) if src_match else None
+        if path:
+            width, height = imagesize.get(path)
+            sets_size = _has_attribute(tag, 'width') or _has_attribute(tag, 'height')
+            if width > 0 and height > 0 and not sets_size:
+                attributes['width'] = round(width)
+                attributes['height'] = round(height)
+
+            src = src_match.group(2)
+            if '?' not in src:
+                versioned = f'{src}?v={_file_version(path)}'
+                tag = tag[:src_match.start(2)] + versioned + tag[src_match.end(2):]
+
+        for name, value in attributes.items():
+            if not _has_attribute(tag, name):
+                # Insert right after "<img" so self-closing "/>" stays intact.
+                tag = f'{tag[:4]} {name}="{value}"{tag[4:]}'
+        return tag
+
+    return _IMG_TAG.sub(enhance, html)
+
+
+def _render_markdown(content):
+    """Render a post body to HTML, shared by the post page and the feed."""
+    html = markdown.markdown(content, extensions=MARKDOWN_EXTENSIONS)
+    return _enhance_images(html)
+
+
+def _absolutize_urls(html):
+    """Turn site-relative src/href values ("/fragments/...") into absolute URLs.
+
+    The feed needs this: a feed reader shows a post outside our site, so it
+    has no page URL to resolve "/fragments/static/images/..." against, and
+    images and links come out broken. The post page keeps relative URLs.
+
+    Only attributes inside real tags are rewritten — an HTML example in a
+    post's code sample is escaped text (&lt;img ...&gt;), so it's never matched.
+    Protocol-relative "//host/..." URLs are left alone.
+    """
+    def absolutize(tag_match):
+        return _RELATIVE_URL_ATTR.sub(rf'\1\2{SITE_URL}/', tag_match.group(0))
+
+    return _HTML_TAG.sub(absolutize, html)
+
+
 def _build_posts():
     """Parse and render every post once. Called only when the cache is stale.
 
-    Each post carries both `content` (raw markdown, used by the listing's
-    excerpt fallback) and `html` (rendered once here, reused by the post page
-    and the feed).
+    Each post carries `content` (raw markdown, used by the listing's excerpt
+    fallback), `html` (rendered once here, for the post page), and `feed_html`
+    (the same HTML with absolute URLs, for the RSS feed).
     """
     posts = []
 
@@ -159,12 +275,14 @@ def _build_posts():
             continue
 
         word_count = len(post.content.split())
+        html = _render_markdown(post.content)
         posts.append({
             'title': post.get('title', 'Untitled'),
             'date': post.get('date'),
             'excerpt': post.get('excerpt', ''),
             'content': post.content,
-            'html': markdown.markdown(post.content, extensions=MARKDOWN_EXTENSIONS),
+            'html': html,
+            'feed_html': _absolutize_urls(html),
             'slug': _slug_from_filename(filename),
             'filename': filename,
             'reading_time': max(1, math.ceil(word_count / 200)),
@@ -246,6 +364,29 @@ fragments_bp = Blueprint(
 )
 
 
+@fragments_bp.after_request
+def cache_versioned_static(response):
+    """Let browsers keep versioned static files for a year.
+
+    Flask's default for static files is to have the browser check back on
+    every view. A URL carrying ?v= changes whenever the file does, so that
+    check is wasted — the old URL simply stops being requested. Unversioned
+    requests keep the default, and so do errors — a 404 cached for a year
+    would outlive the file being added.
+
+    Skipped in local dev (debug mode): there the stylesheet's version is the
+    git hash, which doesn't change while you edit uncommitted CSS, so a
+    year-long cache would hide every change.
+    """
+    is_versioned = request.endpoint == 'fragments.static' and request.args.get('v')
+    if is_versioned and not app.debug and response.status_code in (200, 304):
+        response.cache_control.no_cache = None
+        response.cache_control.public = True
+        response.cache_control.max_age = VERSIONED_STATIC_MAX_AGE
+        response.cache_control.immutable = True
+    return response
+
+
 # Routes
 @fragments_bp.route('/', strict_slashes=False)
 def index():
@@ -305,7 +446,7 @@ def feed():
     items = []
     for post in posts:
         post_url = f'{SITE_URL}/fragments/post/{post["slug"]}'
-        html_content = post['html']  # rendered once when the cache was built
+        html_content = post['feed_html']  # rendered once when the cache was built
         items.append(
             f'    <item>\n'
             f'      <title>{escape(post["title"])}</title>\n'

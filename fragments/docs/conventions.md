@@ -49,6 +49,21 @@ Drafts live in `posts/drafts/`. The app only reads markdown files at the top lev
   ```
 
   These render responsive and centered (max-width 100%, rounded, light border).
+- **Size the file before adding it.** The post column is 680px wide, so export at
+  **1360px wide** at most (2× for retina screens). Use JPEG (quality ~80) for photos,
+  PNG or SVG for flat illustrations and diagrams, and aim for under ~200 KB. Nothing
+  resizes images on the server — what you commit is what readers download.
+- Rendering fills in the rest automatically, so write just `src` and `alt`:
+  `loading="lazy"`, `decoding="async"`, the file's real `width`/`height` (so the page
+  doesn't jump as the image loads), and a `?v=` cache-buster on the src. Any attribute
+  you set yourself is kept — e.g. `loading="eager"` on a raw `<img>` for an image at the
+  very top of a post.
+- An SVG only gets `width`/`height` if the file itself declares them (Figma and most
+  editors do on export); one with just a `viewBox` still works, it just may shift the
+  page slightly as it loads.
+- Browsers cache post images for a year, keyed on the `?v=` hash of the file. Replacing
+  an image in place is fine — its hash changes, so readers get the new one after the
+  next deploy.
 - For a **captioned** image, write a raw `<figure>` block in the markdown (python-markdown
   passes raw HTML through untouched):
 

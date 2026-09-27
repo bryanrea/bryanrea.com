@@ -34,11 +34,11 @@ Build-in-public project documenting what AI coding assistants can and can't do f
 1. **Search** — client-side search with generated index (defer until post count grows)
 2. **Admin interface** — web-based post editor (deferred until core blog is stable)
 3. **Comments / webmentions** — the last unstarted Week 12 item. No decision yet on approach.
-4. **Share card (`og:image`)** — the social metadata layer ships without one, so links preview as text-only cards. Needs a 1200×630 image in `fragments/static/images/`; turning it on is an `og:image` block in `base.html` plus flipping `twitter:card` to `summary_large_image`.
-5. **Performance** — ~~caching~~ (done), ~~compression~~ (done), image optimization
+4. **Share card (`og:image`)** — the social metadata layer ships without one, so links preview as text-only cards. Plan (September 2026): a small illustration per article, composed with the post's title and excerpt into that post's share image — so it waits on the illustrations, which come first. The wiring is small: an `og:image` block in `base.html` that `post.html` overrides, plus flipping `twitter:card` to `summary_large_image`. A generated site-wide card was tried and pulled; the image is a design call.
+5. **Performance** — ~~caching~~ (done), ~~compression~~ (done), ~~image optimization~~ (done)
    - Caching: posts are parsed and rendered once into an in-process cache invalidated by file mtime (`_posts_cache` / `_posts_signature()` in `app.py`). See `docs/architecture.md`.
    - Compression: gzip enabled in Nginx via `/etc/nginx/conf.d/gzip.conf` (July 2026) — covers CSS, JS, XML/RSS, JSON, SVG on both sites. See `docs/deployment.md`.
-   - Image optimization: cheap wins are `loading="lazy"`/`decoding="async"` on post images and pre-sizing source files; not yet done (and moot until a post ships an image).
+   - Image optimization (September 2026): every `<img>` in a rendered post gets `loading="lazy"` and `decoding="async"` (`_add_image_loading_hints()` in `app.py`), including images in raw `<figure>` blocks. Local images also get their real `width`/`height` read from the file (via `imagesize`), so the page reserves their space and doesn't jump as they load, and a `?v=<content hash>` on the src. Any static file requested with `?v=` — post images and the blog stylesheet — is served with a one-year `immutable` cache header (`cache_versioned_static()`), so repeat visits don't re-check them; replacing an image changes its hash, so readers still get the new one. Pre-sizing is a documented export convention in `docs/conventions.md`.
 
 ### Deferred to a look-and-feel pass
 

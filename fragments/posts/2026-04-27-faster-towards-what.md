@@ -17,13 +17,13 @@ Then again, that was over billions of years. The half-life of the average tech c
 
 I think about this a lot. A few things I keep coming back to:
 
-##Vision enables velocity
+## Vision enables velocity
 If you don't know where you're going, you can't get there faster. When everyone on the team has a shared vision, a clear picture of what you're building and why, you _can_ move fast with confidence. A lot of the best product people on [Lenny's Podcast](https://www.lennysnewsletter.com/podcast) talk about importance of taste, of judgement in the new world. If the cost of building goes to zero, the critical thing is knowing what to build and why we're building it. In these speed conversations, I wish I heard people talking just as much about the destination part.
 
-##Clarity is not a speed bump
+## Clarity is not a speed bump
 The people asking "wait, what are we actually building?" probably aren't the ones slowing things down. On the contrary. They're the ones trying to make sure all this energy and speed is getting us somewhere. If asking "where are we heading?" is treated as a burden, that's a worrying sign. It means everyone is running in different directions. Direction doesn't need to be a 3-month vision exercise. A day or two to sketch the destination and pressure-test can be more than enough.
 
-##More is not the same as better
+## More is not the same as better
 Shipping more doesn't necessarily mean a better product. Don't conflate the two. I think about the limits of people's ability to adapt to change. There's a real question of how many new features actually get traction, and how quickly people can absorb them. Pick your favorite app. I'm sure it has dozens of features you've never used. Now imagine they add 10 new features every week... Speed focused on a few things you really want to make amazing will always beat speed spread thin across everything.
 
 One caveat to all of this: if you have a clear destination, and you know what you want to build, but you've just been resource constrained, then by all means go go go. Get to your destination 10x faster.

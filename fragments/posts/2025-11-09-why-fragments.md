@@ -1,7 +1,7 @@
 ---
 title: Why I'm Building Fragments
 date: 2025-11-09
-excerpt: A simple vibe-coded blogging platform to see what's possible, explore a world without intermediaries, and, most importantly, somewhere think and write.
+excerpt: A simple vibe-coded blogging platform to see what's possible, explore a world without intermediaries, and most importantly, somewhere to think and write.
 tags: [vibe-coding, building, writing]
 ---
 

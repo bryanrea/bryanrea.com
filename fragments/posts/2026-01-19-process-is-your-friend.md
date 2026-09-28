@@ -9,7 +9,7 @@ Whenever someone complains about process, I like to remind them of the definitio
 
 It's always the steps. No one ever says they don't want to achieve their goal. What they don't want is someone dictating how to get there. The funny thing, it's almost always the the people or teams who can't deliver great results that complain about process. The best people and teams I've worked with realize repeatable processes allow them to offload a lot of the mundane thinking so they can focus their time, energy, and creativity on bigger problems while not forgetting the details. Most things we do to get from A to B aren't that exciting. They just need to be done.
 
-I'm reminded of the research on the [power of checklists](https://atulgawande.com/book/the-checklist-manifesto/). The best way to improve outcomes in a variety of complex domains? A simple checklist. The benefites? They reduce errors, help manage complexity, ensure consistency and reliability, improve coordination, and enable measurement. 
+I'm reminded of the research on the [power of checklists](https://atulgawande.com/book/the-checklist-manifesto/). The best way to improve outcomes in a variety of complex domains? A simple checklist. The benefits? They reduce errors, help manage complexity, ensure consistency and reliability, improve coordination, and enable measurement. 
 
 Sometimes process does get in the way or needs to be changed. The old way of doing things usually doesn't give way to  new outcomes. But most people, most of the time aren't doing something groundbreaking or revolutionary, they're just trying to deliver. So be open to changing process, but skeptical that it needs changing. 
 

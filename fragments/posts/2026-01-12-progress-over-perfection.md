@@ -1,7 +1,7 @@
 ---
-title: "Progress Over Perfection"
+title: Progress Over Perfection
 date: 2026-01-12
-excerpt: "How I learned to stop worrying about perfection and started shipping again"
+excerpt: How I learned to stop worrying about perfection and started shipping again
 tags: [design, vision, imperfection]
 ---
 

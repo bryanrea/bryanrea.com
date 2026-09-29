@@ -1,5 +1,5 @@
 ---
-title: "Good Principles, Good Outcomes"
+title: Good Principles, Good Outcomes
 date: 2026-08-10
 excerpt: Designers love design principles. Oftentimes they’re meaningless fluff.
 tags: [design, principles, ai]

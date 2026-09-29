@@ -1,7 +1,7 @@
 ---
-title: "Designing with the Grain of AI"
+title: Designing with the Grain of AI
 date: 2026-05-31
-excerpt: "What happens when you design with the grain of AI instead of fighting it?"
+excerpt: What happens when you design with the grain of AI instead of fighting it?
 tags: [design, ai, craft, process]
 ---
 

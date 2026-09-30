@@ -28,8 +28,8 @@
        hardcoding rem values. Base is html { font-size: 17px } (16px ≤768px),
        so 1rem ≈ 17px. A few sizes stay off-scale by design and are documented
        as exceptions in design.md: the drop-cap (computed from line math),
-       inline code (relative em), the tighter mobile nav, and a couple of
-       bespoke mobile heading overrides. */
+       inline code (relative em), the tighter mobile nav, and the mobile
+       listing-title override. */
     --text-2xs: 0.65rem;   /* micro pills — tags, résumé pill button */
     --text-xs: 0.78rem;    /* uppercase meta labels — nav, dates, tag count */
     --text-sm: 0.85rem;    /* small text — footer, back-links */

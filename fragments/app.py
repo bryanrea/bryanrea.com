@@ -7,7 +7,7 @@ import imagesize
 import os
 import re
 import subprocess
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from email.utils import format_datetime
 from html import escape
 from urllib.parse import quote, unquote
@@ -250,6 +250,26 @@ def _absolutize_urls(html):
     return _HTML_TAG.sub(absolutize, html)
 
 
+def _post_date(value):
+    """Normalize a frontmatter date to a `date`, or None if it can't be read.
+
+    YAML hands back a `date` for `2026-04-27`, a `datetime` if a time is
+    included, and a string if the value is quoted. Everything downstream
+    (sorting, templates, the feed) assumes a plain `date`, and mixing types
+    makes the sort raise — taking the listing, feed, and sitemap down with it.
+    """
+    if isinstance(value, datetime):
+        return value.date()
+    if isinstance(value, date):
+        return value
+    if isinstance(value, str):
+        try:
+            return date_parser.parse(value).date()
+        except (ValueError, OverflowError):
+            return None
+    return None
+
+
 def _build_posts():
     """Parse and render every post once. Called only when the cache is stale.
 
@@ -274,11 +294,16 @@ def _build_posts():
             app.logger.warning('Skipping unreadable post: %s', filename, exc_info=True)
             continue
 
+        post_date = _post_date(post.get('date'))
+        if post_date is None:
+            app.logger.warning('Skipping post with missing or invalid date: %s', filename)
+            continue
+
         word_count = len(post.content.split())
         html = _render_markdown(post.content)
         posts.append({
             'title': post.get('title', 'Untitled'),
-            'date': post.get('date'),
+            'date': post_date,
             'excerpt': post.get('excerpt', ''),
             'content': post.content,
             'html': html,
@@ -290,7 +315,7 @@ def _build_posts():
         })
 
     # Sort posts by date (newest first)
-    posts.sort(key=lambda x: x['date'] if x['date'] else datetime.min, reverse=True)
+    posts.sort(key=lambda x: x['date'], reverse=True)
     return posts
 
 

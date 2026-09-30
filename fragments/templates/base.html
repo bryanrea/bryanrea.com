@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% block meta_description %}Building with AI, in public. A blog by Bryan Rea.{% endblock %}">
+    <meta name="description" content="{% filter striptags|e %}{% block meta_description %}Building with AI, in public. A blog by Bryan Rea.{% endblock %}{% endfilter %}">
     <title>{% block title %}Fragments{% endblock %}</title>
 
     <link rel="canonical" href="{% block canonical_url %}{{ absolute_url('fragments.index') }}{% endblock %}">

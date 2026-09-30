@@ -93,9 +93,9 @@ and four body sizes to two.
 - **Inline `code`** `0.92em` — relative to surrounding text by design.
 - **Mobile nav links** `0.72rem` — deliberately tighter than `--text-xs` so four
   links fit the narrow bar.
-- **A few bespoke mobile heading overrides** (`4rem` page-hero, `1.85rem`
-  listing titles, `1.5rem` résumé titles) — responsive fine-tuning that doesn't
-  land on a scale step.
+- **Mobile listing titles** `1.85rem` — a bespoke responsive override that doesn't
+  land on a scale step. (Every other mobile heading steps down a token in the
+  `.display` mobile block in `shared.css`.)
 
 > Weight, letter-spacing, line-height, and text-transform are **not** tokenized —
 > only size. They're set per component (see §7).

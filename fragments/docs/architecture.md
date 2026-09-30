@@ -55,6 +55,8 @@ Every page emits a canonical URL, Open Graph tags, and a Twitter card from `base
 
 `striptags` is load-bearing. A block's literal template text is not autoescaped — only its expressions are — so replaying `Posts tagged "ai" - Fragments` straight into an attribute closes it early. `striptags` returns a plain string, which autoescaping then quotes correctly.
 
+The same applies where `meta_description` is declared, since that declaration sits inside the `<meta name="description">` attribute. A `{% filter %}` body isn't autoescaped either, so it's wrapped in `{% filter striptags|e %}` — the explicit `e` does what autoescaping does for the replayed copies, and the three description tags come out identical.
+
 Blocks a child template can override:
 
 | Block | Default | Overridden by |
@@ -96,9 +98,10 @@ Three routes live on the bare Flask app (outside the Blueprint):
 `get_posts()` in `app.py` returns all posts, newest first. The first call (and any call after `posts/` changes) builds the list via `_build_posts()`:
 1. Lists the `.md` files at the top level of `posts/` (subfolders such as `posts/drafts/` are never read)
 2. Parses YAML frontmatter via `python-frontmatter`
-3. Extracts slug from filename (strips `YYYY-MM-DD-` prefix)
-4. Renders the markdown body → HTML once (stored alongside the raw markdown), and fills in every `<img>`: `loading="lazy"` / `decoding="async"`, plus the real `width`/`height` and a `?v=<content hash>` for images in `static/` (`_enhance_images()`). Because this happens at cache-build time, a replaced image is picked up on the next rebuild — any post edit, or the restart every deploy does
-5. Returns list sorted by date descending
+3. Normalizes `date` to a plain `date` (`_post_date()`) — YAML yields a `date`, a `datetime`, or a string depending on how it's written. A post with a missing or unparseable date is skipped with a logged warning, as is an unreadable file, so one bad post can't break the listing, feed, or sitemap
+4. Extracts slug from filename (strips `YYYY-MM-DD-` prefix)
+5. Renders the markdown body → HTML once (stored alongside the raw markdown), and fills in every `<img>`: `loading="lazy"` / `decoding="async"`, plus the real `width`/`height` and a `?v=<content hash>` for images in `static/` (`_enhance_images()`). Because this happens at cache-build time, a replaced image is picked up on the next rebuild — any post edit, or the restart every deploy does
+6. Returns list sorted by date descending
 
 `get_post(slug)` is just a lookup over that cached list. `get_post_neighbors(slug)` returns the previous (older) and next (newer) posts for prev/next navigation.
 

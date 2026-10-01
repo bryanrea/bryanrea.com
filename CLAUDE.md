@@ -8,6 +8,7 @@ This is a monorepo for bryanrea.com with two distinct sites:
 
 - **Root** (`index.html`, `about/`, `experience/`, `archive/`) — static portfolio site, served directly by Nginx in production
 - **`fragments/`** — a Flask blog app, served via Gunicorn behind Nginx at `/fragments`
+- **`experiments/`** — static sandbox of small prototypes, served by Nginx like the portfolio. Built on `shared/` but kept out of the nav and sitemap, `noindex`, no analytics, no cache-busting. See `experiments/README.md` and §11 of `design.md`
 - **`shared/`** — CSS, JS, and images shared by both sites (served by Nginx in production; the `shared_static` route in `app.py` handles it in local dev)
 
 ## Running the blog locally

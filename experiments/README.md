@@ -1,89 +1,70 @@
 # Experiments
 
-Small, standalone prototypes. Served as static files by the existing Nginx setup;
-no dependencies or build step. Start a server from the repository root:
+Small, standalone prototypes — things built to try ideas out. Plain static
+files served by Nginx like the rest of the portfolio: no dependencies, no build
+step.
 
 ```sh
+# from the repository root
 python3 -m http.server 8000
 # http://localhost:8000/experiments/
 ```
 
-## Motion studies
+## Conventions
 
-`/experiments/motion/` is a vocabulary of 48 studies, grouped into Timing,
-Physics, Choreography, Transitions, Scroll, Spatial, Navigation, and Camera. Hover or keyboard-focus a stage to loop;
-click/tap to replay. Slow motion plays at half speed. With reduced motion enabled,
-only explicit click/Enter/Space plays a single cycle. Animations stop when their
-stage leaves view or the browser tab is hidden. Spring and bounce are illustrative
-keyframes rather than physical simulations.
+- **Low-profile, not private.** Experiments are left out of the site nav and the
+  sitemap and carry `<meta name="robots" content="noindex, nofollow">`. Anyone
+  with the URL can still visit. No analytics.
+- **Built on the site's foundations.** Every page loads `reset.css`,
+  `shared/css/shared.css`, and `shared/js/main.js`, uses the standard site nav and
+  animated background, and composes headings from `.display` / `.label`.
+  `experiments.css` holds the layout all experiment pages share.
+- **Free to bend the rules inside an experiment.** Form controls, canvas, extra
+  diagram colors, and one-off layout are fine, scoped to the experiment's own
+  folder. See §11 of `design.md`.
 
-- `motion/index.html`: readable definitions and use cases, available without JS.
-- `motion/motion.js`: keyframes, playback, filtering, and speed control.
-- `motion/scenes.js`: deterministic Canvas diagrams for scroll, navigation, spatial, and camera studies.
-- `motion/motion.css`: study layout and experiment-only diagram colors.
-- `experiments.css`: shared experiments layout; main site tokens come from `shared/`.
+## Adding an experiment
 
-To add a study, add an article and matching keyframes keyed by `data-technique`,
-or a renderer in `scenes.js`, and update the counts. For a new prototype, create a sibling folder with its own
-`index.html` and add an entry to the experiments index.
+1. Create a sibling folder (e.g. `experiments/sound/`) with its own `index.html`,
+   starting from `motion/index.html`'s `<head>`, nav, and intro.
+2. Put experiment-specific CSS/JS in that folder.
+3. Add a numbered `.experiment-entry` to `experiments/index.html`.
 
-## Local design conventions
+## Motion studies (`motion/`)
 
-Reuse the main site's typography, cream background, and crimson accent. Additional
-teal and ochre colors distinguish circles inside diagrams only. Filters and speed
-controls use native buttons, visible shared focus rings, pressed-state semantics,
-hover borders, and active feedback. No disabled state is currently needed.
+A vocabulary of 48 studies in eight groups: Timing, Physics, Choreography,
+Transitions, Scroll, Spatial, Navigation, and Camera.
 
-The experiments are omitted from the main navigation and sitemap and request
-`noindex, nofollow`. This keeps them low-profile, not private: anyone with a URL
-can visit them after deployment. No analytics script is loaded here.
+- `index.html` — every study's definition and use case, readable without JS.
+- `motion.js` — keyframes for the dot studies, playback, filtering, slow motion.
+- `scenes.js` — Canvas 2D renderers for the scroll, spatial, navigation, and
+  camera studies. Each is a pure function of progress (0–1), drawn only while
+  playing.
+- `motion.css` — toolbar, stage, and diagram styles.
 
+**Behavior.** Hover or keyboard focus loops a study; click/tap replays it. Slow
+motion plays at half speed. Scroll studies add a range input that scrubs the
+simulated scroll position. With reduced motion on, nothing plays except an
+explicit click/Enter/Space, which plays one cycle. Playback stops when a stage
+leaves the viewport or the tab is hidden.
 
-## Expanded studies
+**Adding a study.** Add an `<article class="study">` with a `data-technique`
+and `data-category`, then either keyframes under that key in `motion.js` or a
+renderer in `scenes.js`. Update the study numbers and the "All" count.
 
-The new groups retain circle-based subjects, with small viewport frames, surfaces,
-and perspective grids where the context is essential to understanding the motion.
+**Accuracy notes.** Spring and bounce are illustrative keyframes, not physics
+simulations. Rack focus fakes the focus shift with blur. The camera studies
+share one scene with subjects at different depths so dolly, zoom, and dolly zoom
+can be told apart.
 
-- **Scroll (6):** parallax, scrubbing, pinning, horizontal sequence, view reveal,
-  and stacking. Hover simulates scrolling; a native range input gives direct,
-  reversible control of the simulated scroll position. These are viewport
-  diagrams, not scroll handlers attached to the library page. They do not capture
-  the reader’s wheel or touch scrolling.
-- **Spatial (6):** 3D flip, depth travel, carousel, exploded layers, particle field,
-  and perspective tilt. These use projected 3D coordinates drawn with Canvas 2D.
-- **Navigation (6):** push, cover, shared axis, fade through, container transform,
-  and iris wipe. These illustrate view changes inside a small frame; they do not
-  navigate away from the library.
-- **Camera (12):** pan, tilt, truck, pedestal, dolly in, pull out, zoom, dolly zoom,
-  orbit shot, roll, rack focus, and handheld. A shared world with subjects at
-  different depths makes the distinctions visible. Dolly changes camera position;
-  zoom changes focal length; dolly zoom compensates focal length to hold the red
-  subject’s projected size constant. Rack focus illustrates a focus handoff with
-  blur, not a physically accurate lens simulation.
+### References
 
-WebGL is a rendering technology, not a motion principle. The simple 3D projection
-here keeps the page dependency-free. Geometry, materials, lighting, or shader
-experiments could later justify a WebGL renderer. Neither this page nor its
-filters depend on an external service. Fonts are the same Google Fonts as the
-main site.
+Definitions, diagrams, and code are original; these informed the terminology.
 
-Canvas scenes render once when idle and only schedule animation frames during
-playback. Filtering, leaving the stage, reduced-motion preference changes, leaving
-the viewport, and hiding the tab cancel playback. Scrubbing is an explicit action
-and remains available with reduced motion. Half speed affects playback, not the
-relationship between the slider and its diagram.
-
-## References
-
-This is a curated vocabulary, not a universal taxonomy. A technique can belong
-to several contexts (parallax, for example, appears in both scrolling and camera
-travel). Definitions, diagrams, and code are original; references inform the
-terminology. No third-party assets or animation code are copied.
-
-- [Codrops — A Collection of Page Transitions](https://tympanus.net/Development/PageTransitions/): a broad visual catalog of screen changes.
-- [Material Components — Motion](https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md): named navigation patterns, including shared axis, fade through, and container transform.
-- [Bramus — Scroll-driven Animations](https://scroll-driven-animations.style/): runnable scroll examples and timeline tools.
-- [Chrome — Scroll-driven Animations](https://developer.chrome.com/docs/css-ui/scroll-driven-animations): distinguishes scroll progress from view progress.
-- [StudioBinder — Camera Movement](https://www.studiobinder.com/blog/different-types-of-camera-movements-in-film/): filmmaking terminology and film examples.
-- [StudioBinder — Rack Focus](https://www.studiobinder.com/blog/rack-focus-shot-camera-movement-angles/): shifting focus as a way to direct attention.
-- [Animista](https://animista.net/): an interactive library for exploring CSS animation variations.
+- [Codrops — A Collection of Page Transitions](https://tympanus.net/Development/PageTransitions/)
+- [Material Components — Motion](https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md)
+- [Bramus — Scroll-driven Animations](https://scroll-driven-animations.style/)
+- [Chrome — Scroll-driven Animations](https://developer.chrome.com/docs/css-ui/scroll-driven-animations)
+- [StudioBinder — Camera Movement](https://www.studiobinder.com/blog/different-types-of-camera-movements-in-film/)
+- [StudioBinder — Rack Focus](https://www.studiobinder.com/blog/rack-focus-shot-camera-movement-angles/)
+- [Animista](https://animista.net/)

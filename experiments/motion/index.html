@@ -8,7 +8,7 @@
   <title>Motion studies — Bryan Rea</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=DM+Sans:ital,opsz,wght@0,9..40,400..600;1,9..40,400..600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=DM+Sans:opsz,wght@9..40,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/reset.css">
   <link rel="stylesheet" href="/shared/css/shared.css">
   <link rel="stylesheet" href="../experiments.css">
@@ -19,9 +19,24 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="background" aria-hidden="true"><div class="circle circle-1"></div><div class="circle circle-2"></div><div class="noise"></div></div>
-  <nav class="experiment-nav" aria-label="Experiments"><a class="display display--sm" href="/">Bryan Rea</a><a href="../">← Experiments</a></nav>
+  <nav class="nav" aria-label="Site">
+    <div class="nav-inner">
+      <div class="nav-group nav-start">
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+      </div>
+
+      <a href="/" class="nav-title display display--sm">Bryan Rea</a>
+
+      <div class="nav-group nav-end">
+        <a href="/experience">Experience</a>
+        <a href="/fragments">Fragments</a>
+      </div>
+    </div>
+  </nav>
   <main class="experiment-main" id="main">
     <header class="intro">
+      <a class="back-link" href="../">← Experiments</a>
       <h1 class="display display--xl">Motion studies<span class="title-dot">.</span></h1>
       <p class="intro-copy">A small vocabulary for things that move.<br> Simple circles, different behaviors. A place to look, play, and find the words.</p>
       <p class="reduced-note" hidden>Reduced motion is on. Hover previews are paused; click or press Enter to play an example once.</p>

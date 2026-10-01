@@ -1,0 +1,23 @@
+/* Experiments reuse the site's tokens; layouts and controls stay local. */
+body { margin: 0; }
+.experiment-nav { max-width: 1240px; margin: auto; padding: 1.6rem 32px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.experiment-nav a { text-decoration: none; }
+.experiment-nav > a:last-child { font-size: var(--text-sm); color: var(--color-muted); }
+.experiment-nav > a:hover { color: var(--color-accent); }
+.experiment-main { max-width: 1240px; margin: auto; padding: 2.5rem 32px 2rem; }
+.intro { margin-bottom: 3rem; }
+.intro > .label { margin: 0 0 1rem; }
+.title-dot { color: var(--color-accent); }
+.intro-copy { font-size: var(--text-md); max-width: 40rem; margin: 1.4rem 0 0; }
+.experiment-entry { display: grid; grid-template-columns: 3rem 1fr auto; gap: 1rem; border-top: 1px solid var(--color-muted-light); border-bottom: 1px solid var(--color-muted-light); padding: 2rem 0; text-decoration: none; }
+.experiment-entry .label { padding-top: .6rem; }
+.experiment-entry p { max-width: 38rem; margin-bottom: 0; color: var(--color-muted); }
+.experiment-entry:hover h2, .entry-arrow { color: var(--color-accent); }
+.entry-arrow { font-size: var(--text-xl); }
+@media (max-width: 768px) {
+  .experiment-nav { padding: 1.25rem 20px; }
+  .experiment-main { padding: 2rem 20px; }
+  .intro { margin-bottom: 2rem; }
+  .intro-copy br { display: none; }
+  .experiment-entry { grid-template-columns: 2rem 1fr auto; gap: .5rem; }
+}

@@ -34,7 +34,7 @@ python3 -m http.server 8000
 
 ## Motion studies (`motion/`)
 
-A vocabulary of 48 studies in eight groups: Timing, Physics, Choreography,
+A visual dictionary of 48 studies in eight groups: Timing, Physics, Choreography,
 Transitions, Scroll, Spatial, Navigation, and Camera.
 
 - `index.html` — every study's definition, readable without JS.

@@ -130,13 +130,36 @@ import { createScene } from './scenes.js';
     button.addEventListener('blur', () => { if (!state.hovered) reset(state); });
     button.addEventListener('click', () => play(state));
   });
+  /* Filtering animates with a view transition where supported: studies that
+     stay glide to their new grid positions, the rest fade out or in (see
+     motion.css). Each study gets a view-transition-name only for the length of
+     the transition. Without support, or with reduced motion, it's instant. */
+  let filterTransition = null;
+  function applyFilter(category) {
+    states.forEach(state => {
+      reset(state);
+      state.hovered = false;
+      state.article.hidden = category !== 'all' && state.article.dataset.category !== category;
+    });
+  }
   document.querySelectorAll('.filter').forEach(button => {
     button.addEventListener('click', () => {
       document.querySelectorAll('.filter').forEach(filter => filter.setAttribute('aria-pressed', String(filter === button)));
-      states.forEach(state => {
-        reset(state);
-        state.hovered = false;
-        state.article.hidden = button.dataset.filter !== 'all' && state.article.dataset.category !== button.dataset.filter;
+      const category = button.dataset.filter;
+      if (!document.startViewTransition || reduced.matches) {
+        applyFilter(category);
+        return;
+      }
+      states.forEach((state, i) => { state.article.style.viewTransitionName = `study-${i}`; });
+      const transition = document.startViewTransition(() => applyFilter(category));
+      filterTransition = transition;
+      // A skipped transition (hidden tab, or a quick second click) rejects
+      // `ready`; the filter still applies, so there's nothing to handle.
+      transition.ready.catch(() => {});
+      transition.finished.finally(() => {
+        // A quick second click skips this transition; leave the names for the new one.
+        if (filterTransition !== transition) return;
+        states.forEach(state => { state.article.style.viewTransitionName = ''; });
       });
     });
   });

@@ -97,6 +97,7 @@
 
 .study {
   min-width: 0;
+  view-transition-class: study;
 }
 
 .study[hidden] {
@@ -329,6 +330,45 @@
   max-width: 40rem;
   font-size: var(--text-sm);
   color: var(--color-muted);
+}
+
+/* ===========================
+   Filter transition
+   motion.js wraps filtering in a view transition. Studies that stay glide to
+   their new grid position; studies leaving fade and shrink slightly; studies
+   arriving fade and grow in once the departures have mostly cleared. The
+   rest of the page swaps instantly (no root cross-fade).
+   =========================== */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-group(*.study) {
+  animation-duration: 450ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+::view-transition-old(*.study):only-child {
+  animation: study-out 180ms ease-in both;
+}
+
+::view-transition-new(*.study):only-child {
+  animation: study-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1) 120ms both;
+}
+
+@keyframes study-out {
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes study-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
 }
 
 /* ===========================

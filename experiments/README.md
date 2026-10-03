@@ -46,9 +46,11 @@ Transitions, Scroll, Spatial, Navigation, and Camera.
 
 **Behavior.** Hover or keyboard focus loops a study; click/tap replays it. Slow
 motion plays at half speed. Scroll studies add a range input that scrubs the
-simulated scroll position. With reduced motion on, nothing plays except an
-explicit click/Enter/Space, which plays one cycle. Playback stops when a stage
-leaves the viewport or the tab is hidden.
+simulated scroll position. Changing the filter animates the grid with a view
+transition (instant in browsers without support). With reduced motion on,
+nothing plays except an explicit click/Enter/Space, which plays one cycle, and
+filtering is instant. Playback stops when a stage leaves the viewport or the tab
+is hidden.
 
 **Adding a study.** Add an `<article class="study">` with a `data-technique`
 and `data-category`, then either keyframes under that key in `motion.js` or a

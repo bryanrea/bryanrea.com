@@ -28,14 +28,16 @@ python3 -m http.server 8000
 1. Create a sibling folder (e.g. `experiments/sound/`) with its own `index.html`,
    starting from `motion/index.html`'s `<head>`, nav, and intro.
 2. Put experiment-specific CSS/JS in that folder.
-3. Add a numbered `.experiment-entry` to `experiments/index.html`.
+3. Add a numbered `.experiment-entry` to `experiments/index.html`. The link goes
+   on the title (`<h2><a href="…">`); `experiments.js` makes the rest of the row
+   clickable while keeping its text selectable.
 
 ## Motion studies (`motion/`)
 
-A vocabulary of 48 studies in eight groups: Timing, Physics, Choreography,
+A visual dictionary of 48 studies in eight groups: Timing, Physics, Choreography,
 Transitions, Scroll, Spatial, Navigation, and Camera.
 
-- `index.html` — every study's definition and use case, readable without JS.
+- `index.html` — every study's definition, readable without JS.
 - `motion.js` — keyframes for the dot studies, playback, filtering, slow motion.
 - `scenes.js` — Canvas 2D renderers for the scroll, spatial, navigation, and
   camera studies. Each is a pure function of progress (0–1), drawn only while
@@ -50,7 +52,7 @@ leaves the viewport or the tab is hidden.
 
 **Adding a study.** Add an `<article class="study">` with a `data-technique`
 and `data-category`, then either keyframes under that key in `motion.js` or a
-renderer in `scenes.js`. Update the study numbers and the "All" count.
+renderer in `scenes.js`. Update the "All" count.
 
 **Accuracy notes.** Spring and bounce are illustrative keyframes, not physics
 simulations. Rack focus fakes the focus shift with blur. The camera studies

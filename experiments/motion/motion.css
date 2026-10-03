@@ -48,8 +48,10 @@
   opacity: 0.75;
 }
 
+/* Comes after :hover so the selected chip keeps no hover border. */
 .filter[aria-pressed="true"] {
   background: var(--color-ink);
+  border-color: transparent;
   color: var(--color-bg);
 }
 
@@ -131,39 +133,13 @@
   border-color: var(--color-accent);
 }
 
-.stage-number {
-  position: absolute;
-  top: 14px;
-  left: 16px;
-  font-size: var(--text-2xs);
-  letter-spacing: 0.06em;
-}
-
-.stage-caption {
-  position: absolute;
-  bottom: 14px;
-  left: 16px;
-  font-size: var(--text-2xs);
-}
-
-.play-mark {
-  position: absolute;
-  bottom: 12px;
-  right: 16px;
-  font-size: var(--text-sm);
-}
-
-.stage.is-playing .play-mark {
-  color: var(--color-accent);
-}
-
 /* ===========================
    Scene — a 240 × 144 box that holds either the dot diagram (animated by
    motion.js) or a <canvas> (drawn by scenes.js)
    =========================== */
 .scene {
   position: absolute;
-  top: 47%;
+  top: 50%;
   left: 50%;
   width: 240px;
   height: 144px;
@@ -344,21 +320,9 @@
 }
 
 .definition {
-  margin: 0 0 0.65rem;
-  font-size: var(--text-sm);
-  line-height: 1.6;
-}
-
-.use-case {
   margin: 0;
   font-size: var(--text-sm);
   line-height: 1.6;
-  color: var(--color-muted);
-}
-
-.use-case > span {
-  color: var(--color-ink-soft);
-  font-weight: 500;
 }
 
 .reduced-note {

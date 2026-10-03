@@ -19,7 +19,7 @@ Build-in-public project documenting what AI coding assistants can and can't do f
 | 3 | Post listing, metadata, basic navigation | ✅ Done |
 | 4 | Styling, design, mobile responsiveness | ✅ Done |
 | 5 | SEO: dynamic sitemap, robots.txt, Search Console | ✅ Done |
-| 6 | Redesign: warm palette, Fraunces/Inter fonts, nav scroll reveal | ✅ Done |
+| 6 | Redesign: warm palette, Fraunces/DM Sans fonts, nav scroll reveal | ✅ Done |
 | 7 | Previous/Next post navigation, Fathom Analytics | ✅ Done |
 | 8 | Monorepo consolidation, shared design system, visual unification | ✅ Done |
 | 9 | RSS feed, auto-deploy via GitHub Actions, archive modernization | ✅ Done |

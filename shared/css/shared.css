@@ -8,8 +8,6 @@
    Design tokens
    =========================== */
 :root {
-    --nav-height: 56px;
-
     --color-bg: #FCF8EE;           /* warm cream */
     --color-ink: #1F1B16;          /* warm near-black */
     --color-ink-soft: #2A2620;     /* body text */
@@ -43,6 +41,38 @@
     --text-5xl: 5rem;      /* sub-page hero (About / Experience) */
     --text-6xl: 6rem;      /* 404 numeral */
     --text-hero: 8rem;     /* the big name on home & Fragments */
+
+    /* Spacing scale — canonical margin, padding, and gap steps. Reference
+       these instead of hardcoding rem values. Same base as the type scale
+       (1rem ≈ 17px, 16px ≤768px). A few values stay literal by design and are
+       documented as exceptions in design.md: optical nudges on pills, the drop
+       cap, inline code and the meta row, plus 0 / auto. */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-7: 2rem;
+    --space-8: 2.5rem;
+    --space-9: 3rem;
+    --space-10: 3.5rem;
+    --space-11: 4rem;
+    --space-12: 6rem;
+
+    /* Layout — fixed chrome, page gutters, hero offsets, and measures. */
+    --nav-height: 56px;
+    --nav-padding: 32px;               /* nav side padding */
+    --nav-padding-mobile: 16px;
+    --gutter: 20px;                    /* page side padding */
+    --hero-offset: 6rem;               /* home hero top padding */
+    --hero-offset-mobile: 5.5rem;
+    --page-hero-offset: 7rem;          /* sub-page hero top padding */
+    --page-hero-offset-mobile: 5rem;
+    --measure-portfolio: 36rem;        /* Home / About column */
+    --measure-blog: 680px;             /* Fragments column */
+    --measure-experience: 50rem;       /* résumé column */
+    --rail-width: 8rem;                /* résumé section-label rail */
 }
 
 /* ===========================
@@ -103,7 +133,7 @@ a:hover {
     top: 8px;
     left: 8px;
     z-index: 200;
-    padding: 0.5rem 0.9rem;
+    padding: var(--space-2) var(--space-3);
     background-color: var(--color-bg);
     color: var(--color-ink);
     font-family: var(--font-sans);
@@ -176,7 +206,8 @@ a:hover {
     text-transform: uppercase;
     letter-spacing: 0.07em;
     text-decoration: none;
-    /* Uppercase glyphs ride high; the extra top padding re-centers them. */
+    /* Uppercase glyphs ride high; the extra top padding re-centers them.
+       Optical tweak — kept literal on purpose, off the spacing scale. */
     padding: 0.26rem 0.5rem 0.14rem;
     border: 1px solid var(--color-rule);
     border-radius: 8px;
@@ -220,7 +251,7 @@ a:hover {
     border-bottom: 1px solid transparent;
     z-index: 100;
     transition: border-color 0.3s ease;
-    padding: 0 32px;
+    padding: 0 var(--nav-padding);
 }
 
 .nav-scrolled {
@@ -231,14 +262,14 @@ a:hover {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 1rem;
+    gap: var(--space-4);
     height: 100%;
 }
 
 .nav-group {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: var(--space-7);
 }
 
 .nav-start {
@@ -304,11 +335,11 @@ a:hover {
    =========================== */
 @media (max-width: 768px) {
     .nav {
-        padding: 0 16px;
+        padding: 0 var(--nav-padding-mobile);
     }
 
     .nav-group {
-        gap: 1rem;
+        gap: var(--space-4);
     }
 
     .nav-group a {
@@ -350,7 +381,7 @@ a:hover {
 .hero-name .tagline {
     position: absolute;
     top: 100%;
-    margin-top: -0.4em;
+    margin-top: -0.4em; /* optical tuck under the name — kept literal on purpose */
     font-family: var(--font-sans);
     font-size: var(--text-md);
     font-weight: 400;

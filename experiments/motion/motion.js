@@ -153,6 +153,9 @@ import { createScene } from './scenes.js';
       states.forEach((state, i) => { state.article.style.viewTransitionName = `study-${i}`; });
       const transition = document.startViewTransition(() => applyFilter(category));
       filterTransition = transition;
+      // A skipped transition (hidden tab, or a quick second click) rejects
+      // `ready`; the filter still applies, so there's nothing to handle.
+      transition.ready.catch(() => {});
       transition.finished.finally(() => {
         // A quick second click skips this transition; leave the names for the new one.
         if (filterTransition !== transition) return;

@@ -103,10 +103,6 @@ main.experiment-main {
     margin-bottom: 2rem;
   }
 
-  .intro-copy br {
-    display: none;
-  }
-
   .experiment-entry {
     grid-template-columns: 2rem 1fr auto;
     gap: 0.5rem;

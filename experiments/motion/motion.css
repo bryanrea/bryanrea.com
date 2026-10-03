@@ -48,8 +48,10 @@
   opacity: 0.75;
 }
 
+/* Comes after :hover so the selected chip keeps no hover border. */
 .filter[aria-pressed="true"] {
   background: var(--color-ink);
+  border-color: transparent;
   color: var(--color-bg);
 }
 

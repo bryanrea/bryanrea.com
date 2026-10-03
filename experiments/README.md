@@ -37,7 +37,7 @@ python3 -m http.server 8000
 A vocabulary of 48 studies in eight groups: Timing, Physics, Choreography,
 Transitions, Scroll, Spatial, Navigation, and Camera.
 
-- `index.html` — every study's definition and use case, readable without JS.
+- `index.html` — every study's definition, readable without JS.
 - `motion.js` — keyframes for the dot studies, playback, filtering, slow motion.
 - `scenes.js` — Canvas 2D renderers for the scroll, spatial, navigation, and
   camera studies. Each is a pure function of progress (0–1), drawn only while

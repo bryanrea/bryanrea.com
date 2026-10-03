@@ -320,21 +320,9 @@
 }
 
 .definition {
-  margin: 0 0 0.65rem;
-  font-size: var(--text-sm);
-  line-height: 1.6;
-}
-
-.use-case {
   margin: 0;
   font-size: var(--text-sm);
   line-height: 1.6;
-  color: var(--color-muted);
-}
-
-.use-case > span {
-  color: var(--color-ink-soft);
-  font-weight: 500;
 }
 
 .reduced-note {

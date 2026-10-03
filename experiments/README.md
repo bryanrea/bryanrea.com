@@ -50,7 +50,7 @@ leaves the viewport or the tab is hidden.
 
 **Adding a study.** Add an `<article class="study">` with a `data-technique`
 and `data-category`, then either keyframes under that key in `motion.js` or a
-renderer in `scenes.js`. Update the study numbers and the "All" count.
+renderer in `scenes.js`. Update the "All" count.
 
 **Accuracy notes.** Spring and bounce are illustrative keyframes, not physics
 simulations. Rack focus fakes the focus shift with blur. The camera studies

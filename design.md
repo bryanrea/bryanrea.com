@@ -6,6 +6,9 @@ The design system for **bryanrea.com** — covering both the static portfolio
 link styles, navigation, and animated background so a visitor moving between
 them never feels a seam.
 
+The `experiments/` sandbox builds on the same foundations, with looser rules
+inside each experiment (§11).
+
 This document is the source of truth for the *look*. For app structure and
 routing see `fragments/docs/architecture.md`; for code style see
 `fragments/docs/conventions.md`.
@@ -21,6 +24,7 @@ routing see `fragments/docs/architecture.md`; for code style see
 | `style.css` (root) | Portfolio only | Page-hero, content prose, experience/résumé layout, + the hero's outer spacing & tagline offset |
 | `fragments/static/css/style.css` | Blog only | Blog reset/base, post list, post body, tags, footer, 404, + the hero's outer spacing & tagline offset |
 | `shared/js/main.js` | **Both sites** | Blob animation randomizing, nav scroll/title behavior |
+| `experiments/experiments.css` | `experiments/` only | Layout shared by experiment pages; each experiment's own CSS lives in its folder (see §11) |
 | `archive/css/*` | Legacy `archive/` only | Self-contained old design — **not** part of this system (see §10) |
 
 **Golden rule:** anything visual that appears on *both* sites lives in
@@ -258,10 +262,11 @@ states. (Sections 4–6 cover nav, background, and hero, which are also
 components; this section covers the rest.) The surface sections (§8–§9) describe
 *where* these get composed.
 
-> **Note — there are no form components.** The whole project contains no
-> `<button>`, `<input>`, `<form>`, `<select>`, or `<textarea>`. It's a static
-> portfolio plus a read-only blog. Every "button" is a styled `<a>`. If you ever
-> add a real form/button, define its base + `:hover`/`:focus`/`:active`/disabled
+> **Note — there are no form components.** The portfolio and blog contain no
+> `<button>`, `<input>`, `<form>`, `<select>`, or `<textarea>`. Every "button" is
+> a styled `<a>`. Experiments (§11) use native buttons and range inputs, styled
+> locally; those aren't part of this catalog. If the portfolio or blog ever adds
+> a real form/button, define its base + `:hover`/`:focus`/`:active`/disabled
 > states here first.
 
 ### 7.1 Links — five variants
@@ -423,7 +428,27 @@ background. Leave it alone unless explicitly redesigning it.
 
 ---
 
-## 11. Conventions & gotchas
+## 11. Experiments (`experiments/`)
+
+A sandbox of small prototypes built to try ideas out, at `/experiments/`. Unlike
+the archive, experiments sit **on** the design system: every page loads
+`reset.css`, `shared.css`, and `shared/js/main.js`, and uses the standard fixed
+nav, animated background, and `.display` / `.label` recipes. Page layout shared
+across experiments lives in `experiments/experiments.css`.
+
+Inside an experiment the rules loosen. Native form controls, canvas drawing,
+extra colors for diagrams, and one-off layout are all fine, as long as they're
+scoped to that experiment's folder and never added to `shared/`. The motion
+studies, for example, define `--study-teal` / `--study-gold` diagram inks on
+`.motion-grid` rather than as site tokens.
+
+Experiments stay low-profile: not linked from the nav, left out of the sitemap,
+`noindex, nofollow`, no analytics. Their CSS links aren't cache-busted. See
+`experiments/README.md` for structure and how to add one.
+
+---
+
+## 12. Conventions & gotchas
 
 - **Pure CSS, no frameworks** — by project rule. No utility classes, no
   preprocessor.
@@ -450,4 +475,5 @@ background. Leave it alone unless explicitly redesigning it.
   changes that affect the portfolio. See `CLAUDE.md` § Cache busting.
 - **Fonts are loaded per-page** in each `<head>` (Fraunces + DM Sans); the
   experience page additionally loads Fraunces italic.
-- **Analytics:** Fathom (`data-site="VBYEXRMM"`) is included on every page.
+- **Analytics:** Fathom (`data-site="VBYEXRMM"`) is included on every page
+  except experiments.

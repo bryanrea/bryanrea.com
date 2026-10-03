@@ -28,7 +28,9 @@ python3 -m http.server 8000
 1. Create a sibling folder (e.g. `experiments/sound/`) with its own `index.html`,
    starting from `motion/index.html`'s `<head>`, nav, and intro.
 2. Put experiment-specific CSS/JS in that folder.
-3. Add a numbered `.experiment-entry` to `experiments/index.html`.
+3. Add a numbered `.experiment-entry` to `experiments/index.html`. The link goes
+   on the title (`<h2><a href="…">`); `experiments.js` makes the rest of the row
+   clickable while keeping its text selectable.
 
 ## Motion studies (`motion/`)
 

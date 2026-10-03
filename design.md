@@ -36,7 +36,8 @@ duplicate a token or a nav rule into a site-specific file.
 ## 2. Design tokens
 
 All defined as CSS custom properties on `:root` in `shared/css/shared.css`.
-Always reference the variable — never hardcode a hex value or pixel nav height.
+Always reference the variable — never hardcode a hex value, font size, spacing
+step, or layout dimension.
 
 ### Color
 
@@ -104,11 +105,57 @@ and four body sizes to two.
 > Weight, letter-spacing, line-height, and text-transform are **not** tokenized —
 > only size. They're set per component (see §7).
 
+### Spacing
+
+One set of margin, padding, and gap steps shared by both sites, defined in
+`shared/css/shared.css`. **Reference these tokens — don't hardcode rem values.**
+Same base as the type scale (`1rem ≈ 17px`, 16px ≤768px). Near-duplicate
+values (e.g. `0.4` / `0.5` / `0.55rem`, `0.75` / `0.85` / `0.9rem`) were snapped
+to the nearest step when the scale was introduced.
+
+| Token | Value | Typical use |
+|-------|-------|-------------|
+| `--space-1` | `0.25rem` | Post-nav label → title |
+| `--space-2` | `0.5rem` | Tag-list gap, list items, heading → body, résumé title → meta |
+| `--space-3` | `0.75rem` | Prose `h2` bottom, meta row bottom, figcaption, prev/next card padding |
+| `--space-4` | `1rem` | Paragraph bottom (résumé), tag-list top, nav gaps |
+| `--space-5` | `1.25rem` | Paragraph bottom (prose & portfolio), blockquote indent |
+| `--space-6` | `1.5rem` | List indent, `pre` bottom, prev/next grid gap |
+| `--space-7` | `2rem` | Post-preview padding, blockquote / image / figure margins |
+| `--space-8` | `2.5rem` | Prose `h2`/`h3` top, header bottoms, résumé entry separation |
+| `--space-9` | `3rem` | Section separation, post-content bottom |
+| `--space-10` | `3.5rem` | Résumé section padding & rail gap |
+| `--space-11` | `4rem` | Blog `main` bottom, footer top, 404 padding |
+| `--space-12` | `6rem` | Portfolio page bottom padding |
+
+**Documented literal exceptions** (intentionally not tokenized — optical tweaks):
+- **`.pill` padding** `0.26rem 0.5rem 0.14rem` and **`.tag-pill` padding**
+  `0.35em 0.8em 0.29em` — extra top padding re-centers uppercase glyphs.
+- **Drop cap margins** `0.05rem 0.55rem 0 0` (float fallback) and `0 0.5rem 0 0`
+  (`initial-letter`) — fitted to the cap.
+- **Inline `code` padding** `0.15rem 0.4rem` — hugs the inline glyphs.
+- **Hero tagline** `margin-top: -0.4em` and its `left` offsets (`36%` home,
+  `46%` Fragments) — tuned to each name's descender.
+- **`.post-meta`** `gap: 0.6em` and the reading-time dot's `margin-right: 0.6em`
+  — em-relative to the label type.
+- Background blob positions, and `0` / `auto` values.
+
 ### Layout
 
 | Token | Value | Role |
 |-------|-------|------|
 | `--nav-height` | `56px` | Fixed nav height; blog `body` uses it as top padding |
+| `--nav-padding` | `32px` | Nav side padding |
+| `--nav-padding-mobile` | `16px` | Nav side padding ≤768px |
+| `--gutter` | `20px` | Page side padding (portfolio heroes & mains, blog `body`) |
+| `--hero-offset` | `6rem` | Home `header.hero` top padding |
+| `--hero-offset-mobile` | `5.5rem` | Same, ≤768px |
+| `--page-hero-offset` | `7rem` | Sub-page `header.page-hero` top padding |
+| `--page-hero-offset-mobile` | `5rem` | Same, ≤768px |
+| `--measure-portfolio` | `36rem` | Home / About column (`main.content`) |
+| `--measure-blog` | `680px` | Fragments column (`.container`, `.post-full`) |
+| `--measure-experience` | `50rem` | Résumé column (`main.experience`) |
+| `--rail-width` | `8rem` | Résumé section-label rail (`.resume-section` grid) |
 
 ---
 
@@ -190,8 +237,9 @@ sites with identical markup.
 - **Scrolled state:** `.nav-scrolled` adds the hairline bottom border once the
   page scrolls past 8px.
 
-**Responsive (≤768px):** padding tightens to `0 16px`, link gap shrinks to
-`1rem`, font to `0.72rem`; the centered brand title is hidden entirely.
+**Responsive (≤768px):** padding tightens to `--nav-padding-mobile`, link gap
+shrinks to `--space-4`, font to `0.72rem`; the centered brand title is hidden
+entirely.
 
 > Cross-site note: in the blog's `base.html` the nav links point at absolute
 > `https://bryanrea.com/...` URLs (the blog is a separate Flask app behind
@@ -330,7 +378,7 @@ Markdown renders into these — they're styled once and reused across all posts:
   a `--color-rule` border + `6px` radius.
 - **Images** — block, centered, rounded `6px`, `--color-rule` border; wrap in
   `<figure>` for a centered italic muted `<figcaption>`.
-- **Lists** — `1.5rem` indent, `0.5rem` between items.
+- **Lists** — `--space-6` indent, `--space-2` between items.
 
 ---
 
@@ -340,14 +388,14 @@ Markdown renders into these — they're styled once and reused across all posts:
 antialiased.
 
 ### Home / About content (`main.content`)
-- Centered column, `max-width: 36rem`.
+- Centered column, `max-width: var(--measure-portfolio)`.
 - `h2` — Fraunces `2.5rem`, **crimson**, `text-wrap: balance`. (The crimson
   `h2` is a portfolio-only signature; the blog's `h2` is ink.)
-- `p` — `1.1rem`, ink-soft. Sections separated by `3rem`.
+- `p` — `1.1rem`, ink-soft. Sections separated by `--space-9`.
 
 ### Experience / résumé (`main.experience`)
-- Wider column, `max-width: 50rem`, left-aligned.
-- **Two-column grid** `8rem 1fr` with a `3.5rem` gap per `.resume-section`,
+- Wider column, `max-width: var(--measure-experience)`, left-aligned.
+- **Two-column grid** `var(--rail-width) 1fr` with a `--space-10` gap per `.resume-section`,
   separated by `--color-rule` top borders. The left column is the section label.
 - `main.experience h2` (section label) — Fraunces **italic**, `1.05rem`,
   `opsz 9`, muted, right-aligned in its rail.
@@ -367,7 +415,7 @@ antialiased.
 ## 9. Fragments blog surfaces (`fragments/static/css/style.css`)
 
 **Body:** DM Sans, `line-height 1.7`, top padding `--nav-height` (clears the fixed
-nav). Content lives in `.container` (`max-width: 680px`, centered).
+nav). Content lives in `.container` (`max-width: var(--measure-blog)`, centered).
 
 ### Headings
 - `h1` `3.75rem` / `h2` `2rem` / `h3` `1.4rem`, all Fraunces, weight 600, ink.
@@ -377,8 +425,8 @@ nav). Content lives in `.container` (`max-width: 680px`, centered).
 ### Home hero
 Mirrors the portfolio hero exactly — "Fragments" at `8rem` with the tagline
 *"Building with AI, in public"* tucked under-right. The name is a link to the
-blog index. (Comments in the CSS explain how the `2.5rem` top padding + body's
-`--nav-height` reproduce home's `6rem` offset.)
+blog index. (Comments in the CSS explain how the `--space-8` top padding + body's
+`--nav-height` approximate home's `--hero-offset`.)
 
 ### Post listing (`.post-preview`)
 - Stacked, separated by `--color-rule` bottom borders.
@@ -398,7 +446,7 @@ blog index. (Comments in the CSS explain how the `2.5rem` top padding + body's
   - `blockquote` — `3px` crimson left border, Fraunces, muted.
   - `code` / `pre` — `--color-surface-soft` background, monospace stack, rounded;
     `pre` adds a `--color-rule` border.
-  - `img` — block, centered, rounded `6px`, `--color-rule` border, `2rem`
+  - `img` — block, centered, rounded `6px`, `--color-rule` border, `--space-7`
     margins. `figure` + `figcaption` (centered, italic, muted) for captions.
 - **Prev/next nav** (`.post-nav`) — two bordered cards in a `1fr 1fr` grid
   (stacks on mobile); crimson uppercase label + Fraunces title; hover darkens
@@ -452,12 +500,19 @@ Experiments stay low-profile: not linked from the nav, left out of the sitemap,
 
 - **Pure CSS, no frameworks** — by project rule. No utility classes, no
   preprocessor.
-- **Reference tokens, never literals.** New hex value, font size, or nav height →
-  add/use a `:root` token in `shared.css`. Font sizes come from the **type scale**
-  (`--text-*`, §2) — don't introduce a new ad-hoc rem value; pick the nearest step
-  or, if a genuinely new size is warranted, add a scale token. The only allowed
-  off-scale sizes are the documented exceptions in §2 (drop cap, inline `code`,
-  mobile nav, bespoke mobile heading overrides).
+- **Reference tokens, never literals.** New hex value, font size, spacing value,
+  or layout dimension → add/use a `:root` token in `shared.css`. Font sizes come
+  from the **type scale** (`--text-*`, §2) — don't introduce a new ad-hoc rem
+  value; pick the nearest step or, if a genuinely new size is warranted, add a
+  scale token. The only allowed off-scale sizes are the documented exceptions in
+  §2 (drop cap, inline `code`, mobile nav, bespoke mobile heading overrides).
+- **Spacing comes from `--space-*`** (§2). Every margin, padding, and gap uses a
+  spacing step; gutters, nav padding, hero offsets, measures, and the résumé
+  rail use the layout tokens. Snap a new value to the nearest step rather than
+  inventing one. The only literals allowed are the documented optical exceptions
+  in §2 (pill / tag-pill padding, drop-cap margins, inline `code` padding, the
+  hero tagline tuck and offsets, the `.post-meta` em gaps, blob positions) plus
+  `0` / `auto` — each carries a "kept literal on purpose" comment in the CSS.
 - **One breakpoint: `768px`.** Lean on rem-based sizing + the `html` font-size
   step before reaching for a new media query.
 - **Crimson is precious.** It's the only saturated color — use it for emphasis,
@@ -471,7 +526,7 @@ Experiments stay low-profile: not linked from the nav, left out of the sitemap,
 - **Cache busting differs by site.** The blog auto-appends `?v={{ cache_bust }}`
   (git short hash, via a context processor). The static portfolio hardcodes the
   hash in `index.html`, `about/index.html`, `experience/index.html` (currently
-  `?v=5473d61`) — **update all three by hand** when shipping shared CSS/JS
+  `?v=800e458`) — **update all three by hand** when shipping shared CSS/JS
   changes that affect the portfolio. See `CLAUDE.md` § Cache busting.
 - **Fonts are loaded per-page** in each `<head>` (Fraunces + DM Sans); the
   experience page additionally loads Fraunces italic.

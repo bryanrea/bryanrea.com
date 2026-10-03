@@ -216,7 +216,7 @@ Posts feel connected rather than isolated. Basic traffic visibility is in place.
 **Date:** ~March 2026
 
 ### ✅ Completed
-- Redesigned Fragments with the warm palette (cream + crimson), Fraunces + Inter type pairing, and the animated gradient background — aligning it with the direction of the portfolio.
+- Redesigned Fragments with the warm palette (cream + crimson), Fraunces + DM Sans type pairing, and the animated gradient background — aligning it with the direction of the portfolio.
 - Added nav scroll-reveal behavior so the nav hides on scroll down and reappears on scroll up.
 
 ### 🌐 Result

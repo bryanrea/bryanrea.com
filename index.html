@@ -21,8 +21,8 @@
       }
     </script>
     <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="shared/css/shared.css?v=800e458" />
-    <link rel="stylesheet" href="style.css?v=800e458" />
+    <link rel="stylesheet" href="shared/css/shared.css?v=f3f1417" />
+    <link rel="stylesheet" href="style.css?v=f3f1417" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -60,37 +60,250 @@
       </div>
     </nav>
 
-    <header class="hero">
-      <div class="hero-name">
-        <h1 class="display display--hero">Bryan Rea</h1>
-        <p class="tagline">Designing in Systems</p>
-      </div>
-    </header>
-
-    <main class="content" id="main">
-      <section class="section">
-        <h2 class="display display--lg display--accent">On to something new :)</h2>
-        <p>
-          After 12+ years as a UX designer, manager, and leader at Google on
-          some of the world's biggest products like Play, Android, Gmail, and
-          YouTube, something new is on the way. Stay tuned.
-        </p>
+    <!-- Stacked cards: each section sticks under the nav and is covered by the
+         next. js/stacked-cards.js scales and dims the covered ones. -->
+    <main class="home" id="main">
+      <section class="card card--intro" data-card aria-labelledby="who">
+        <div class="background background--contained" aria-hidden="true">
+          <div class="circle circle-1"></div>
+          <div class="circle circle-2"></div>
+          <div class="noise"></div>
+        </div>
+        <!-- News callout: time-bound, so it sits apart from the card's
+             evergreen headline and text. Drop it when it's no longer news. -->
+        <div class="callout">
+          <span class="callout-icon" aria-hidden="true">
+            <!-- Lucide "party-popper" (lucide.dev/icons/party-popper, ISC) -->
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M5.8 11.3 2 22l10.7-3.79" />
+              <path d="M4 3h.01" />
+              <path d="M22 8h.01" />
+              <path d="M15 2h.01" />
+              <path d="M22 20h.01" />
+              <path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10" />
+              <path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17" />
+              <path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7" />
+              <path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z" />
+            </svg>
+          </span>
+          <p>
+            Happy to share I just joined
+            <a href="https://www.getyourguide.com/">GetYourGuide</a> as the UX
+            Director for the Traveler experience.
+          </p>
+        </div>
+        <div class="intro-body">
+          <div class="intro-text">
+            <h1 id="who" class="display display--xxl">
+              Building products and teams that help people
+              <!-- Cycles through the verbs once, then rests on the last.
+                   Screen readers get the static sentence via the hidden copy;
+                   without JS or with reduced motion, "thrive" just shows. -->
+              <span class="verb-cycle" data-verb-cycle aria-hidden="true">
+                <!-- Keep each word no wider than "connect": the longest one sets
+                     the box, and wider ones push the headline to a 4th line. -->
+                <span>connect</span>
+                <span>create</span>
+                <span>learn</span>
+                <span>explore</span>
+                <span>travel</span>
+                <span>share</span>
+                <span>grow</span>
+                <span>dream</span>
+                <span class="is-current">thrive<svg class="verb-underline" viewBox="0 0 200 20" preserveAspectRatio="none" focusable="false"><path d="M3 13 C 40 6, 92 5, 132 8 S 184 14, 197 7" pathLength="1" /></svg></span>
+              </span>
+              <span class="visually-hidden">thrive</span>
+            </h1>
+            <div class="intro-copy">
+              <p>
+                For over 20 years I’ve built products that help people get where
+                they want to go in life. I believe most hard problems are
+                system problems, so I zoom out to see how the pieces fit. And I
+                focus on helping my teams do the best work of their lives, because
+                great teams build great products.
+              </p>
+              <p class="intro-location">
+                <!-- Lucide "map-pin" (lucide.dev/icons/map-pin, ISC) -->
+                <svg class="icon icon--inline" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                <span>Based in Zurich</span>
+              </p>
+            </div>
+          </div>
+          <div class="portrait">
+            <img src="img/headshot.webp?v=f3f1417" alt="Bryan Rea" width="880" height="880" decoding="async" />
+          </div>
+        </div>
       </section>
 
-      <section class="section">
-        <h2 class="display display--lg display--accent">In the meantime…</h2>
-        <p>
-          Check out my
-          <a href="resume.pdf">resume</a>,
-          <a href="https://www.linkedin.com/in/bryanrea/">LinkedIn</a>, a
-          <em>very</em>
-          <a href="archive/">old archive of work</a>
-          (pre-Google), or better yet,
-          <a href="mailto:bryan@bryanrea.com">let's chat</a>.
+      <section class="card card--dark card--center" data-card aria-labelledby="work">
+        <h2 id="work" class="display display--xl">More coming, stay tuned!</h2>
+        <!-- Placeholder for now. The original "Products used by billions"
+             content is parked below, inert, until it's ready to come back:
+             move it out of the <template> and switch the card back to
+             card--soft (no card--center) to restore it. Its CSS (.app-list
+             etc.) was removed — bring it back from git history too. -->
+        <template>
+          <h2 id="work" class="display display--xl">Products used by billions.</h2>
+          <!-- TODO: swap the initials for real app icons. Add one image per app
+               under shared/img/apps/ (e.g. getyourguide.png) and replace each
+               .app-icon's text with an <img alt=""> — the tile stays decorative
+               since the name is printed beneath it. -->
+          <ul class="app-list">
+            <li class="app">
+              <div class="app-icon" aria-hidden="true">Gy</div>
+              <span class="app-name">GetYourGuide</span>
+              <span class="app-role">Design Director</span>
+            </li>
+            <li class="app">
+              <div class="app-icon" aria-hidden="true">Ys</div>
+              <span class="app-name">YouTube Studio</span>
+              <span class="app-role">Head of UX</span>
+            </li>
+            <li class="app">
+              <div class="app-icon" aria-hidden="true">Ga</div>
+              <span class="app-name">G Suite Assistant</span>
+              <span class="app-role">Senior UX Lead</span>
+            </li>
+            <li class="app">
+              <div class="app-icon" aria-hidden="true">Gm</div>
+              <span class="app-name">Gmail + Inbox</span>
+              <span class="app-role">UX Lead</span>
+            </li>
+            <li class="app">
+              <div class="app-icon" aria-hidden="true">Pm</div>
+              <span class="app-name">Play Music</span>
+              <span class="app-role">UX Designer</span>
+            </li>
+            <li class="app">
+              <div class="app-icon" aria-hidden="true">An</div>
+              <span class="app-name">Android</span>
+              <span class="app-role">UX Designer</span>
+            </li>
+            <li class="app">
+              <div class="app-icon" aria-hidden="true">Sh</div>
+              <span class="app-name">Shopping.com</span>
+              <span class="app-role">Interaction Designer</span>
+            </li>
+          </ul>
+        </template>
+      </section>
+
+      <!-- Latest post is hand-written for now: update the label, title, link
+           and excerpt when a new post ships. -->
+      <section class="card card--soft" data-card aria-labelledby="latest">
+        <p class="label">Latest post · Sep 29, 2026</p>
+        <div class="latest-body">
+          <h2 id="latest" class="display display--xxl card-headline latest-title">
+            <a href="/fragments/post/lessons-from-google">3 Lessons From My Time at Google</a>
+          </h2>
+          <p class="latest-excerpt">
+            The power of vision. Don’t ask for permission. Together, we’re
+            unstoppable.
+          </p>
+        </div>
+        <a href="/fragments" class="card-link latest-all">All posts in Fragments →</a>
+      </section>
+
+      <section class="card card--contact" data-card aria-labelledby="talk">
+        <div class="background background--contained" aria-hidden="true">
+          <div class="circle circle-1"></div>
+          <div class="circle circle-2"></div>
+          <div class="noise"></div>
+        </div>
+        <div class="contact-body">
+          <h2 id="talk" class="display display--lg">Interested?</h2>
+          <a href="mailto:bryan@bryanrea.com" class="display display--hero contact-cta">Let's talk →</a>
+        </div>
+        <p class="contact-meta">
+          bryan@bryanrea.com ·
+          <a href="https://www.linkedin.com/in/bryanrea/">LinkedIn</a> ·
+          <a href="/resume.pdf">Resume</a>
         </p>
       </section>
+      <!-- Parked for later: the case-study and philosophy cards. Inert inside
+           a <template>, and placed after the last card so it doesn't shift
+           the cards' :nth-child stagger. Move a card back above to restore,
+           along with its CSS (.stats, .case-cta, .card--split, .principle…)
+           from git history. -->
+      <template>
+        <section class="card card--dark" data-card aria-labelledby="case">
+          <h2 id="case" class="display display--xl card-headline">
+            From a dumping ground of features to a creative partner.
+          </h2>
+          <div class="case-footer">
+            <dl class="stats">
+              <div class="stat">
+                <dt>creators served</dt>
+                <dd class="display">100M+</dd>
+              </div>
+              <div class="stat">
+                <dt>mobile usage</dt>
+                <dd class="display">2x</dd>
+              </div>
+              <div class="stat">
+                <dt>weekly active channels</dt>
+                <dd class="display">+20%</dd>
+              </div>
+              <div class="stat">
+                <dt>first-time uploaders</dt>
+                <dd class="display">+10%</dd>
+              </div>
+            </dl>
+            <!-- TODO: /youtube-studio doesn't exist yet — this 404s until the
+                 case study page is built. -->
+            <p>
+              <a href="/youtube-studio" class="pill case-cta">Read the case study →</a>
+            </p>
+          </div>
+        </section>
+
+        <section class="card card--split" data-card aria-labelledby="lead">
+          <div class="card-heading">
+            <h2 id="lead" class="display display--xl">How I lead</h2>
+            <p class="philosophy-lede">
+              Know where you're going, why it matters, and repeat it until
+              everyone else does too.
+            </p>
+          </div>
+          <ol class="principles">
+            <li class="principle">
+              <span class="display display--sm display--accent">01</span>
+              <span class="principle-body">
+                <span class="display display--md">Clarity and conviction</span>
+                <span>What are we doing, and why are we doing it.</span>
+              </span>
+            </li>
+            <li class="principle">
+              <span class="display display--sm display--accent">02</span>
+              <span class="principle-body">
+                <span class="display display--md">Guardrails, not gates</span>
+                <span>The best results come from teams hungry to solve the problem.</span>
+              </span>
+            </li>
+            <li class="principle">
+              <span class="display display--sm display--accent">03</span>
+              <span class="principle-body">
+                <span class="display display--md">Care deeply</span>
+                <span>A culture where people care about the user and each other.</span>
+              </span>
+            </li>
+            <li class="principle">
+              <span class="display display--sm display--accent">04</span>
+              <span class="principle-body">
+                <span class="display display--md">Design as a differentiator</span>
+                <span>Design creates value for the company and for its users.</span>
+              </span>
+            </li>
+          </ol>
+        </section>
+      </template>
     </main>
 
-    <script src="shared/js/main.js?v=800e458" defer></script>
+    <script src="shared/js/main.js?v=f3f1417" defer></script>
+    <script src="js/stacked-cards.js?v=f3f1417" defer></script>
+    <script src="js/verb-cycle.js?v=f3f1417" defer></script>
   </body>
 </html>

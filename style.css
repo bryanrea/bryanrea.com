@@ -14,19 +14,337 @@ body {
 
 
 /* ===========================
-   Hero
-   The `.hero-name` block (name + tagline) lives in shared.css. Here we set
-   only the hero's outer spacing and the tagline's horizontal offset.
+   Home — stacked cards
+   Full-height sections that stick under the nav, each one step lower than
+   the last, so scrolling deals them into a stack — on every screen size.
+   js/stacked-cards.js scales and dims the covered cards, and lets a card
+   taller than the viewport scroll until its bottom shows before it sticks.
    =========================== */
-header.hero {
-  padding: var(--hero-offset) var(--gutter) var(--space-6);
+/* --card-gap separates the cards; --card-peek is how much of the next card
+   always shows below the current one. A card's height leaves room for both
+   (see .card), and the bottom padding equals them so the page ends where the
+   last card lands: it can't stick — it ends its own containing block — so
+   any more padding would scroll it up under the nav. stacked-cards.js reads
+   this padding as the gap to keep below a too-tall card. */
+main.home {
+  --card-gap: var(--space-9);
+  --card-peek: var(--space-9);
+  max-width: var(--measure-home);
+  margin: 0 auto;
+  padding: calc(var(--nav-height) + var(--space-4)) var(--gutter)
+    calc(var(--card-gap) + var(--card-peek));
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap);
+}
+
+.card {
+  --card-top: calc(
+    var(--nav-height) + var(--card-stack-offset) +
+      var(--card-stack-step) * var(--card-index, 0)
+  );
+  position: sticky;
+  top: var(--card-top);
+  /* Fill the screen below the sticky top, less the gap and the next card's
+     peek — capped at --card-height on tall screens. */
+  min-height: min(
+    var(--card-height),
+    calc(100svh - var(--card-top) - var(--card-gap) - var(--card-peek))
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-7);
+  --card-padding: var(--space-11);
+  --card-radius: var(--radius-card);
+  padding: var(--card-padding);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--card-radius);
+  /* Squircle corners (continuous curvature). Progressive enhancement:
+     browsers without corner-shape fall back to plain round corners. */
+  corner-shape: squircle;
+  overflow: hidden;
+  background-color: var(--color-bg);
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+
+.card:nth-child(2) { --card-index: 1; }
+.card:nth-child(3) { --card-index: 2; }
+.card:nth-child(4) { --card-index: 3; }
+.card:nth-child(5) { --card-index: 4; }
+.card:nth-child(6) { --card-index: 5; }
+
+/* Lift content above a card's contained background. */
+.card > :not(.background) {
+  position: relative;
+}
+
+.card--soft {
+  background-color: var(--color-surface-soft);
+  border-color: transparent;
+}
+
+.card--dark {
+  background-color: var(--color-ink);
+  border-color: transparent;
+  color: var(--color-bg);
+}
+
+.card--dark .display { color: var(--color-bg); }
+
+/* Single centered message (the "More coming" placeholder). */
+.card--center {
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
-/* Offset the tagline to clear the "y" descender in "Bryan". Optical — kept
-   literal on purpose. */
-.hero-name .tagline {
-  left: 36%;
+.card-headline {
+  max-width: var(--measure-display);
+}
+
+/* Standalone uppercase link — the nav-link recipe at a tap-sized height. */
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  color: var(--color-ink);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.card-link:hover {
+  color: var(--color-accent);
+}
+
+/* 01 · Intro — contained blobs sit top-right and bottom-centre. Blob
+   positions are literal on purpose (see design.md §2). */
+.card--intro .circle-1 { top: -25%; left: auto; right: -15%; }
+.card--intro .circle-2 { top: auto; bottom: -45%; left: 35%; }
+
+/* Cycling verb at the end of the intro headline. Every word shares one grid
+   cell, so the box is as wide as the longest word and the headline never
+   re-wraps mid-cycle. Words waiting below and leaving above are blurred out;
+   transitions only switch on once JS marks the cycle ready, so the initial
+   swap away from the no-JS "thrive" doesn't animate. Motion uses the nav
+   fly-in curve (design.md §3). */
+.verb-cycle {
+  display: inline-grid;
+  color: var(--color-accent);
+}
+
+/* justify-self: start so each word hugs its own width (the grid cell is the
+   longest word's) — the underline sizes to the word, not the cell. */
+.verb-cycle > span {
+  grid-area: 1 / 1;
+  justify-self: start;
+}
+
+.verb-cycle > :not(.is-current) {
+  opacity: 0;
+  transform: translateY(0.3em);
+  filter: blur(0.08em);
+}
+
+.verb-cycle > .is-leaving {
+  transform: translateY(-0.3em);
+}
+
+/* Hand-drawn underline under the final word. Drawn by default (no JS,
+   reduced motion); once JS runs it waits hidden and draws itself left to
+   right when the word lands (.is-landed). pathLength="1" makes the dash
+   math unitless; non-scaling-stroke keeps the stroke even though the SVG
+   stretches to the word. Offsets are optical, kept literal on purpose. */
+.verb-cycle > span:last-child {
+  position: relative;
+}
+
+.verb-underline {
+  position: absolute;
+  left: -2%;
+  bottom: -0.06em;
+  width: 104%;
+  height: 0.2em;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.05em;
+  stroke-linecap: round;
+}
+
+/* Dash = the whole path, gap = twice it. Offsetting by 1 lands the path
+   entirely in the gap; a plain "1" dasharray would leave a zero-length dash
+   at the path's end, which round caps draw as a stray dot. */
+.verb-underline path {
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 0;
+}
+
+.verb-cycle.is-ready .verb-underline path {
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+
+.verb-cycle.is-ready .is-landed .verb-underline path {
+  stroke-dashoffset: 0;
+  opacity: 1;
+  transition: stroke-dashoffset 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.verb-cycle.is-ready > span {
+  transition:
+    opacity 800ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* News callout at the top of the card — its one time-bound element. No box:
+   just the icon tile and a line of news, on the content edge like the
+   headline below it. */
+.callout {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-base);
+  line-height: 1.5;
+}
+
+.callout-icon {
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+/* Headline + paragraph on the left, portrait on the right. 5fr / 3fr gives
+   the headline room for its longest cycling verb in three lines. */
+.intro-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
+  align-items: center;
+  gap: var(--space-8) var(--space-10);
+}
+
+.intro-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.intro-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: var(--measure-portfolio);
+  font-size: var(--text-md);
+}
+
+.intro-location {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-muted);
+}
+
+/* Optical: the text centers a touch high against the pin. Kept literal on
+   purpose, like the pill padding nudges. */
+.intro-location span {
+  position: relative;
+  top: 1px;
+}
+
+/* Headshot in an organic blob. The photo's white backdrop multiplies onto
+   the soft-cream fill, so it takes the fill's color instead of reading as a
+   white box; isolation keeps the blend inside the shape. The blob slowly
+   morphs between a few nearby shapes, each within ~10% of round so it stays
+   subtle. Radii are literal on purpose, like the background blob positions. */
+.portrait {
+  aspect-ratio: 1;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 58% 42% 47% 53% / 50% 56% 44% 50%;
+  background-color: var(--color-surface-soft);
+  animation: portrait-morph 24s ease-in-out infinite;
+}
+
+@keyframes portrait-morph {
+  0%, 100% { border-radius: 58% 42% 47% 53% / 50% 56% 44% 50%; }
+  25%      { border-radius: 46% 54% 56% 44% / 56% 46% 54% 44%; }
+  50%      { border-radius: 52% 48% 42% 58% / 44% 52% 48% 56%; }
+  75%      { border-radius: 44% 56% 52% 48% / 52% 44% 56% 48%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portrait {
+    animation: none;
+  }
+}
+
+.portrait img {
+  width: 100%;
+  height: 100%;
+  /* img/headshot.webp is pre-cropped square (880px, 2× the largest blob). */
+  object-fit: cover;
+  mix-blend-mode: multiply;
+}
+
+/* 05 · Latest writing. */
+.latest-title a {
+  text-decoration: none;
+}
+
+/* Title and excerpt travel together; the card's space-between puts the
+   label at the top and the all-posts link at the bottom. */
+.latest-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.latest-all {
+  align-self: flex-end;
+}
+
+.latest-excerpt {
+  max-width: var(--measure-portfolio);
+  font-size: var(--text-lg);
+  line-height: 1.5;
+}
+
+/* 06 · Contact — blobs mirrored from the intro card. */
+.card--contact .circle-1 { top: auto; bottom: -40%; left: auto; right: -10%; }
+.card--contact .circle-2 { top: -30%; left: -15%; }
+
+.contact-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.contact-cta {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.contact-cta:hover {
+  color: var(--color-ink);
+}
+
+.contact-meta {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.contact-meta a {
+  text-decoration: none;
+}
+
+.contact-meta a:hover {
+  color: var(--color-accent);
 }
 
 /* ===========================
@@ -60,6 +378,15 @@ p {
   font-size: var(--text-md);
   margin: 0 0 var(--space-5);
   color: var(--color-ink-soft);
+}
+
+/* The global `p` rule above sizes and spaces prose; cards lay out their own.
+   :where() keeps this at element specificity so `.label` etc. still win;
+   it must stay after the global `p` rule, since source order breaks the tie. */
+:where(main.home) p {
+  margin: 0;
+  font-size: inherit;
+  color: inherit;
 }
 
 .section + .section {
@@ -199,8 +526,41 @@ main.experience p:last-child {
    Responsive
    =========================== */
 @media (max-width: 768px) {
-  header.hero {
-    padding: var(--hero-offset-mobile) var(--gutter) var(--space-7);
+  /* Home: the same sticky deck as desktop, tighter gap. Each card fills the
+     screen below its sticky top less gap + peek (no 46rem cap). */
+  main.home {
+    --card-gap: var(--space-4);
+  }
+
+  .card {
+    min-height: calc(100svh - var(--card-top) - var(--card-gap) - var(--card-peek));
+    --card-padding: var(--space-7);
+  }
+
+  /* Slimmer intro so it fits a phone screen: tighter gaps, body-size copy.
+     The card is screen-height, so pack the portrait + text at the bottom
+     rather than letting the grid spread spare height between them. */
+  .intro-body,
+  .intro-text {
+    gap: var(--space-6);
+  }
+
+  .intro-body {
+    align-content: end;
+  }
+
+  .intro-copy {
+    font-size: var(--text-base);
+  }
+
+  .intro-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Portrait leads on mobile, at a third of the card width. */
+  .portrait {
+    order: -1;
+    width: 33%;
   }
 
   header.page-hero {

@@ -1,13 +1,15 @@
 // Randomize each blob's animation phase so the page never opens
 // on the same frame twice.
 (function () {
+  // querySelectorAll: the home page also has contained blobs inside cards.
   const circles = [
-    { el: document.querySelector(".circle-1"), duration: 64 },
-    { el: document.querySelector(".circle-2"), duration: 82 },
+    { selector: ".circle-1", duration: 64 },
+    { selector: ".circle-2", duration: 82 },
   ];
-  circles.forEach(({ el, duration }) => {
-    if (!el) return;
-    el.style.animationDelay = `-${Math.random() * duration}s`;
+  circles.forEach(({ selector, duration }) => {
+    document.querySelectorAll(selector).forEach((el) => {
+      el.style.animationDelay = `-${Math.random() * duration}s`;
+    });
   });
 })();
 

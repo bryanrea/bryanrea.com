@@ -21,7 +21,8 @@ routing see `fragments/docs/architecture.md`; for code style see
 |------|-------|------|
 | `shared/css/shared.css` | **Both sites** | Design tokens + type scale, `html` root sizing, shared `body` base (font, color, background, leading, smoothing), global link styles, fixed nav, **hero name block**, animated background |
 | `reset.css` | Portfolio only | Modern box-sizing / margin reset (Andy-Bell-style). The portfolio's `style.css` relies on it for `box-sizing` and does **not** redeclare it |
-| `style.css` (root) | Portfolio only | Page-hero, content prose, experience/résumé layout, + the hero's outer spacing & tagline offset |
+| `style.css` (root) | Portfolio only | Home stacked cards, page-hero, content prose, experience/résumé layout |
+| `js/stacked-cards.js` | Home only | Scales and dims covered home cards on scroll (§8) |
 | `fragments/static/css/style.css` | Blog only | Blog reset/base, post list, post body, tags, footer, 404, + the hero's outer spacing & tagline offset |
 | `shared/js/main.js` | **Both sites** | Blob animation randomizing, nav scroll/title behavior |
 | `experiments/experiments.css` | `experiments/` only | Layout shared by experiment pages; each experiment's own CSS lives in its folder (see §11) |
@@ -51,7 +52,8 @@ step, or layout dimension.
 | `--color-rule` | `rgba(237, 229, 213, 0.5)` | Hairline rules & borders (cream at half opacity, softens over the gradient) |
 | `--color-accent` | `#E63946` | Crimson — links on hover, `h2` on portfolio, drop cap, accents |
 | `--color-accent-soft` | `rgba(230, 57, 70, 0.4)` | Default underline color, soft borders |
-| `--color-surface-soft` | `#F6F0E1` | Slightly darker cream for hovers, code backgrounds |
+| `--color-surface-soft` | `#F6F0E1` | Slightly darker cream for hovers, code backgrounds, soft home cards, the home news callout |
+| `--color-surface-glass` | `rgba(252, 248, 238, 0.85)` | Frosted surface — the nav bar; always paired with `--glass-blur` (`saturate(160%) blur(8px)`) |
 
 The palette is **warm, paper-like, single-accent**. Crimson is the only
 saturated color and is used sparingly — it should always read as emphasis.
@@ -90,7 +92,7 @@ and four body sizes to two.
 | `--text-3xl` | `3.75rem` | Blog post `h1` |
 | `--text-4xl` | `4.5rem` | Post-detail title |
 | `--text-5xl` | `5rem` | Sub-page hero (About / Experience) |
-| `--text-6xl` | `6rem` | 404 numeral |
+| `--text-6xl` | `6rem` | 404 numeral, home intro & latest-post headlines (`.display--xxl`) |
 | `--text-hero` | `8rem` | The big name on Home & Fragments |
 
 **Documented off-scale exceptions** (intentionally not tokenized):
@@ -98,6 +100,12 @@ and four body sizes to two.
 - **Inline `code`** `0.92em` — relative to surrounding text by design.
 - **Mobile nav links** `0.72rem` — deliberately tighter than `--text-xs` so four
   links fit the narrow bar.
+- **`.display--xxl`** `clamp(--text-3xl, 7.1vw, --text-6xl)` — fluid on
+  desktop so mid widths (900–1280px, two columns) don't wrap to 5–6 lines;
+  full `--text-6xl` from ~1440px.
+- **Mobile `.display--xxl`** `clamp(--text-2xl, 12vw, --text-4xl)` — fluid
+  between two scale steps so tablet-ish widths get a big headline, not the
+  phone size. The `12vw` slope is the off-scale part.
 - **Mobile listing titles** `1.85rem` — a bespoke responsive override that doesn't
   land on a scale step. (Every other mobile heading steps down a token in the
   `.display` mobile block in `shared.css`.)
@@ -156,6 +164,25 @@ to the nearest step when the scale was introduced.
 | `--measure-blog` | `680px` | Fragments column (`.container`, `.post-full`) |
 | `--measure-experience` | `50rem` | Résumé column (`main.experience`) |
 | `--rail-width` | `8rem` | Résumé section-label rail (`.resume-section` grid) |
+| `--measure-home` | `80rem` | Home card column (`main.home`) |
+| `--measure-display` | `60rem` | Long display headlines and their body rows on home cards |
+| `--tap-target` | `44px` | Min height for standalone links/buttons (home CTAs) |
+| `--card-height` | `46rem` | Home card height (capped to the viewport on short screens) |
+| `--card-stack-offset` | `24px` | First card's sticky `top`, below the nav |
+| `--card-stack-step` | `16px` | Each later card sticks one step lower |
+| `--icon-size` | `24px` | Lucide icons (`.icon`) — their native grid |
+
+> `--hero-offset` / `--hero-offset-mobile` are currently unused: the home page
+> dropped its name hero for the stacked cards. Kept in case it comes back.
+
+### Radii
+
+| Token | Value | Role |
+|-------|-------|------|
+| `--radius-card` | `42px` | Home cards (squircle; ~1.5× the old round 28px for similar softness) |
+
+The older `8px` (pills, skip link) and `6px` (images, `pre`, prev/next cards)
+radii are still literals; tokenize them in their own pass.
 
 ---
 
@@ -198,7 +225,8 @@ via modifiers; per-context structural bits (margins, grid placement, bespoke
 chrome) stay on the site classes.
 
 - **`.display`** — the serif heading recipe (Fraunces, `opsz 144`, weight 600,
-  ink, balanced wrap). Size via a modifier: `--hero` (`--text-hero`), `--xl`
+  ink, balanced wrap). Size via a modifier: `--hero` (`--text-hero`), `--xxl`
+  (`--text-6xl`, home headlines), `--xl`
   (`--text-4xl`), `--lg` (`--text-2xl`), `--md` (`--text-xl`), `--sm`
   (`--text-lg`); `--accent` recolors to crimson. Mobile sizes are token-driven
   in one `@media` block. Used by the hero name, sub-page heroes, post titles,
@@ -210,6 +238,13 @@ chrome) stay on the site classes.
   radius, hover to accent); `--accent` is the always-crimson variant. Used by
   blog tags and the résumé download button. The tag-page heading composes
   `.pill` with a bespoke `.tag-pill` shim for its larger, rounder display scale.
+- **`.icon`** — an inline [Lucide](https://lucide.dev) SVG (ISC), pasted from
+  the site with `class="icon"`, sized `--icon-size`, stroked in
+  `currentColor`. Inline SVG rather than the Lucide web font, so a page only
+  carries the icons it uses. Mark it (or its wrapper) `aria-hidden="true"`
+  when it's decorative.
+  `.icon--inline` sizes it to `1em` to sit in a line of text (e.g. the map pin
+  before "Based in Zurich" on home).
 
 **Deliberately off-system** (do *not* take `.display`): the experience
 right-rail section labels (`main.experience h2` — small italic serif, `opsz 9`),
@@ -224,8 +259,8 @@ so they carry the recipe scoped to `.post-content`).
 A `position: fixed` top bar, `--nav-height` tall, present on every page of both
 sites with identical markup.
 
-- **Surface:** translucent cream `rgba(252, 248, 238, 0.85)` with
-  `backdrop-filter: saturate(160%) blur(8px)`. Bottom border is transparent
+- **Surface:** frosted glass — `--color-surface-glass` (translucent cream) with
+  `backdrop-filter: var(--glass-blur)` (`saturate(160%) blur(8px)`). Bottom border is transparent
   until scrolled.
 - **Layout:** a 3-column grid `1fr auto 1fr` — `HOME / ABOUT` left,
   `EXPERIENCE / FRAGMENTS` right, centered brand title between.
@@ -263,6 +298,10 @@ Fixed behind all content (`z-index: -1`) on every page. Identical markup:
   - `.circle-1` — warm peach → crimson, drifts on a 64s loop.
   - `.circle-2` — soft amber → terracotta, drifts on an 82s loop.
   - Different durations and waypoints keep them from ever syncing.
+- **Contained variant** — `.background.background--contained` drops the same
+  markup inside a positioned, `overflow: hidden` box (the home intro and
+  contact cards) instead of fixing it to the viewport. Each use positions its
+  own circles.
 - **`main.js` randomizes each blob's `animation-delay`** on load so the page
   never opens on the same frame twice.
 - **`.noise`** — a tiled `img/noise.png` at `opacity 0.25`,
@@ -274,6 +313,11 @@ surfaces transparent so it shows through.
 ---
 
 ## 6. The hero pattern (and the nav handoff)
+
+> The portfolio home no longer has a name hero — it opens on the stacked cards
+> (§8), so the nav title shows immediately there. The `.hero-name` block is
+> currently used by Fragments only; the description below covers both in case
+> home brings it back.
 
 Both site homepages use the **same oversized name hero** — defined once as the
 `.hero-name` block in `shared.css` so the two stay in lockstep — and it drives
@@ -387,7 +431,58 @@ Markdown renders into these — they're styled once and reused across all posts:
 **Body:** DM Sans, `line-height 1.7`, `--color-ink-soft` on `--color-bg`,
 antialiased.
 
-### Home / About content (`main.content`)
+### Home — stacked cards (`main.home`)
+- Four live `section.card`s (intro, "More coming", latest post, contact; the
+  work, case-study and philosophy markup is parked in inert `<template>`s;
+  their CSS was removed — restore it from git history with the markup)
+  in a `--measure-home` column, `--space-12` apart. Each
+  has squircle corners (`corner-shape: squircle` on `--radius-card`;
+  plain round where unsupported) and is `position: sticky` at `--nav-height + --card-stack-offset +
+  --card-stack-step × index` (index set by `:nth-child`), `--card-height` tall
+  (capped to the viewport), `--radius-card`, clipped.
+- Variants: default (cream, `--color-rule` border), `.card--soft`
+  (`--color-surface-soft`), `.card--dark` (ink surface, cream type), `.card--center` (one centered
+  message — the "More coming" placeholder). The intro and contact cards hold a
+  contained background (§5).
+- **`js/stacked-cards.js`** sums how far each later card has travelled to its
+  sticky top and scales (`-0.05`) and dims (`brightness -0.05`) the covered
+  card per card on top, from the top edge. Off under `prefers-reduced-motion`.
+- **Peek:** a card's height is the screen below its sticky top less
+  `--card-gap` and `--card-peek` (both `--space-9`; set on `main.home`), so the
+  next card always shows a sliver below the current one. `main.home`'s bottom
+  padding equals gap + peek, so the page ends where the last card lands (it
+  can't stick, being last in its container, and extra padding would scroll it
+  under the nav).
+- **≤768px:** the same sticky deck, `--card-gap: --space-4`, no 46rem cap,
+  `--space-7` padding. The intro slims down (third-width portrait, `--space-6`
+  gaps, `--text-base` copy) and goes to one column, packed to the bottom.
+- **Too-tall cards** (any width): `stacked-cards.js` gives a card taller than
+  the room below its sticky top a negative `top`, so it scrolls until its
+  bottom sits gap + peek above the viewport edge and sticks there — nothing is cut
+  off on short screens (e.g. the intro at 1280×800 or 375×667).
+- **News callout** (`.callout`) — no box: an icon tile and one line of news
+  at the top of the intro card, on the same content edge as the headline;
+  the icon centers vertically on the text, however many lines it wraps to. The icon is a bare crimson
+  Lucide party popper (`.callout-icon`, no tile). It
+  holds the time-bound announcement so the card's headline and body stay
+  evergreen; drop it when the news is old.
+- **Cycling verb** (`.verb-cycle`, `js/verb-cycle.js`) — the intro headline
+  ends "help people connect / create / learn / … / thrive" in crimson
+  (upright, not italic): the words share one grid cell (sized to the longest, so nothing re-wraps) and each fades and
+  lifts out with a soft blur as the next rises in, once, resting on "thrive",
+  which then gets a hand-drawn crimson underline (inline SVG, drawn on with
+  `stroke-dashoffset`; static when there's no JS or reduced motion).
+  Screen readers get a `.visually-hidden` static "thrive"; reduced motion and
+  no-JS just show it. `.visually-hidden` lives in `shared.css`.
+- **Portrait** (`.portrait`) — the headshot (`img/headshot.webp`) beside the
+  intro headline in a `5fr / 3fr` grid, clipped to an organic blob (literal
+  `border-radius` percentages) that slowly morphs on a 24s loop
+  (`portrait-morph`; off under `prefers-reduced-motion`). Its white photo backdrop is
+  `mix-blend-mode: multiply`'d onto a `--color-surface-soft` fill inside an
+  isolated shape, so it reads as cream, not a white box. ≤768px it moves above
+  the headline at a third of the width.
+
+### About content (`main.content`)
 - Centered column, `max-width: var(--measure-portfolio)`.
 - `h2` — Fraunces `2.5rem`, **crimson**, `text-wrap: balance`. (The crimson
   `h2` is a portfolio-only signature; the blog's `h2` is ink.)

@@ -621,7 +621,7 @@ Experiments stay low-profile: not linked from the nav, left out of the sitemap,
 - **Cache busting differs by site.** The blog auto-appends `?v={{ cache_bust }}`
   (git short hash, via a context processor). The static portfolio hardcodes the
   hash in `index.html`, `about/index.html`, `experience/index.html` (currently
-  `?v=800e458`) — **update all three by hand** when shipping shared CSS/JS
+  `?v=f3f1417`) — **update all three by hand** when shipping shared CSS/JS
   changes that affect the portfolio. See `CLAUDE.md` § Cache busting.
 - **Fonts are loaded per-page** in each `<head>` (Fraunces + DM Sans); the
   experience page additionally loads Fraunces italic.

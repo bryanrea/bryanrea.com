@@ -48,6 +48,29 @@ Palette contrast came out of the accessibility audit and is deliberately **not**
 - The 404 numeral (`--color-muted-light`, `#B8A89A`): **2.17:1**.
 - Candidates measured against `#FCF8EE`: `#D62828` → 4.72:1, `#C1121F` → 5.87:1, `#A4161A` → 7.31:1.
 
+### Portfolio home — still to build
+
+The stacked-card home page shipped in October 2026 (PR #38) with four live cards: intro, a "More coming, stay tuned!" placeholder, latest post, and contact. Three cards from the prototype are parked in inert `<template>`s in `index.html` with their copy intact; their CSS was removed and lives in git history (commit `f3f1417`, `style.css` §02–04). Restoring one means moving its markup back above the last card and bringing its CSS back.
+
+1. **Work overview** — "Products used by billions." Replaces the "More coming" placeholder (card 2; switch it back to `card--soft`, drop `card--center`). Products and roles, newest first:
+
+   | Product | Role |
+   |---------|------|
+   | GetYourGuide | Design Director |
+   | YouTube Studio | Head of UX |
+   | G Suite Assistant | Senior UX Lead |
+   | Gmail + Inbox | UX Lead |
+   | Play Music | UX Designer |
+   | Android | UX Designer |
+   | Shopping.com | Interaction Designer |
+
+   - Needs real app icons in `shared/img/apps/` (one per product; the tiles are placeholder initials today).
+   - Reconcile the GetYourGuide title: the live intro callout says **UX Director**, this card says **Design Director**.
+2. **YouTube Studio case study** — dark card: "From a dumping ground of features to a creative partner." Stats: **100M+** creators served, **2x** mobile usage, **+20%** weekly active channels, **+10%** first-time uploaders. Its "Read the case study →" button links to `/youtube-studio`, **which doesn't exist yet** — the case study page itself needs writing and building before this card goes live.
+3. **How I lead** — philosophy card: "Know where you're going, why it matters, and repeat it until everyone else does too." Four principles: Clarity and conviction · Guardrails, not gates · Care deeply · Design as a differentiator (each with a one-line description in the parked markup).
+
+Also: the latest-post card is hand-written — update its label, title, link and excerpt when a new post ships.
+
 ---
 
 > **Done:** reading time estimate, the tag system, and image support (Week 10); code highlighting (Week 11) — a warm Pygments theme for the already-enabled `codehilite` extension lives in `fragments/static/css/style.css`; post caching (Week 12) — `get_posts()` builds once and caches until `posts/` changes; accessibility audit (Week 12, July 2026) — skip links, focus-visible ring, nav focus-trap fix, screen-reader semantics, and code-theme contrast across both sites (PR #19); social & SEO metadata (Week 12, August 2026) — canonical URLs, Open Graph and Twitter cards, `BlogPosting` structured data, tag pages in the sitemap. See the weekly progress log and `docs/conventions.md` for the image workflow.

@@ -56,7 +56,7 @@ The stacked-card home page shipped in October 2026 (PR #38) with four live cards
 
    | Product | Role |
    |---------|------|
-   | GetYourGuide | Design Director |
+   | GetYourGuide | UX Director |
    | YouTube Studio | Head of UX |
    | G Suite Assistant | Senior UX Lead |
    | Gmail + Inbox | UX Lead |
@@ -65,7 +65,6 @@ The stacked-card home page shipped in October 2026 (PR #38) with four live cards
    | Shopping.com | Interaction Designer |
 
    - Needs real app icons in `shared/img/apps/` (one per product; the tiles are placeholder initials today).
-   - Reconcile the GetYourGuide title: the live intro callout says **UX Director**, this card says **Design Director**.
 2. **YouTube Studio case study** — dark card: "From a dumping ground of features to a creative partner." Stats: **100M+** creators served, **2x** mobile usage, **+20%** weekly active channels, **+10%** first-time uploaders. Its "Read the case study →" button links to `/youtube-studio`, **which doesn't exist yet** — the case study page itself needs writing and building before this card goes live.
 3. **How I lead** — philosophy card: "Know where you're going, why it matters, and repeat it until everyone else does too." Four principles: Clarity and conviction · Guardrails, not gates · Care deeply · Design as a differentiator (each with a one-line description in the parked markup).
 

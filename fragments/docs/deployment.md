@@ -46,6 +46,13 @@ server {
         try_files $uri $uri/ =404;
     }
 
+    # Hide dotfiles. root is the git checkout, so without this /.git/,
+    # /.github/ and /.gitignore are publicly readable. .well-known stays
+    # reachable for Certbot's ACME challenges.
+    location ~ /\.(?!well-known) {
+        return 404;
+    }
+
     # Flask blog
     location /fragments {
         proxy_pass http://127.0.0.1:8000;
